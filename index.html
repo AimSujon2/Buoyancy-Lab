@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্লবতা ও আর্কিমিডিসের নীতি - ইন্টারঅ্যাক্টিভ ল্যাব</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        input[type="range"] {
+            accent-color: #38bdf8;
+        }
+        .tab-btn.active {
+            background-color: #0284c7;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+        }
+        .preset-btn.active {
+            border-color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+    <!-- Header & Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">প্লবতা ও আর্কিমিডিসের নীতি ল্যাব</h1>
+                    <p class="text-xs text-slate-400">ইন্টারঅ্যাক্টিভ পদার্থবিজ্ঞান সিমুলেটর ও ক্যালকুলেটর</p>
+                </div>
+            </div>
+
+            <nav class="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700/70">
+                <button id="tabSimBtn" class="tab-btn active px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">
+                    ভার্চুয়াল ল্যাব
+                </button>
+                <button id="tabCalcBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    ক্যালকুলেটর ও তত্ত্ব
+                </button>
+                <button id="tabQuizBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    কুইজ চ্যালেঞ্জ
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+        <!-- VIEW 1: VIRTUAL LAB SIMULATOR -->
+        <section id="viewSim" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Left Column: Visual Tank & Live Readout (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center flex-wrap gap-2">
+                            <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                ভাসমান (Floating)
+                            </span>
+                            <span id="submergedBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                                নিমজ্জিত অংশ: 60.0%
+                            </span>
+                            <span id="combinedModeBadge" class="hidden px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                ২টি বস্তু যুক্ত
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="inline-flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700">
+                                <input type="checkbox" id="showVectorsToggle" checked class="rounded text-sky-500 focus:ring-0">
+                                <span>বল ভেক্টর (W ও F<sub>b</sub>)</span>
+                            </label>
+                            <button id="dropObjectBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white transition flex items-center gap-1 shadow">
+                                <span>উপর থেকে ফেলুন</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Canvas Container -->
+                    <div class="relative w-full h-80 sm:h-[420px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                        <canvas id="tankCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                        <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between pointer-events-none text-[11px] text-slate-300/90 bg-slate-900/75 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800">
+                            <span>টিপস: বস্তুটি মাউস বা আঙুল দিয়ে টেনে পানির গভীরে ডুবিয়ে বা ওপরে তুলে ছেড়ে দিন!</span>
+                            <span id="depthReadout" class="font-mono text-sky-300">গভীরতা: 0.00 m</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Physics Metrics Cards -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-3">
+                            <p class="text-xs text-slate-400">মোট ওজন (W = mg)</p>
+                            <p id="metricWeight" class="text-lg font-bold text-rose-400 mt-0.5">29.43 N</p>
+                            <p id="metricMass" class="text-[11px] text-slate-400">মোট ভর: 3.00 kg</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-3">
+                            <p class="text-xs text-slate-400">প্লবতা বল (F<sub>b</sub>)</p>
+                            <p id="metricBuoyancy" class="text-lg font-bold text-emerald-400 mt-0.5">29.43 N</p>
+                            <p id="metricDisplaced" class="text-[11px] text-slate-400">অপসারিত তরল: 3.00 L</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-3">
+                            <p class="text-xs text-slate-400">তরলে আপাত ওজন (W')</p>
+                            <p id="metricApparent" class="text-lg font-bold text-amber-300 mt-0.5">0.00 N</p>
+                            <p id="metricNetForce" class="text-[11px] text-slate-400">লব্ধি বল: 0.00 N</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-3">
+                            <p class="text-xs text-slate-400">গড় ঘনত্বের অনুপাত</p>
+                            <p id="metricRatio" class="text-lg font-bold text-sky-300 mt-0.5">0.60</p>
+                            <p id="metricEffDensity" class="text-[11px] text-slate-400">গড় ρ: 600 kg/m³</p>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Explanation Box -->
+                    <div id="liveExplanation" class="bg-sky-950/40 border border-sky-800/60 rounded-xl p-3.5 text-xs leading-relaxed text-slate-200">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Controls & Presets (5 cols) -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-5">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center justify-between">
+                            <span>পরীক্ষণের প্যারামিটার নিয়ন্ত্রণ</span>
+                            <button id="resetSimBtn" class="text-xs font-medium text-sky-400 hover:text-sky-300 underline">রিসেট করুন</button>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">১ম বস্তুর ভর, আয়তন, ঘনত্ব পরিবর্তন করুন অথবা ২য় বস্তু যুক্ত করুন</p>
+                    </div>
+
+                    <!-- PRIMARY OBJECT (1st Object) -->
+                    <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">১ম বস্তু (প্রধান ব্লক)</span>
+                            <span id="obj1SummaryBadge" class="text-[11px] font-mono text-slate-300 bg-slate-800 px-2 py-0.5 rounded">m₁ = 3.00 kg | V₁ = 5.0 L</span>
+                        </div>
+
+                        <!-- Object Material Presets -->
+                        <div class="grid grid-cols-3 gap-1.5" id="objectPresets">
+                            <button data-density="240" data-name="কর্ক (Cork)" data-color="#d97706" class="obj-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">কর্ক</div>
+                                <div class="text-[10px] text-slate-400">240 kg/m³</div>
+                            </button>
+                            <button data-density="600" data-name="কাঠ (Wood)" data-color="#b45309" class="obj-preset preset-btn active px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">কাঠের ব্লক</div>
+                                <div class="text-[10px] text-slate-400">600 kg/m³</div>
+                            </button>
+                            <button data-density="917" data-name="বরফ (Ice)" data-color="#7dd3fc" class="obj-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">বরফ খণ্ড</div>
+                                <div class="text-[10px] text-slate-400">917 kg/m³</div>
+                            </button>
+                            <button data-density="1000" data-name="নিরপেক্ষ বস্তু" data-color="#a855f7" class="obj-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">সম-ঘনত্ব</div>
+                                <div class="text-[10px] text-slate-400">1000 kg/m³</div>
+                            </button>
+                            <button data-density="2700" data-name="অ্যালুমিনিয়াম" data-color="#94a3b8" class="obj-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">অ্যালুমিনিয়াম</div>
+                                <div class="text-[10px] text-slate-400">2700 kg/m³</div>
+                            </button>
+                            <button data-density="7870" data-name="লোহা (Iron)" data-color="#475569" class="obj-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                <div class="font-semibold">লোহার ব্লক</div>
+                                <div class="text-[10px] text-slate-400">7870 kg/m³</div>
+                            </button>
+                        </div>
+
+                        <!-- 1st Object Mass Slider (Direct Mass Control) -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <label for="objMassSlider" class="font-medium text-slate-200">১ম বস্তুর ভর (m₁) <span class="text-[10px] text-slate-400">[V₁ স্থির রেখে ρ₁ পরিবর্তন]</span></label>
+                                <span id="objMassVal" class="font-mono font-semibold text-amber-300">3.00 kg</span>
+                            </div>
+                            <input id="objMassSlider" type="range" min="0.1" max="120" step="0.05" value="3.0" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- 1st Object Volume Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <label for="objVolumeSlider" class="font-medium text-slate-300">১ম বস্তুর আয়তন (V₁) <span class="text-[10px] text-slate-400">[m₁ স্থির রেখে ρ₁ পরিবর্তন]</span></label>
+                                <span id="objVolumeVal" class="font-mono font-semibold text-sky-400">5.0 L (0.005 m³)</span>
+                            </div>
+                            <input id="objVolumeSlider" type="range" min="1" max="15" step="0.5" value="5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- 1st Object Density Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <label for="objDensitySlider" class="font-medium text-slate-300">১ম বস্তুর ঘনত্ব (ρ₁ = m₁ / V₁) <span class="text-[10px] text-slate-400">[V₁ স্থির রেখে m₁ পরিবর্তন]</span></label>
+                                <span id="objDensityVal" class="font-mono font-semibold text-sky-400">600 kg/m³</span>
+                            </div>
+                            <input id="objDensitySlider" type="range" min="100" max="8000" step="10" value="600" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- SECOND OBJECT (Attach Another Object Feature) -->
+                    <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label for="attachObj2Toggle" class="text-xs font-bold text-amber-400 uppercase tracking-wider cursor-pointer">
+                                    + আরেকটি বস্তু যুক্ত করুন (২য় বস্তু)
+                                </label>
+                                <p class="text-[11px] text-slate-400">১ম বস্তুর সাথে ক্ল্যাম্প দিয়ে ২য় বস্তু যুক্ত করে সম্মিলিত ভাসন পরীক্ষা করুন</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="attachObj2Toggle" class="sr-only peer">
+                                <div class="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                            </label>
+                        </div>
+
+                        <!-- 2nd Object Controls (Revealed when toggled on) -->
+                        <div id="obj2ControlsPanel" class="hidden space-y-3 pt-2 border-t border-slate-800">
+                            <div class="grid grid-cols-4 gap-1.5" id="obj2Presets">
+                                <button data-density="240" data-name="কর্ক" data-color="#f59e0b" class="obj2-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-[11px] font-medium text-slate-200 hover:border-slate-500 transition text-center">
+                                    <div class="font-semibold">কর্ক</div>
+                                    <div class="text-[9px] text-slate-400">240</div>
+                                </button>
+                                <button data-density="600" data-name="কাঠ" data-color="#d97706" class="obj2-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-[11px] font-medium text-slate-200 hover:border-slate-500 transition text-center">
+                                    <div class="font-semibold">কাঠ</div>
+                                    <div class="text-[9px] text-slate-400">600</div>
+                                </button>
+                                <button data-density="2700" data-name="অ্যালুমিনিয়াম" data-color="#64748b" class="obj2-preset preset-btn active px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-[11px] font-medium text-slate-200 hover:border-slate-500 transition text-center">
+                                    <div class="font-semibold">অ্যালু.</div>
+                                    <div class="text-[9px] text-slate-400">2700</div>
+                                </button>
+                                <button data-density="7870" data-name="লোহা" data-color="#334155" class="obj2-preset preset-btn px-2 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 text-[11px] font-medium text-slate-200 hover:border-slate-500 transition text-center">
+                                    <div class="font-semibold">লোহা</div>
+                                    <div class="text-[9px] text-slate-400">7870</div>
+                                </button>
+                            </div>
+
+                            <!-- 2nd Object Mass Slider -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <label for="obj2MassSlider" class="font-medium text-slate-200">২য় বস্তুর ভর (m₂)</label>
+                                    <span id="obj2MassVal" class="font-mono font-semibold text-amber-300">1.35 kg</span>
+                                </div>
+                                <input id="obj2MassSlider" type="range" min="0.1" max="80" step="0.05" value="1.35" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <!-- 2nd Object Volume Slider -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <label for="obj2VolumeSlider" class="font-medium text-slate-300">২য় বস্তুর আয়তন (V₂)</label>
+                                    <span id="obj2VolumeVal" class="font-mono font-semibold text-sky-400">0.5 L</span>
+                                </div>
+                                <input id="obj2VolumeSlider" type="range" min="0.5" max="10" step="0.5" value="0.5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <!-- 2nd Object Density Slider -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <label for="obj2DensitySlider" class="font-medium text-slate-300">২য় বস্তুর ঘনত্ব (ρ₂ = m₂ / V₂)</label>
+                                    <span id="obj2DensityVal" class="font-mono font-semibold text-sky-400">2700 kg/m³</span>
+                                </div>
+                                <input id="obj2DensitySlider" type="range" min="100" max="10000" step="10" value="2700" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <div id="combinedStatsBox" class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300 flex flex-wrap justify-between gap-2">
+                                <span>মোট ভর: <strong id="combMassText" class="text-white">4.35 kg</strong></span>
+                                <span>মোট আয়তন: <strong id="combVolText" class="text-white">5.5 L</strong></span>
+                                <span>সম্মিলিত গড় ঘনত্ব: <strong id="combRhoText" class="text-amber-300">791 kg/m³</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fluid & Gravity Settings -->
+                    <div class="space-y-4 pt-1">
+                        <!-- Fluid Presets -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">তরল মাধ্যম নির্বাচন করুন</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="fluidPresets">
+                                <button data-fdensity="800" data-fname="কেরোসিন তেল" data-fcolor="rgba(250, 204, 21, 0.38)" class="fluid-preset preset-btn px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">কেরোসিন</div>
+                                    <div class="text-[10px] text-slate-400">800 kg/m³</div>
+                                </button>
+                                <button data-fdensity="1000" data-fname="বিশুদ্ধ পানি" data-fcolor="rgba(14, 165, 233, 0.42)" class="fluid-preset preset-btn active px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">বিশুদ্ধ পানি</div>
+                                    <div class="text-[10px] text-slate-400">1000 kg/m³</div>
+                                </button>
+                                <button data-fdensity="1030" data-fname="সমুদ্রের পানি" data-fcolor="rgba(6, 182, 212, 0.48)" class="fluid-preset preset-btn px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">সমুদ্রের পানি</div>
+                                    <div class="text-[10px] text-slate-400">1030 kg/m³</div>
+                                </button>
+                                <button data-fdensity="1240" data-fname="মৃত সাগর (Dead Sea)" data-fcolor="rgba(20, 184, 166, 0.52)" class="fluid-preset preset-btn px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">মৃত সাগর</div>
+                                    <div class="text-[10px] text-slate-400">1240 kg/m³</div>
+                                </button>
+                                <button data-fdensity="1420" data-fname="মধু (Honey)" data-fcolor="rgba(245, 158, 11, 0.52)" class="fluid-preset preset-btn px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">মধু</div>
+                                    <div class="text-[10px] text-slate-400">1420 kg/m³</div>
+                                </button>
+                                <button data-fdensity="13600" data-fname="পারদ (Mercury)" data-fcolor="rgba(148, 163, 184, 0.72)" class="fluid-preset preset-btn px-2.5 py-2 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-slate-200 hover:border-slate-500 transition text-left">
+                                    <div class="font-semibold">পারদ</div>
+                                    <div class="text-[10px] text-slate-400">13600 kg/m³</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <label for="fluidDensitySlider" class="font-medium text-slate-300">তরলের ঘনত্ব (ρ<sub>তরল</sub>)</label>
+                                <span id="fluidDensityVal" class="font-mono font-semibold text-sky-400">1000 kg/m³</span>
+                            </div>
+                            <input id="fluidDensitySlider" type="range" min="500" max="13600" step="10" value="1000" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <label for="gravitySlider" class="font-medium text-slate-300">অভিকর্ষজ ত্বরণ (g)</label>
+                                <span id="gravityVal" class="font-mono font-semibold text-sky-400">9.81 m/s²</span>
+                            </div>
+                            <input id="gravitySlider" type="range" min="1.6" max="24.8" step="0.01" value="9.81" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                            <div class="flex gap-2 mt-1.5">
+                                <button data-g="1.62" class="g-preset text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">চাঁদ (1.62)</button>
+                                <button data-g="3.71" class="g-preset text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">মঙ্গল (3.71)</button>
+                                <button data-g="9.81" class="g-preset text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">পৃথিবী (9.81)</button>
+                                <button data-g="24.79" class="g-preset text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">বৃহস্পতি (24.79)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: CALCULATOR & THEORY -->
+        <section id="viewCalc" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Interactive Step-by-Step Solver (6 cols) -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">ধাপে ধাপে গাণিতিক সমস্যা সমাধানকারী</h2>
+                            <p class="text-xs text-slate-400">১টি বা ২টি যুক্ত বস্তুর ভর, আয়তন এবং তরলের ঘনত্ব দিয়ে সমাধান দেখুন</p>
+                        </div>
+                        <button id="syncFromLabBtn" class="px-3 py-1.5 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 border border-sky-500/40 text-xs font-semibold transition">
+                            ল্যাবের মান আনুন
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর ভর, m₁ (kg)</label>
+                            <input id="calcMass" type="number" step="0.1" min="0.1" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর আয়তন, V₁ (লিটার / dm³)</label>
+                            <input id="calcVolLiters" type="number" step="0.1" min="0.1" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                    </div>
+
+                    <!-- Optional 2nd object in Calculator -->
+                    <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+                        <label class="inline-flex items-center gap-2 text-xs font-semibold text-amber-300 cursor-pointer">
+                            <input type="checkbox" id="calcHasObj2" class="rounded text-amber-500 focus:ring-0">
+                            <span>এর সাথে ২য় একটি বস্তু যুক্ত আছে (যুক্ত বস্তুর গাণিতিক সমস্যা)</span>
+                        </label>
+                        <div id="calcObj2Fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর ভর, m₂ (kg)</label>
+                                <input id="calcMass2" type="number" step="0.1" min="0.1" value="1.35" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর আয়তন, V₂ (লিটার / dm³)</label>
+                                <input id="calcVol2Liters" type="number" step="0.1" min="0.1" value="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">তরলের ঘনত্ব, ρ<sub>f</sub> (kg/m³)</label>
+                            <input id="calcFluidRho" type="number" step="10" min="100" value="1000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">অভিকর্ষজ ত্বরণ, g (m/s²)</label>
+                            <input id="calcG" type="number" step="0.01" min="0.1" value="9.81" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                    </div>
+
+                    <div id="calcSolutionSteps" class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2.5 text-xs sm:text-sm font-mono text-slate-200">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Theory & Formulas Reference (6 cols) -->
+                <div class="lg:col-span-6 space-y-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
+                        <h3 class="text-base font-bold text-sky-400">১. প্লবতা (Buoyancy) ও যুক্ত বস্তুর নীতি</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            কোনো তরল বা বায়বীয় পদার্থে আংশিক বা সম্পূর্ণ নিমজ্জিত কোনো বস্তুর ওপর তরল বা বায়বীয় পদার্থ লম্বভাবে যে ঊর্ধ্বমুখী লব্ধি বল প্রয়োগ করে, তাকে <strong>প্লবতা (Buoyancy)</strong> বলে। এর মান বস্তু কর্তৃক অপসারিত তরলের ওজনের সমান।
+                        </p>
+                        <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700 text-xs sm:text-sm space-y-1.5">
+                            <p class="font-semibold text-white">প্লবতা সূত্র: <span class="font-mono text-sky-300">F<sub>b</sub> = V<sub>নিমজ্জিত</sub> × ρ<sub>তরল</sub> × g</span></p>
+                            <p class="font-semibold text-white">যুক্ত বস্তুর গড় ঘনত্ব: <span class="font-mono text-amber-300">ρ<sub>গড়</sub> = (m₁ + m₂) ÷ (V₁ + V₂)</span></p>
+                            <p class="font-semibold text-white">ভাসমান অবস্থায় সাম্যাবস্থা: <span class="font-mono text-emerald-300">F<sub>b</sub> = W &nbsp;⇒&nbsp; V<sub>নিমজ্জিত</sub> / V<sub>মোট</sub> = ρ<sub>গড়</sub> / ρ<sub>তরল</sub></span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
+                        <h3 class="text-base font-bold text-emerald-400">২. আর্কিমিডিসের নীতি ও ভাসনের ৩টি শর্ত</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            কোনো বস্তুকে স্থির তরলে ছাড়লে বস্তুটির গড় ঘনত্ব (ρ<sub>বস্তু</sub>) এবং তরলের ঘনত্বের (ρ<sub>তরল</sub>) তুলনার ওপর ভিত্তি করে ৩টি অবস্থা ঘটতে পারে:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                            <div class="bg-emerald-950/40 border border-emerald-800/50 rounded-xl p-3">
+                                <div class="font-bold text-emerald-300 mb-1">ভাসবে (Float)</div>
+                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &lt; ρ<sub>তরল</sub></div>
+                                <p class="text-slate-400 mt-1">বস্তুটি আংশিক ডুবে ভাসবে। সাম্যাবস্থায় F<sub>b</sub> = W এবং আপাত ওজন শূন্য (W' = 0)।</p>
+                            </div>
+                            <div class="bg-purple-950/40 border border-purple-800/50 rounded-xl p-3">
+                                <div class="font-bold text-purple-300 mb-1">নিমজ্জিত ভাসন</div>
+                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> = ρ<sub>তরল</sub></div>
+                                <p class="text-slate-400 mt-1">বস্তুটি ১০০% ডুবে তরলের যেকোনো গভীরে ভেসে থাকবে (F<sub>b</sub> = W)।</p>
+                            </div>
+                            <div class="bg-rose-950/40 border border-rose-800/50 rounded-xl p-3">
+                                <div class="font-bold text-rose-300 mb-1">ডুবে যাবে (Sink)</div>
+                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &gt; ρ<sub>তরল</sub></div>
+                                <p class="text-slate-400 mt-1">সম্পূর্ণ ডুবলেও W &gt; F<sub>b,max</sub> হওয়ায় পাত্রের তলায় ডুবে যাবে।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: INTERACTIVE QUIZ -->
+        <section id="viewQuiz" class="hidden max-w-3xl mx-auto">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">প্লবতা ও আর্কিমিডিসের নীতি কুইজ</h2>
+                        <p class="text-xs text-slate-400">নিজের ধারণা যাচাই করে নিন</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="quizScoreBadge" class="px-3 py-1.5 rounded-xl bg-sky-500/20 border border-sky-500/40 text-sky-300 text-xs font-bold">
+                            স্কোর: 0 / 5
+                        </span>
+                    </div>
+                </div>
+
+                <div id="quizContainer" class="space-y-5">
+                    <!-- Populated via JS -->
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button id="resetQuizBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition">
+                        কুইজ পুনরায় শুরু করুন
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- State ---
+        const BASE_WATER_Y = 0.36; // Unperturbed water surface in normalized tank coordinates
+        const WATER_RISE_FACTOR = 0.0018; // Surface rise per Liter of displaced fluid
+
+        const state = {
+            // 1st Object
+            objDensity: 600,     // kg/m^3
+            objVolumeL: 5.0,     // Liters (1 L = 0.001 m^3)
+            objMass: 3.0,        // kg (m1 = rho1 * V1)
+            objName: 'কাঠ (Wood)',
+            objColor: '#b45309',
+
+            // 2nd Attached Object
+            hasObj2: false,
+            obj2Density: 2700,   // kg/m^3 (Aluminum by default so attaching 0.5L still floats!)
+            obj2VolumeL: 0.5,    // Liters
+            obj2Mass: 1.35,      // kg
+            obj2Name: 'অ্যালুমিনিয়াম',
+            obj2Color: '#64748b',
+
+            // Fluid & Environment
+            fluidDensity: 1000,  // kg/m^3
+            fluidName: 'বিশুদ্ধ পানি',
+            fluidColor: 'rgba(14, 165, 233, 0.42)',
+            g: 9.81,             // m/s^2
+            showVectors: true,
+
+            // Physics vertical animation state
+            objY: 0.36,          // Center of assembly in normalized tank coords
+            objVy: 0,
+            isDragging: false,
+            wavePhase: 0
+        };
+
+        // --- DOM Elements ---
+        const tabSimBtn = document.getElementById('tabSimBtn');
+        const tabCalcBtn = document.getElementById('tabCalcBtn');
+        const tabQuizBtn = document.getElementById('tabQuizBtn');
+        const viewSim = document.getElementById('viewSim');
+        const viewCalc = document.getElementById('viewCalc');
+        const viewQuiz = document.getElementById('viewQuiz');
+
+        const canvas = document.getElementById('tankCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 1st Object Controls
+        const objMassSlider = document.getElementById('objMassSlider');
+        const objVolumeSlider = document.getElementById('objVolumeSlider');
+        const objDensitySlider = document.getElementById('objDensitySlider');
+        const objMassVal = document.getElementById('objMassVal');
+        const objVolumeVal = document.getElementById('objVolumeVal');
+        const objDensityVal = document.getElementById('objDensityVal');
+        const obj1SummaryBadge = document.getElementById('obj1SummaryBadge');
+
+        // 2nd Object Controls
+        const attachObj2Toggle = document.getElementById('attachObj2Toggle');
+        const obj2ControlsPanel = document.getElementById('obj2ControlsPanel');
+        const combinedModeBadge = document.getElementById('combinedModeBadge');
+        const obj2MassSlider = document.getElementById('obj2MassSlider');
+        const obj2VolumeSlider = document.getElementById('obj2VolumeSlider');
+        const obj2DensitySlider = document.getElementById('obj2DensitySlider');
+        const obj2MassVal = document.getElementById('obj2MassVal');
+        const obj2VolumeVal = document.getElementById('obj2VolumeVal');
+        const obj2DensityVal = document.getElementById('obj2DensityVal');
+        const combMassText = document.getElementById('combMassText');
+        const combVolText = document.getElementById('combVolText');
+        const combRhoText = document.getElementById('combRhoText');
+
+        // Fluid & Gravity Controls
+        const fluidDensitySlider = document.getElementById('fluidDensitySlider');
+        const gravitySlider = document.getElementById('gravitySlider');
+        const fluidDensityVal = document.getElementById('fluidDensityVal');
+        const gravityVal = document.getElementById('gravityVal');
+
+        // Readouts
+        const statusBadge = document.getElementById('statusBadge');
+        const submergedBadge = document.getElementById('submergedBadge');
+        const depthReadout = document.getElementById('depthReadout');
+        const metricWeight = document.getElementById('metricWeight');
+        const metricMass = document.getElementById('metricMass');
+        const metricBuoyancy = document.getElementById('metricBuoyancy');
+        const metricDisplaced = document.getElementById('metricDisplaced');
+        const metricApparent = document.getElementById('metricApparent');
+        const metricNetForce = document.getElementById('metricNetForce');
+        const metricRatio = document.getElementById('metricRatio');
+        const metricEffDensity = document.getElementById('metricEffDensity');
+        const liveExplanation = document.getElementById('liveExplanation');
+
+        // --- Tab Switching ---
+        function switchTab(tab) {
+            [tabSimBtn, tabCalcBtn, tabQuizBtn].forEach(b => {
+                b.classList.remove('active');
+                b.classList.add('text-slate-300');
+            });
+            [viewSim, viewCalc, viewQuiz].forEach(v => v.classList.add('hidden'));
+
+            if (tab === 'sim') {
+                tabSimBtn.classList.add('active');
+                viewSim.classList.remove('hidden');
+                resizeCanvas();
+            } else if (tab === 'calc') {
+                tabCalcBtn.classList.add('active');
+                viewCalc.classList.remove('hidden');
+                updateCalculator();
+            } else if (tab === 'quiz') {
+                tabQuizBtn.classList.add('active');
+                viewQuiz.classList.remove('hidden');
+            }
+        }
+
+        tabSimBtn.addEventListener('click', () => switchTab('sim'));
+        tabCalcBtn.addEventListener('click', () => switchTab('calc'));
+        tabQuizBtn.addEventListener('click', () => switchTab('quiz'));
+
+        // --- Unified Physics Geometry & Hydrostatics ---
+        function getBlock1HalfHeightNorm() {
+            const scale = Math.cbrt(state.objVolumeL / 5.0);
+            return 0.075 * scale;
+        }
+
+        function getBlock2HalfHeightNorm() {
+            if (!state.hasObj2) return 0;
+            const scale = Math.cbrt(state.obj2VolumeL / 5.0);
+            return 0.075 * scale;
+        }
+
+        function getTotalHalfHeightNorm() {
+            return getBlock1HalfHeightNorm() + getBlock2HalfHeightNorm();
+        }
+
+        // Pure geometric submergence given centerY and waterSurfaceY.
+        // Object 2 is attached flush underneath Object 1 (no vertical dead-zone gap),
+        // so displaced volume increases strictly and continuously with depth.
+        function computeSubmergenceAtWaterLine(centerY, waterSurfaceY) {
+            const h1 = getBlock1HalfHeightNorm();
+            const h2 = getBlock2HalfHeightNorm();
+            const totalHalf = h1 + h2;
+
+            const top1 = centerY - totalHalf;
+            const bottom1 = top1 + 2 * h1;
+            const top2 = bottom1;
+            const bottom2 = top2 + 2 * h2;
+
+            const calcLinearFrac = (t, b) => {
+                if (b <= t) return 0;
+                if (b <= waterSurfaceY) return 0;
+                if (t >= waterSurfaceY) return 1;
+                return (b - waterSurfaceY) / (b - t);
+            };
+
+            const frac1 = calcLinearFrac(top1, bottom1);
+            const frac2 = state.hasObj2 ? calcLinearFrac(top2, bottom2) : 0;
+
+            const displacedL = state.objVolumeL * frac1 + (state.hasObj2 ? state.obj2VolumeL * frac2 : 0);
+            const totalVolL = state.objVolumeL + (state.hasObj2 ? state.obj2VolumeL : 0);
+
+            return {
+                displacedL,
+                subFrac: displacedL / totalVolL,
+                frac1,
+                frac2,
+                top1,
+                bottom1,
+                top2,
+                bottom2
+            };
+        }
+
+        // Self-consistent hydrostatics solver: finds exact risen water level `waterY`
+        // and exact submergence at `centerY` so `animate()` and `updateMetricsUI()` never disagree!
+        function getTankHydrostatics(centerY) {
+            let waterY = BASE_WATER_Y;
+            let sub = computeSubmergenceAtWaterLine(centerY, waterY);
+            for (let i = 0; i < 8; i++) {
+                waterY = BASE_WATER_Y - sub.displacedL * WATER_RISE_FACTOR;
+                sub = computeSubmergenceAtWaterLine(centerY, waterY);
+            }
+
+            const totalMass = state.hasObj2 ? (state.objMass + state.obj2Mass) : state.objMass;
+            const totalVolL = state.hasObj2 ? (state.objVolumeL + state.obj2VolumeL) : state.objVolumeL;
+            const totalVolM3 = totalVolL / 1000;
+            const effDensity = totalMass / totalVolM3;
+            const weight = totalMass * state.g;
+            const buoyancy = (sub.displacedL / 1000) * state.fluidDensity * state.g;
+
+            const totalHalfH = getTotalHalfHeightNorm();
+            const floorY = 0.88 - totalHalfH;
+            const onFloor = centerY >= floorY - 0.0005 && weight > buoyancy;
+            const normalForce = onFloor ? (weight - buoyancy) : 0;
+            const apparentWeight = Math.max(0, weight - buoyancy);
+            const netDownwardForce = weight - buoyancy - normalForce;
+
+            return {
+                waterY,
+                ...sub,
+                totalMass,
+                totalVolL,
+                totalVolM3,
+                effDensity,
+                weight,
+                buoyancy,
+                normalForce,
+                apparentWeight,
+                netDownwardForce,
+                onFloor,
+                floorY
+            };
+        }
+
+        // Computes the exact mathematical equilibrium Y for the current state
+        function computeEquilibriumY() {
+            const totalMass = state.hasObj2 ? (state.objMass + state.obj2Mass) : state.objMass;
+            const totalVolL = state.hasObj2 ? (state.objVolumeL + state.obj2VolumeL) : state.objVolumeL;
+            const totalHalfH = getTotalHalfHeightNorm();
+            const floorY = 0.88 - totalHalfH;
+
+            // Target displaced fluid volume in Liters to balance weight: m_total = V_disp_m3 * rho_fluid => V_disp_L = (m_total / rho_fluid) * 1000
+            const requiredDisplacedL = (totalMass / state.fluidDensity) * 1000;
+
+            if (requiredDisplacedL >= totalVolL) {
+                // Sinks to floor (or neutral at current depth if equal)
+                if (Math.abs(requiredDisplacedL - totalVolL) < 1e-4) {
+                    const minSubmergedY = BASE_WATER_Y - totalVolL * WATER_RISE_FACTOR + totalHalfH;
+                    return Math.min(floorY, Math.max(minSubmergedY, state.objY));
+                }
+                return floorY;
+            }
+
+            // Floating: find centerY where displacedL === requiredDisplacedL via bisection
+            let low = 0.05;
+            let high = floorY;
+            for (let i = 0; i < 30; i++) {
+                const mid = 0.5 * (low + high);
+                const hydro = getTankHydrostatics(mid);
+                if (hydro.displacedL < requiredDisplacedL) {
+                    low = mid;
+                } else {
+                    high = mid;
+                }
+            }
+            return 0.5 * (low + high);
+        }
+
+        function syncObj1Sliders() {
+            const maxMass1 = Math.max(40, Math.ceil(state.objMass + 5));
+            objMassSlider.max = maxMass1;
+            objMassSlider.value = state.objMass;
+
+            objVolumeSlider.value = state.objVolumeL;
+
+            const maxRho1 = Math.max(8000, Math.ceil(state.objDensity + 100));
+            objDensitySlider.max = maxRho1;
+            objDensitySlider.value = Math.round(state.objDensity);
+
+            objMassVal.textContent = `${state.objMass.toFixed(2)} kg`;
+            objVolumeVal.textContent = `${state.objVolumeL.toFixed(1)} L (${(state.objVolumeL / 1000).toFixed(4)} m³)`;
+            objDensityVal.textContent = `${Math.round(state.objDensity)} kg/m³`;
+            obj1SummaryBadge.textContent = `m₁ = ${state.objMass.toFixed(2)} kg | V₁ = ${state.objVolumeL.toFixed(1)} L`;
+        }
+
+        function syncObj2Sliders() {
+            const maxMass2 = Math.max(40, Math.ceil(state.obj2Mass + 5));
+            obj2MassSlider.max = maxMass2;
+            obj2MassSlider.value = state.obj2Mass;
+
+            obj2VolumeSlider.value = state.obj2VolumeL;
+
+            const maxRho2 = Math.max(10000, Math.ceil(state.obj2Density + 100));
+            obj2DensitySlider.max = maxRho2;
+            obj2DensitySlider.value = Math.round(state.obj2Density);
+
+            obj2MassVal.textContent = `${state.obj2Mass.toFixed(2)} kg`;
+            obj2VolumeVal.textContent = `${state.obj2VolumeL.toFixed(1)} L`;
+            obj2DensityVal.textContent = `${Math.round(state.obj2Density)} kg/m³`;
+
+            const totalMass = state.objMass + state.obj2Mass;
+            const totalVolL = state.objVolumeL + state.obj2VolumeL;
+            const effRho = totalMass / (totalVolL / 1000);
+
+            combMassText.textContent = `${totalMass.toFixed(2)} kg`;
+            combVolText.textContent = `${totalVolL.toFixed(1)} L`;
+            combRhoText.textContent = `${Math.round(effRho)} kg/m³`;
+        }
+
+        function updateMetricsUI(hydro) {
+            syncObj1Sliders();
+            if (state.hasObj2) syncObj2Sliders();
+
+            const ratio = hydro.effDensity / state.fluidDensity;
+
+            fluidDensityVal.textContent = `${state.fluidDensity} kg/m³`;
+            gravityVal.textContent = `${state.g.toFixed(2)} m/s²`;
+
+            metricWeight.textContent = `${hydro.weight.toFixed(2)} N`;
+            metricMass.textContent = `মোট ভর: ${hydro.totalMass.toFixed(2)} kg`;
+            metricBuoyancy.textContent = `${hydro.buoyancy.toFixed(2)} N`;
+            metricDisplaced.textContent = `অপসারিত তরল: ${hydro.displacedL.toFixed(2)} L`;
+            metricApparent.textContent = `${hydro.apparentWeight.toFixed(2)} N`;
+            metricNetForce.textContent = hydro.onFloor
+                ? `তলার প্রতিক্রিয়া বল: ${hydro.normalForce.toFixed(2)} N`
+                : `লব্ধি বল: ${Math.abs(hydro.weight - hydro.buoyancy).toFixed(2)} N`;
+            metricRatio.textContent = ratio.toFixed(2);
+            metricEffDensity.textContent = `গড় ρ: ${Math.round(hydro.effDensity)} kg/m³`;
+
+            const subPct = (hydro.subFrac * 100).toFixed(1);
+            submergedBadge.textContent = `নিমজ্জিত অংশ: ${subPct}%`;
+
+            const depthM = Math.max(0, (hydro.bottom2 - hydro.waterY) * 2.5);
+            depthReadout.textContent = `তলদেশের গভীরতা: ${depthM.toFixed(2)} m`;
+
+            const labelPrefix = state.hasObj2
+                ? `যুক্ত অবস্থায় মোট ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, মোট আয়তন <strong>${hydro.totalVolL.toFixed(1)} L</strong> এবং সম্মিলিত গড় ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `
+                : `বস্তুটির ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, আয়তন <strong>${hydro.totalVolL.toFixed(1)} L</strong> এবং ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `;
+
+            if (ratio < 0.999) {
+                statusBadge.textContent = 'ভাসমান (Floating)';
+                statusBadge.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                const eqPct = (ratio * 100).toFixed(1);
+                const eqDispL = ((hydro.totalMass / state.fluidDensity) * 1000).toFixed(2);
+                liveExplanation.innerHTML = `<strong class="text-emerald-300">ভাসনের বিশ্লেষণ:</strong> ${labelPrefix}তরলের ঘনত্বের (${state.fluidDensity} kg/m³) চেয়ে গড় ঘনত্ব কম হওয়ায় সাম্যাবস্থায় এটি মোট আয়তনের <strong>${eqPct}%</strong> (${eqDispL} L তরল অপসারণ করে) ডুবে ভাসছে। এখানে ওজন <strong>W = ${hydro.weight.toFixed(2)} N</strong> এবং প্লবতা বল <strong>F<sub>b</sub> = ${hydro.buoyancy.toFixed(2)} N</strong> পরস্পর সমান, তাই আপাত ওজন <strong>0.00 N</strong>।`;
+            } else if (ratio <= 1.001) {
+                statusBadge.textContent = 'নিমজ্জিত ভাসন (Neutral)';
+                statusBadge.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30';
+                liveExplanation.innerHTML = `<strong class="text-purple-300">নিরপেক্ষ সাম্যাবস্থা:</strong> ${labelPrefix}গড় ঘনত্ব এবং তরলের ঘনত্ব সমান হওয়ায় সম্পূর্ণ (১০০%) নিমজ্জিত অবস্থায় প্লবতা বল ও ওজন সমান (<strong>${hydro.weight.toFixed(2)} N</strong>)।`;
+            } else {
+                statusBadge.textContent = 'ডুবন্ত (Sinking)';
+                statusBadge.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                const maxFb = hydro.totalVolM3 * state.fluidDensity * state.g;
+                liveExplanation.innerHTML = `<strong class="text-rose-300">ডুবে যাওয়ার বিশ্লেষণ:</strong> ${labelPrefix}গড় ঘনত্ব তরলের ঘনত্বের (${state.fluidDensity} kg/m³) চেয়ে বেশি। ১০০% ডুবলেও সর্বোচ্চ প্লবতা বল (<strong>F<sub>b</sub> = ${maxFb.toFixed(2)} N</strong>) মোট ওজনের (<strong>W = ${hydro.weight.toFixed(2)} N</strong>) চেয়ে কম হওয়ায় এটি তলায় ডুবে গেছে এবং তরলে এর আপাত ওজন <strong>W' = ${(hydro.weight - maxFb).toFixed(2)} N</strong>।`;
+            }
+        }
+
+        // --- Canvas Resize & Drawing ---
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawArrow(x, y1, y2, color, label, alignLeft = false) {
+            const len = Math.abs(y2 - y1);
+            if (len < 5) return;
+            const dir = y2 > y1 ? 1 : -1;
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+            ctx.moveTo(x, y1);
+            ctx.lineTo(x, y2);
+            ctx.stroke();
+
+            // Arrowhead
+            ctx.beginPath();
+            ctx.moveTo(x, y2);
+            ctx.lineTo(x - 6, y2 - dir * 10);
+            ctx.lineTo(x + 6, y2 - dir * 10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Label pill
+            ctx.font = 'bold 11px Inter, sans-serif';
+            const textW = ctx.measureText(label).width + 10;
+            const pillX = alignLeft ? (x - textW - 8) : (x + 8);
+            const pillY = (y1 + y2) / 2 - 9;
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+            ctx.fillRect(pillX, pillY, textW, 18);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pillX, pillY, textW, 18);
+            ctx.fillStyle = color;
+            ctx.textAlign = 'left';
+            ctx.fillText(label, pillX + 5, pillY + 13);
+            ctx.restore();
+        }
+
+        function animate() {
+            const w = canvas.width / window.devicePixelRatio;
+            const h = canvas.height / window.devicePixelRatio;
+
+            const totalHalfH = getTotalHalfHeightNorm();
+            const floorY = 0.88 - totalHalfH;
+            const ceilY = 0.09 + totalHalfH;
+
+            let hydro = getTankHydrostatics(state.objY);
+
+            if (!state.isDragging) {
+                const eqY = computeEquilibriumY();
+                const netForce = hydro.weight - hydro.buoyancy;
+                // Acceleration scaled so the object moves realistically and settles briskly
+                const acc = (netForce / Math.max(hydro.totalMass, 0.15)) * 0.00032;
+
+                state.objVy += acc;
+                const damping = hydro.subFrac > 0 ? 0.84 : 0.96;
+                state.objVy *= damping;
+                state.objY += state.objVy;
+
+                // Snap cleanly to exact mathematical equilibrium when very close and slow
+                if (Math.abs(state.objY - eqY) < 0.0006 && Math.abs(state.objVy) < 0.0006) {
+                    state.objY = eqY;
+                    state.objVy = 0;
+                }
+
+                if (state.objY > floorY) {
+                    state.objY = floorY;
+                    state.objVy = 0;
+                }
+                if (state.objY < ceilY) {
+                    state.objY = ceilY;
+                    state.objVy = 0;
+                }
+
+                hydro = getTankHydrostatics(state.objY);
+            }
+
+            updateMetricsUI(hydro);
+
+            // Clear Canvas
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw Tank Walls
+            const tankLeft = w * 0.14;
+            const tankRight = w * 0.86;
+            const tankTop = h * 0.08;
+            const tankBottom = h * 0.88;
+
+            // Fluid Fill with gentle surface wave (mean height = hydro.waterY)
+            state.wavePhase += 0.04;
+            const surfacePx = h * hydro.waterY;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(tankLeft, surfacePx);
+            for (let x = tankLeft; x <= tankRight; x += 10) {
+                const waveOffset = Math.sin((x / 35) + state.wavePhase) * 1.8;
+                ctx.lineTo(x, surfacePx + waveOffset);
+            }
+            ctx.lineTo(tankRight, tankBottom);
+            ctx.lineTo(tankLeft, tankBottom);
+            ctx.closePath();
+            ctx.fillStyle = state.fluidColor;
+            ctx.fill();
+
+            // Exact hydrostatic water level line
+            ctx.beginPath();
+            ctx.moveTo(tankLeft, surfacePx);
+            ctx.lineTo(tankRight, surfacePx);
+            ctx.strokeStyle = 'rgba(186, 230, 253, 0.85)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+
+            // Tank graduation marks (Liters)
+            ctx.save();
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
+            ctx.font = '10px Inter, sans-serif';
+            for (let i = 1; i <= 5; i++) {
+                const gy = tankBottom - (i / 6) * (tankBottom - tankTop);
+                ctx.beginPath();
+                ctx.moveTo(tankRight - 12, gy);
+                ctx.lineTo(tankRight, gy);
+                ctx.stroke();
+                ctx.fillText(`${i * 10}L`, tankRight - 34, gy + 3);
+            }
+            ctx.restore();
+
+            // Tank Outer Glass Border
+            ctx.save();
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(tankLeft, tankTop);
+            ctx.lineTo(tankLeft, tankBottom);
+            ctx.lineTo(tankRight, tankBottom);
+            ctx.lineTo(tankRight, tankTop);
+            ctx.stroke();
+            ctx.restore();
+
+            // Draw Object 1 & Optional Attached Object 2 (flush contact + side clamps)
+            const blockCenterX = w * 0.5;
+            const b1TopPx = hydro.top1 * h;
+            const b1HeightPx = (hydro.bottom1 - hydro.top1) * h;
+            const b1WidthPx = Math.max(68, b1HeightPx * 1.25);
+
+            // Draw Object 1 Box
+            ctx.save();
+            ctx.fillStyle = state.objColor;
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(blockCenterX - b1WidthPx / 2, b1TopPx, b1WidthPx, b1HeightPx, state.hasObj2 ? [8, 8, 2, 2] : 8);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 11px Hind Siliguri, sans-serif';
+            ctx.textAlign = 'center';
+            const b1CenterY = b1TopPx + b1HeightPx / 2;
+            ctx.fillText(`১ম: ${state.objName.split(' ')[0]}`, blockCenterX, b1CenterY - 3);
+            ctx.font = '10px Inter, sans-serif';
+            ctx.fillText(`${state.objMass.toFixed(2)}kg | ${Math.round(state.objDensity)}kg/m³`, blockCenterX, b1CenterY + 11);
+            ctx.restore();
+
+            if (state.hasObj2) {
+                const b2TopPx = hydro.top2 * h;
+                const b2HeightPx = (hydro.bottom2 - hydro.top2) * h;
+                const b2WidthPx = Math.max(64, b2HeightPx * 1.25);
+
+                // Draw Object 2 Box flush below Object 1
+                ctx.save();
+                ctx.fillStyle = state.obj2Color;
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(blockCenterX - b2WidthPx / 2, b2TopPx, b2WidthPx, b2HeightPx, [2, 2, 8, 8]);
+                ctx.fill();
+                ctx.stroke();
+
+                // Side Clamps / Couplers showing physical attachment
+                const clampHalfW = Math.min(b1WidthPx, b2WidthPx) / 2 - 6;
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(blockCenterX - clampHalfW, b2TopPx - 6);
+                ctx.lineTo(blockCenterX - clampHalfW, b2TopPx + 6);
+                ctx.moveTo(blockCenterX + clampHalfW, b2TopPx - 6);
+                ctx.lineTo(blockCenterX + clampHalfW, b2TopPx + 6);
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px Hind Siliguri, sans-serif';
+                ctx.textAlign = 'center';
+                const b2CenterY = b2TopPx + b2HeightPx / 2;
+                ctx.fillText(`২য়: ${state.obj2Name}`, blockCenterX, b2CenterY - 2);
+                ctx.font = '9px Inter, sans-serif';
+                ctx.fillText(`${state.obj2Mass.toFixed(2)}kg | ${Math.round(state.obj2Density)}kg/m³`, blockCenterX, b2CenterY + 10);
+                ctx.restore();
+            }
+
+            // Force Vectors (Proportional lengths so W == Fb gives identical arrow lengths!)
+            if (state.showVectors) {
+                const centerPxY = state.objY * h;
+                const maxForce = Math.max(hydro.weight, hydro.buoyancy, 1);
+                const maxArrowPx = Math.min(92, Math.max(42, 28 + Math.log10(maxForce + 1) * 28));
+
+                const getProportionalLen = (f) => (f <= 0.05 ? 0 : Math.max(14, (f / maxForce) * maxArrowPx));
+
+                const wLen = getProportionalLen(hydro.weight);
+                const fbLen = getProportionalLen(hydro.buoyancy);
+
+                if (wLen > 0) {
+                    drawArrow(
+                        blockCenterX - 28,
+                        centerPxY,
+                        centerPxY + wLen,
+                        '#fb7185',
+                        `W = ${hydro.weight.toFixed(2)} N`,
+                        true
+                    );
+                }
+                if (fbLen > 0) {
+                    drawArrow(
+                        blockCenterX + 28,
+                        centerPxY,
+                        centerPxY - fbLen,
+                        '#34d399',
+                        `Fb = ${hydro.buoyancy.toFixed(2)} N`,
+                        false
+                    );
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- Pointer Dragging on Canvas ---
+        function getPointerNormY(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return (clientY - rect.top) / rect.height;
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            state.isDragging = true;
+            state.objVy = 0;
+            const totalHalfH = getTotalHalfHeightNorm();
+            state.objY = Math.min(0.88 - totalHalfH, Math.max(0.09 + totalHalfH, getPointerNormY(e)));
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!state.isDragging) return;
+            const totalHalfH = getTotalHalfHeightNorm();
+            state.objY = Math.min(0.88 - totalHalfH, Math.max(0.09 + totalHalfH, getPointerNormY(e)));
+        });
+        window.addEventListener('mouseup', () => {
+            state.isDragging = false;
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            state.isDragging = true;
+            state.objVy = 0;
+            const totalHalfH = getTotalHalfHeightNorm();
+            state.objY = Math.min(0.88 - totalHalfH, Math.max(0.09 + totalHalfH, getPointerNormY(e)));
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (!state.isDragging) return;
+            const totalHalfH = getTotalHalfHeightNorm();
+            state.objY = Math.min(0.88 - totalHalfH, Math.max(0.09 + totalHalfH, getPointerNormY(e)));
+        }, { passive: true });
+        window.addEventListener('touchend', () => {
+            state.isDragging = false;
+        });
+
+        // --- 1st Object Controls & Presets ---
+        document.querySelectorAll('.obj-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.objDensity = parseFloat(btn.dataset.density);
+                state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(3);
+                state.objName = btn.dataset.name;
+                state.objColor = btn.dataset.color;
+                syncObj1Sliders();
+            });
+        });
+
+        // Changing Mass slider updates Mass and recalculates Density = Mass / Volume
+        objMassSlider.addEventListener('input', (e) => {
+            state.objMass = parseFloat(e.target.value);
+            state.objDensity = state.objMass / (state.objVolumeL / 1000);
+            state.objName = 'কাস্টম বস্তু';
+            document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
+            syncObj1Sliders();
+        });
+
+        // Changing Volume slider keeps Mass fixed and updates Density = Mass / Volume
+        objVolumeSlider.addEventListener('input', (e) => {
+            state.objVolumeL = parseFloat(e.target.value);
+            state.objDensity = state.objMass / (state.objVolumeL / 1000);
+            syncObj1Sliders();
+        });
+
+        // Changing Density slider keeps Volume fixed and updates Mass = Density * Volume
+        objDensitySlider.addEventListener('input', (e) => {
+            state.objDensity = parseFloat(e.target.value);
+            state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(3);
+            state.objName = 'কাস্টম বস্তু';
+            document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
+            syncObj1Sliders();
+        });
+
+        // --- 2nd Object Toggle, Presets & Sliders ---
+        attachObj2Toggle.addEventListener('change', (e) => {
+            state.hasObj2 = e.target.checked;
+            obj2ControlsPanel.classList.toggle('hidden', !state.hasObj2);
+            combinedModeBadge.classList.toggle('hidden', !state.hasObj2);
+            state.objVy = 0;
+            syncObj2Sliders();
+        });
+
+        document.querySelectorAll('.obj2-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.obj2Density = parseFloat(btn.dataset.density);
+                state.obj2Mass = +(state.obj2Density * (state.obj2VolumeL / 1000)).toFixed(3);
+                state.obj2Name = btn.dataset.name;
+                state.obj2Color = btn.dataset.color;
+                syncObj2Sliders();
+            });
+        });
+
+        obj2MassSlider.addEventListener('input', (e) => {
+            state.obj2Mass = parseFloat(e.target.value);
+            state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
+            state.obj2Name = 'কাস্টম';
+            document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
+            syncObj2Sliders();
+        });
+
+        obj2VolumeSlider.addEventListener('input', (e) => {
+            state.obj2VolumeL = parseFloat(e.target.value);
+            state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
+            syncObj2Sliders();
+        });
+
+        obj2DensitySlider.addEventListener('input', (e) => {
+            state.obj2Density = parseFloat(e.target.value);
+            state.obj2Mass = +(state.obj2Density * (state.obj2VolumeL / 1000)).toFixed(3);
+            state.obj2Name = 'কাস্টম';
+            document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
+            syncObj2Sliders();
+        });
+
+        // --- Fluid & Gravity Controls ---
+        document.querySelectorAll('.fluid-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.fluidDensity = parseFloat(btn.dataset.fdensity);
+                state.fluidName = btn.dataset.fname;
+                state.fluidColor = btn.dataset.fcolor;
+                fluidDensitySlider.value = state.fluidDensity;
+            });
+        });
+
+        document.querySelectorAll('.g-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.g = parseFloat(btn.dataset.g);
+                gravitySlider.value = state.g;
+            });
+        });
+
+        fluidDensitySlider.addEventListener('input', (e) => {
+            state.fluidDensity = parseFloat(e.target.value);
+            state.fluidName = 'কাস্টম তরল';
+            document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
+        });
+
+        gravitySlider.addEventListener('input', (e) => {
+            state.g = parseFloat(e.target.value);
+        });
+
+        document.getElementById('showVectorsToggle').addEventListener('change', (e) => {
+            state.showVectors = e.target.checked;
+        });
+
+        document.getElementById('dropObjectBtn').addEventListener('click', () => {
+            const totalHalfH = getTotalHalfHeightNorm();
+            state.objY = 0.12 + totalHalfH;
+            state.objVy = 0;
+        });
+
+        document.getElementById('resetSimBtn').addEventListener('click', () => {
+            state.objDensity = 600;
+            state.objVolumeL = 5.0;
+            state.objMass = 3.0;
+            state.objName = 'কাঠ (Wood)';
+            state.objColor = '#b45309';
+
+            state.hasObj2 = false;
+            attachObj2Toggle.checked = false;
+            obj2ControlsPanel.classList.add('hidden');
+            combinedModeBadge.classList.add('hidden');
+            state.obj2Density = 2700;
+            state.obj2VolumeL = 0.5;
+            state.obj2Mass = 1.35;
+            state.obj2Name = 'অ্যালুমিনিয়াম';
+            state.obj2Color = '#64748b';
+
+            state.fluidDensity = 1000;
+            state.fluidName = 'বিশুদ্ধ পানি';
+            state.fluidColor = 'rgba(14, 165, 233, 0.42)';
+            state.g = 9.81;
+
+            document.querySelectorAll('.obj-preset').forEach(b => {
+                b.classList.toggle('active', b.dataset.density === '600');
+            });
+            document.querySelectorAll('.fluid-preset').forEach(b => {
+                b.classList.toggle('active', b.dataset.fdensity === '1000');
+            });
+
+            fluidDensitySlider.value = 1000;
+            gravitySlider.value = 9.81;
+            syncObj1Sliders();
+            syncObj2Sliders();
+            state.objY = computeEquilibriumY();
+            state.objVy = 0;
+        });
+
+        // --- Step-by-Step Calculator Logic ---
+        const calcHasObj2 = document.getElementById('calcHasObj2');
+        const calcObj2Fields = document.getElementById('calcObj2Fields');
+        const syncFromLabBtn = document.getElementById('syncFromLabBtn');
+
+        calcHasObj2.addEventListener('change', (e) => {
+            calcObj2Fields.classList.toggle('hidden', !e.target.checked);
+            updateCalculator();
+        });
+
+        syncFromLabBtn.addEventListener('click', () => {
+            document.getElementById('calcMass').value = state.objMass.toFixed(2);
+            document.getElementById('calcVolLiters').value = state.objVolumeL.toFixed(1);
+            calcHasObj2.checked = state.hasObj2;
+            calcObj2Fields.classList.toggle('hidden', !state.hasObj2);
+            document.getElementById('calcMass2').value = state.obj2Mass.toFixed(2);
+            document.getElementById('calcVol2Liters').value = state.obj2VolumeL.toFixed(1);
+            document.getElementById('calcFluidRho').value = state.fluidDensity;
+            document.getElementById('calcG').value = state.g;
+            updateCalculator();
+        });
+
+        const calcInputs = ['calcMass', 'calcVolLiters', 'calcMass2', 'calcVol2Liters', 'calcFluidRho', 'calcG'];
+        calcInputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateCalculator);
+        });
+
+        function updateCalculator() {
+            const m1 = Math.max(0.01, parseFloat(document.getElementById('calcMass').value) || 0);
+            const v1L = Math.max(0.01, parseFloat(document.getElementById('calcVolLiters').value) || 0);
+            const useObj2 = calcHasObj2.checked;
+            const m2 = useObj2 ? Math.max(0.01, parseFloat(document.getElementById('calcMass2').value) || 0) : 0;
+            const v2L = useObj2 ? Math.max(0.01, parseFloat(document.getElementById('calcVol2Liters').value) || 0) : 0;
+            const rhoF = Math.max(1, parseFloat(document.getElementById('calcFluidRho').value) || 1000);
+            const g = Math.max(0.1, parseFloat(document.getElementById('calcG').value) || 9.81);
+
+            const totalM = m1 + m2;
+            const totalVL = v1L + v2L;
+            const totalVM3 = totalVL / 1000;
+            const rhoObj = totalM / totalVM3;
+            const W = totalM * g;
+            const maxFb = totalVM3 * rhoF * g;
+            const floats = rhoObj <= rhoF;
+            const actualFb = floats ? W : maxFb;
+            const displacedL = floats ? (totalM / rhoF) * 1000 : totalVL;
+            const apparentW = Math.max(0, W - actualFb);
+            const subPct = floats ? (rhoObj / rhoF) * 100 : 100;
+
+            const container = document.getElementById('calcSolutionSteps');
+            container.innerHTML = `
+                <div class="text-sky-400 font-bold">ধাপ ১: ${useObj2 ? 'যুক্ত বস্তুদ্বয়ের মোট ভর, মোট আয়তন ও গড় ঘনত্ব' : 'বস্তুর ঘনত্ব (ρ<sub>বস্তু</sub>) নির্ণয়'}</div>
+                ${useObj2 ? `<div>মোট ভর, M = m₁ + m₂ = ${m1} + ${m2} = <strong>${totalM.toFixed(2)} kg</strong></div>` : ''}
+                <div>মোট আয়তন, V = ${useObj2 ? `${v1L} + ${v2L} = ` : ''}${totalVL.toFixed(2)} L = <strong>${totalVM3.toFixed(4)} m³</strong></div>
+                <div>${useObj2 ? 'গড় ঘনত্ব, ρ<sub>গড়</sub>' : 'ঘনত্ব, ρ<sub>বস্তু</sub>'} = M / V = ${totalM.toFixed(2)} / ${totalVM3.toFixed(4)} = <strong>${rhoObj.toFixed(2)} kg/m³</strong></div>
+
+                <div class="text-sky-400 font-bold pt-2">ধাপ ২: বাতাসে মোট ওজন (W) ও সর্বোচ্চ প্লবতা (F<sub>b,max</sub>)</div>
+                <div>মোট ওজন, W = M × g = ${totalM.toFixed(2)} × ${g} = <strong>${W.toFixed(2)} N</strong></div>
+                <div>১০০% নিমজ্জিত অবস্থায় সর্বোচ্চ প্লবতা, F<sub>b,max</sub> = V × ρ<sub>f</sub> × g = <strong>${maxFb.toFixed(2)} N</strong></div>
+
+                <div class="text-sky-400 font-bold pt-2">ধাপ ৩: ভাসন নাকি নিমজ্জন ও ক্রিয়াশীল প্লবতা বল</div>
+                <div class="p-2.5 rounded-lg ${floats ? 'bg-emerald-950/60 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/60 border border-rose-700/60 text-rose-200'}">
+                    ${floats
+                        ? `যেহেতু গড় ঘনত্ব (${rhoObj.toFixed(1)} kg/m³) ≤ তরলের ঘনত্ব (${rhoF} kg/m³), তাই এটি <strong>ভাসবে</strong>!<br>• নিমজ্জিত অংশ = <strong>${subPct.toFixed(1)}%</strong> (অপসারিত তরল = <strong>${displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = W = <strong>${actualFb.toFixed(2)} N</strong><br>• তরলে আপাত ওজন, W' = W - F<sub>b</sub> = <strong>0.00 N</strong>`
+                        : `যেহেতু গড় ঘনত্ব (${rhoObj.toFixed(1)} kg/m³) > তরলের ঘনত্ব (${rhoF} kg/m³), তাই এটি <strong>ডুবে যাবে</strong>!<br>• নিমজ্জিত অংশ = <strong>100%</strong> (অপসারিত তরল = <strong>${displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = F<sub>b,max</sub> = <strong>${actualFb.toFixed(2)} N</strong><br>• তরলে আপাত ওজন, W' = W - F<sub>b</sub> = <strong>${apparentW.toFixed(2)} N</strong>`
+                    }
+                </div>
+            `;
+        }
+
+        // --- Quiz Data & Logic ---
+        const quizQuestions = [
+            {
+                q: "১. কোনো বস্তুর ঘনত্ব ৬০০ kg/m³ হলে বিশুদ্ধ পানিতে (১০০০ kg/m³) ভাসমান অবস্থায় এর কত শতাংশ পানির নিচে ডুবে থাকবে?",
+                options: ["৪০%", "৬০%", "৮০%", "১০০%"],
+                ans: 1,
+                exp: "ভাসমান বস্তুর নিমজ্জিত অংশের ভগ্নাংশ = (বস্তুর ঘনত্ব ÷ তরলের ঘনত্ব) × ১০০% = (৬০০ ÷ ১০০০) × ১০০% = ৬০%।"
+            },
+            {
+                q: "২. একটি বস্তুর বাতাসে ওজন ৫০ N এবং পানিতে সম্পূর্ণ নিমজ্জিত অবস্থায় ওজন ৩৫ N হলে, বস্তুটির ওপর ক্রিয়াশীল প্লবতা বল কত?",
+                options: ["১৫ N", "৩৫ N", "৫০ N", "৮৫ N"],
+                ans: 0,
+                exp: "আর্কিমিডিসের নীতি অনুসারে, প্লবতা বল = বস্তুর হারানো ওজন = ৫০ N - ৩৫ N = ১৫ N।"
+            },
+            {
+                q: "৩. নদী থেকে একটি জাহাজ সমুদ্রের লবণাক্ত পানিতে প্রবেশ করলে জাহাজটির নিমজ্জিত অংশের কী পরিবর্তন হবে?",
+                options: ["আরও বেশি ডুবে যাবে", "সামান্য ওপরে ভেসে উঠবে", "কোনো পরিবর্তন হবে না", "সম্পূর্ণ ডুবে যাবে"],
+                ans: 1,
+                exp: "সমুদ্রের লবণাক্ত পানির ঘনত্ব নদীর পানির চেয়ে বেশি। তাই সমপরিমাণ ওজন ভাসিয়ে রাখতে কম আয়তনের পানি অপসারণ করতে হয়, ফলে জাহাজটি সামান্য ওপরে ভেসে ওঠে।"
+            },
+            {
+                q: "৪. লোহার টুকরো পানিতে ডুবে যায় কিন্তু পারদে (ঘনত্ব ১৩,৬০০ kg/m³) ভাসে কেন?",
+                options: ["লোহার ঘনত্ব পারদের চেয়ে বেশি", "লোহার ঘনত্ব পানির চেয়ে বেশি কিন্তু পারদের চেয়ে কম", "পারদে অভিকর্ষজ ত্বরণ কাজ করে না", "লোহা পারদের সাথে বিক্রিয়া করে"],
+                ans: 1,
+                exp: "লোহার ঘনত্ব (~৭৮৭০ kg/m³) পানির ঘনত্বের (১০০০ kg/m³) চেয়ে বেশি কিন্তু পারদের ঘনত্বের (১৩,৬০০ kg/m³) চেয়ে অনেক কম।"
+            },
+            {
+                q: "৫. বরফ পানিতে ভাসার সময় তার আয়তনের প্রায় কত অংশ পানির নিচে থাকে?",
+                options: ["প্রায় অর্ধেক (৫০%)", "প্রায় ৯/১০ অংশ (৯২%)", "প্রায় ১/১০ অংশ (১০%)", "প্রায় ৩/৪ অংশ (৭৫%)"],
+                ans: 1,
+                exp: "বরফের ঘনত্ব প্রায় ৯১৭ kg/m³ এবং পানির ঘনত্ব ১০০০ kg/m³ হওয়ায় বরফের প্রায় ৯১.৭% বা প্রায় ৯/১০ অংশ পানির নিচে থাকে।"
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            let score = 0;
+
+            quizQuestions.forEach((item, idx) => {
+                const answered = userAnswers[idx] !== undefined;
+                if (answered && userAnswers[idx] === item.ans) score++;
+
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3';
+
+                const qTitle = document.createElement('p');
+                qTitle.className = 'text-sm font-semibold text-white';
+                qTitle.textContent = item.q;
+                card.appendChild(qTitle);
+
+                const optGrid = document.createElement('div');
+                optGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+
+                item.options.forEach((opt, oIdx) => {
+                    const btn = document.createElement('button');
+                    let cls = 'text-left px-3 py-2 rounded-lg text-xs font-medium border transition ';
+                    if (!answered) {
+                        cls += 'bg-slate-900 border-slate-700 text-slate-200 hover:border-sky-500';
+                    } else if (oIdx === item.ans) {
+                        cls += 'bg-emerald-950/80 border-emerald-500 text-emerald-200 font-bold';
+                    } else if (userAnswers[idx] === oIdx) {
+                        cls += 'bg-rose-950/80 border-rose-500 text-rose-200';
+                    } else {
+                        cls += 'bg-slate-900/50 border-slate-800 text-slate-500';
+                    }
+                    btn.className = cls;
+                    btn.textContent = opt;
+                    btn.disabled = answered;
+                    btn.addEventListener('click', () => {
+                        userAnswers[idx] = oIdx;
+                        renderQuiz();
+                    });
+                    optGrid.appendChild(btn);
+                });
+
+                card.appendChild(optGrid);
+
+                if (answered) {
+                    const expBox = document.createElement('div');
+                    expBox.className = 'text-xs p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300';
+                    expBox.innerHTML = `<strong class="text-sky-400">ব্যাখ্যা:</strong> ${item.exp}`;
+                    card.appendChild(expBox);
+                }
+
+                container.appendChild(card);
+            });
+
+            document.getElementById('quizScoreBadge').textContent = `স্কোর: ${score} / ${quizQuestions.length}`;
+        }
+
+        document.getElementById('resetQuizBtn').addEventListener('click', () => {
+            userAnswers = {};
+            renderQuiz();
+        });
+
+        // Initialize on load
+        window.onload = () => {
+            resizeCanvas();
+            syncObj1Sliders();
+            syncObj2Sliders();
+            state.objY = computeEquilibriumY();
+            updateCalculator();
+            renderQuiz();
+            requestAnimationFrame(animate);
+        };
+    </script>
+</body>
+</html>
