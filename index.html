@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্লবতা ও আর্কিমিডিসের নীতি - ইন্টারঅ্যাক্টিভ ল্যাব</title>
+    <title>প্লবতা ও বল বৃদ্ধিকরণ নীতি - সৃজনশীল সমাধান ও ল্যাব | StudyPulse</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -25,9 +26,24 @@
             background-color: rgba(56, 189, 248, 0.15);
             color: #38bdf8;
         }
+        .cq-mode-btn.active {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.18);
+            color: #6ee7b7;
+        }
+        .touch-none-canvas {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+    <!-- Toast Notification for PDF Download -->
+    <div id="toastNotification" class="hidden fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl border border-emerald-400/40 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all">
+        <span id="toastMessage">পিডিএফ (PDF) সফলভাবে ডাউনলোড হয়েছে!</span>
+    </div>
 
     <!-- Header & Navigation -->
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
@@ -39,19 +55,23 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">প্লবতা ও আর্কিমিডিসের নীতি ল্যাব</h1>
-                    <p class="text-xs text-slate-400">ইন্টারঅ্যাক্টিভ পদার্থবিজ্ঞান সিমুলেটর ও ক্যালকুলেটর</p>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">প্লবতা ও বল বৃদ্ধিকরণ নীতি ল্যাব</h1>
+                        <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-full">StudyPulse</span>
+                    </div>
+                    <p class="text-xs text-slate-400">বোর্ড ও গাইডের সৃজনশীল (CQ) অংক সমাধানকারী, এনিমেশন ও PDF ডাউনলোড</p>
                 </div>
             </div>
 
-            <nav class="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700/70">
-                <button id="tabSimBtn" class="tab-btn active px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">
+            <!-- 3 Clean Tabs -->
+            <nav class="flex flex-wrap items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700/70">
+                <button id="tabSimBtn" class="tab-btn active px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all">
                     ভার্চুয়াল ল্যাব
                 </button>
-                <button id="tabCalcBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
-                    ক্যালকুলেটর ও তত্ত্ব
+                <button id="tabPascalBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-all">
+                    বল বৃদ্ধিকরণ নীতি
                 </button>
-                <button id="tabQuizBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-all">
+                <button id="tabQuizBtn" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-all">
                     কুইজ চ্যালেঞ্জ
                 </button>
             </nav>
@@ -61,8 +81,9 @@
     <!-- Main Content -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
 
-        <!-- VIEW 1: VIRTUAL LAB SIMULATOR -->
-        <section id="viewSim" class="space-y-6">
+        <!-- VIEW 1: VIRTUAL LAB SIMULATOR + INTEGRATED CREATIVE QUESTION SOLVER (BUOYANCY) -->
+        <section id="viewSim" class="space-y-8">
+            <!-- Part A: Interactive Buoyancy Simulator & Controls -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
                 <!-- Left Column: Visual Tank & Live Readout (7 cols) -->
@@ -92,10 +113,10 @@
 
                     <!-- Interactive Canvas Container -->
                     <div class="relative w-full h-80 sm:h-[420px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
-                        <canvas id="tankCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                        <canvas id="tankCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing touch-none-canvas"></canvas>
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between pointer-events-none text-[11px] text-slate-300/90 bg-slate-900/75 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800">
                             <span>টিপস: বস্তুটি মাউস বা আঙুল দিয়ে টেনে পানির গভীরে ডুবিয়ে বা ওপরে তুলে ছেড়ে দিন!</span>
-                            <span id="depthReadout" class="font-mono text-sky-300">গভীরতা: 0.00 m</span>
+                            <span id="depthReadout" class="font-mono text-sky-300">তলদেশের গভীরতা: 0.00 m</span>
                         </div>
                     </div>
 
@@ -330,79 +351,181 @@
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- VIEW 2: CALCULATOR & THEORY -->
-        <section id="viewCalc" class="hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Interactive Step-by-Step Solver (6 cols) -->
-                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
+            <!-- Part B: Universal Creative Question (CQ) Solver for Buoyancy & Archimedes' Principle -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
+                <!-- Interactive Step-by-Step CQ Solver (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
                         <div>
-                            <h2 class="text-lg font-bold text-white">ধাপে ধাপে গাণিতিক সমস্যা সমাধানকারী</h2>
-                            <p class="text-xs text-slate-400">১টি বা ২টি যুক্ত বস্তুর ভর, আয়তন এবং তরলের ঘনত্ব দিয়ে সমাধান দেখুন</p>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">বোর্ড ও গাইডের সৃজনশীল (CQ) অংক সমাধান বক্স</span>
+                            <h2 class="text-base sm:text-lg font-bold text-white">প্লবতা ও আর্কিমিডিসের নীতি — সব ধরনের অংক সমাধানকারী</h2>
                         </div>
-                        <button id="syncFromLabBtn" class="px-3 py-1.5 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 border border-sky-500/40 text-xs font-semibold transition">
-                            ল্যাবের মান আনুন
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                        <div>
-                            <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর ভর, m₁ (kg)</label>
-                            <input id="calcMass" type="number" step="0.1" min="0.1" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর আয়তন, V₁ (লিটার / dm³)</label>
-                            <input id="calcVolLiters" type="number" step="0.1" min="0.1" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button id="syncFromLabBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-xs font-semibold transition">
+                                ল্যাবের মান আনুন
+                            </button>
+                            <button id="downloadBuoyancyPdfBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition shadow flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>সমাধান PDF ডাউনলোড</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Optional 2nd object in Calculator -->
-                    <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
-                        <label class="inline-flex items-center gap-2 text-xs font-semibold text-amber-300 cursor-pointer">
-                            <input type="checkbox" id="calcHasObj2" class="rounded text-amber-500 focus:ring-0">
-                            <span>এর সাথে ২য় একটি বস্তু যুক্ত আছে (যুক্ত বস্তুর গাণিতিক সমস্যা)</span>
-                        </label>
-                        <div id="calcObj2Fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <!-- CQ Problem Type Selector -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-semibold text-sky-300">১. তোমার সৃজনশীল প্রশ্নের ধরন নির্বাচন করো:</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="buoyancyCqTypeBtns">
+                            <button data-bcq="float_sink" class="bcq-type-btn cq-mode-btn active px-3 py-2 rounded-xl border border-slate-700 bg-slate-800/70 text-xs font-medium text-left transition">
+                                <div class="font-bold">টাইপ ১: ভাসবে নাকি ডুববে ও প্লবতা নির্ণয়</div>
+                                <div class="text-[10px] text-slate-400">ভর ও আয়তন/মাপ দেওয়া আছে (কত অংশ ডুববে / অতিরিক্ত ভর)</div>
+                            </button>
+                            <button data-bcq="air_water" class="bcq-type-btn cq-mode-btn px-3 py-2 rounded-xl border border-slate-700 bg-slate-800/70 text-xs font-medium text-left transition">
+                                <div class="font-bold">টাইপ ২: বাতাসে ও পানিতে ওজন দেওয়া আছে</div>
+                                <div class="text-[10px] text-slate-400">হারানো ওজন, প্লবতা, বস্তুর আয়তন ও ঘনত্ব নির্ণয় (আর্কিমিডিসের নীতি)</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 1 Inputs: Mass & Volume / Shape Dimensions -->
+                    <div id="bcqMode1Panel" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-slate-300">বস্তুর আয়তন কীভাবে দেওয়া আছে?</span>
+                            <div class="flex gap-1.5" id="volInputTypeBtns">
+                                <button data-vtype="direct" class="vtype-btn preset-btn active px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সরাসরি আয়তন (V)</button>
+                                <button data-vtype="box" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">দৈর্ঘ্য×প্রস্থ×উচ্চতা</button>
+                                <button data-vtype="sphere" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">গোলকের ব্যাসার্ধ (r)</button>
+                                <button data-vtype="cylinder" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সিলিন্ডার (r, h)</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর ভর, m₂ (kg)</label>
-                                <input id="calcMass2" type="number" step="0.1" min="0.1" value="1.35" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর ভর (m₁)</label>
+                                <div class="flex gap-1.5">
+                                    <input id="calcMass" type="number" step="any" min="0.001" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                    <select id="calcMassUnit" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-sky-300 font-semibold">
+                                        <option value="kg">kg</option>
+                                        <option value="g">g (গ্রাম)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Direct Volume Input -->
+                            <div id="volDirectBox">
+                                <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর আয়তন (V₁)</label>
+                                <div class="flex gap-1.5">
+                                    <input id="calcVolLiters" type="number" step="any" min="0.0001" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                    <select id="calcVolUnit" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-sky-300 font-semibold">
+                                        <option value="L">লিটার (L / dm³)</option>
+                                        <option value="cm3">cm³ (সিসি)</option>
+                                        <option value="m3">m³ (ঘনমিটার)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box Dimensions (l x b x h in cm) -->
+                        <div id="volBoxDims" class="hidden grid grid-cols-3 gap-2 pt-1">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">দৈর্ঘ্য l (cm)</label>
+                                <input id="boxL" type="number" step="any" value="25" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
                             </div>
                             <div>
-                                <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর আয়তন, V₂ (লিটার / dm³)</label>
-                                <input id="calcVol2Liters" type="number" step="0.1" min="0.1" value="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                <label class="block text-[11px] text-slate-400 mb-1">প্রস্থ b (cm)</label>
+                                <input id="boxB" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">উচ্চতা h (cm)</label>
+                                <input id="boxH" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                        </div>
+
+                        <!-- Sphere Radius (r in cm) -->
+                        <div id="volSphereDims" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">গোলকের ব্যাসার্ধ r (cm)</label>
+                                <input id="sphereR" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                        </div>
+
+                        <!-- Cylinder Dimensions (r, h in cm) -->
+                        <div id="volCylDims" class="hidden grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">সিলিন্ডারের ব্যাসার্ধ r (cm)</label>
+                                <input id="cylR" type="number" step="any" value="7" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">সিলিন্ডারের উচ্চতা h (cm)</label>
+                                <input id="cylH" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                        </div>
+
+                        <!-- Optional 2nd object in Calculator -->
+                        <div class="pt-2 border-t border-slate-800 space-y-2.5">
+                            <label class="inline-flex items-center gap-2 text-xs font-semibold text-amber-300 cursor-pointer">
+                                <input type="checkbox" id="calcHasObj2" class="rounded text-amber-500 focus:ring-0">
+                                <span>এর সাথে ২য় একটি বস্তু বেঁধে দেওয়া হয়েছে (যুক্ত বস্তুর সৃজনশীল প্রশ্ন)</span>
+                            </label>
+                            <div id="calcObj2Fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর ভর, m₂ (kg)</label>
+                                    <input id="calcMass2" type="number" step="any" min="0.001" value="1.35" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর আয়তন, V₂ (লিটার / dm³)</label>
+                                    <input id="calcVol2Liters" type="number" step="any" min="0.001" value="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Mode 2 Inputs: Weight in Air (W) & Weight in Fluid (W') -->
+                    <div id="bcqMode2Panel" class="hidden p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                        <p class="text-xs text-amber-300">বাতাসে ওজন এবং পানিতে/তরলে নিমজ্জিত অবস্থায় ওজন ইনপুট দাও:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">বাতাসে বস্তুর ওজন, W₁ (N)</label>
+                                <input id="calcAirWeight" type="number" step="any" min="0.1" value="50" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">তরলে নিমজ্জিত অবস্থায় ওজন, W₂ (N)</label>
+                                <input id="calcWaterWeight" type="number" step="any" min="0" value="35" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fluid Density & Gravity Inputs -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs text-slate-300 mb-1">তরলের ঘনত্ব, ρ<sub>f</sub> (kg/m³)</label>
-                            <input id="calcFluidRho" type="number" step="10" min="100" value="1000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            <input id="calcFluidRho" type="number" step="any" min="100" value="1000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
                         </div>
                         <div>
                             <label class="block text-xs text-slate-300 mb-1">অভিকর্ষজ ত্বরণ, g (m/s²)</label>
-                            <input id="calcG" type="number" step="0.01" min="0.1" value="9.81" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            <input id="calcG" type="number" step="any" min="0.1" value="9.8" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
                         </div>
                     </div>
 
-                    <div id="calcSolutionSteps" class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2.5 text-xs sm:text-sm font-mono text-slate-200">
+                    <!-- Step-by-Step Output Box -->
+                    <div id="calcSolutionSteps" class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed">
                         <!-- Populated via JS -->
                     </div>
                 </div>
 
-                <!-- Theory & Formulas Reference (6 cols) -->
-                <div class="lg:col-span-6 space-y-4">
+                <!-- Theory & Formulas Reference (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
-                        <h3 class="text-base font-bold text-sky-400">১. প্লবতা (Buoyancy) ও যুক্ত বস্তুর নীতি</h3>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            কোনো তরল বা বায়বীয় পদার্থে আংশিক বা সম্পূর্ণ নিমজ্জিত কোনো বস্তুর ওপর তরল বা বায়বীয় পদার্থ লম্বভাবে যে ঊর্ধ্বমুখী লব্ধি বল প্রয়োগ করে, তাকে <strong>প্লবতা (Buoyancy)</strong> বলে। এর মান বস্তু কর্তৃক অপসারিত তরলের ওজনের সমান।
-                        </p>
-                        <div class="bg-slate-800/70 rounded-xl p-3 border border-slate-700 text-xs sm:text-sm space-y-1.5">
-                            <p class="font-semibold text-white">প্লবতা সূত্র: <span class="font-mono text-sky-300">F<sub>b</sub> = V<sub>নিমজ্জিত</sub> × ρ<sub>তরল</sub> × g</span></p>
-                            <p class="font-semibold text-white">যুক্ত বস্তুর গড় ঘনত্ব: <span class="font-mono text-amber-300">ρ<sub>গড়</sub> = (m₁ + m₂) ÷ (V₁ + V₂)</span></p>
-                            <p class="font-semibold text-white">ভাসমান অবস্থায় সাম্যাবস্থা: <span class="font-mono text-emerald-300">F<sub>b</sub> = W &nbsp;⇒&nbsp; V<sub>নিমজ্জিত</sub> / V<sub>মোট</sub> = ρ<sub>গড়</sub> / ρ<sub>তরল</sub></span></p>
+                        <h3 class="text-base font-bold text-sky-400">১. প্লবতা ও সৃজনশীল অংকের সকল সূত্র</h3>
+                        <div class="bg-slate-950 rounded-xl p-3.5 border border-slate-800 text-xs sm:text-sm space-y-2">
+                            <p class="font-semibold text-white">• বস্তুর ঘনত্ব: <span class="font-mono text-sky-300">ρ = m / V</span> &nbsp;(১০০০ L = ১ m³, ১০⁶ cm³ = ১ m³)</p>
+                            <p class="font-semibold text-white">• প্লবতা বল: <span class="font-mono text-emerald-300">F<sub>b</sub> = V<sub>নিমজ্জিত</sub> × ρ<sub>তরল</sub> × g</span></p>
+                            <p class="font-semibold text-white">• হারানো ওজন (আর্কিমিডিসের নীতি): <span class="font-mono text-amber-300">F<sub>b</sub> = W<sub>বাতাস</sub> - W<sub>তরল</sub></span></p>
+                            <p class="font-semibold text-white">• ভাসমান বস্তুর নিমজ্জিত অংশ: <span class="font-mono text-purple-300">V<sub>নিমজ্জিত</sub> / V = ρ<sub>বস্তু</sub> / ρ<sub>তরল</sub></span></p>
+                            <p class="font-semibold text-white">• সম্পূর্ণ ডুবাতে প্রয়োজনীয় অতিরিক্ত ভর: <span class="font-mono text-rose-300">Δm = (V × ρ<sub>তরল</sub>) - m</span></p>
+                            <p class="font-semibold text-white">• যুক্ত বস্তুর গড় ঘনত্ব: <span class="font-mono text-sky-300">ρ<sub>গড়</sub> = (m₁ + m₂) ÷ (V₁ + V₂)</span></p>
                         </div>
                     </div>
 
@@ -411,21 +534,313 @@
                         <p class="text-sm text-slate-300 leading-relaxed">
                             কোনো বস্তুকে স্থির তরলে ছাড়লে বস্তুটির গড় ঘনত্ব (ρ<sub>বস্তু</sub>) এবং তরলের ঘনত্বের (ρ<sub>তরল</sub>) তুলনার ওপর ভিত্তি করে ৩টি অবস্থা ঘটতে পারে:
                         </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                        <div class="grid grid-cols-1 gap-2.5 text-xs">
                             <div class="bg-emerald-950/40 border border-emerald-800/50 rounded-xl p-3">
-                                <div class="font-bold text-emerald-300 mb-1">ভাসবে (Float)</div>
-                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &lt; ρ<sub>তরল</sub></div>
-                                <p class="text-slate-400 mt-1">বস্তুটি আংশিক ডুবে ভাসবে। সাম্যাবস্থায় F<sub>b</sub> = W এবং আপাত ওজন শূন্য (W' = 0)।</p>
+                                <div class="font-bold text-emerald-300">ভাসবে (Float): <span class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &lt; ρ<sub>তরল</sub> অথবা W &lt; F<sub>b,max</sub></span></div>
+                                <p class="text-slate-400 mt-0.5">বস্তুটি আংশিক ডুবে ভাসবে। সাম্যাবস্থায় F<sub>b</sub> = W এবং আপাত ওজন শূন্য (W' = 0)।</p>
                             </div>
                             <div class="bg-purple-950/40 border border-purple-800/50 rounded-xl p-3">
-                                <div class="font-bold text-purple-300 mb-1">নিমজ্জিত ভাসন</div>
-                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> = ρ<sub>তরল</sub></div>
-                                <p class="text-slate-400 mt-1">বস্তুটি ১০০% ডুবে তরলের যেকোনো গভীরে ভেসে থাকবে (F<sub>b</sub> = W)।</p>
+                                <div class="font-bold text-purple-300">নিমজ্জিত ভাসন: <span class="font-mono text-slate-200">ρ<sub>বস্তু</sub> = ρ<sub>তরল</sub> অথবা W = F<sub>b,max</sub></span></div>
+                                <p class="text-slate-400 mt-0.5">বস্তুটি ১০০% ডুবে তরলের যেকোনো গভীরে ভেসে থাকবে।</p>
                             </div>
                             <div class="bg-rose-950/40 border border-rose-800/50 rounded-xl p-3">
-                                <div class="font-bold text-rose-300 mb-1">ডুবে যাবে (Sink)</div>
-                                <div class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &gt; ρ<sub>তরল</sub></div>
-                                <p class="text-slate-400 mt-1">সম্পূর্ণ ডুবলেও W &gt; F<sub>b,max</sub> হওয়ায় পাত্রের তলায় ডুবে যাবে।</p>
+                                <div class="font-bold text-rose-300">ডুবে যাবে (Sink): <span class="font-mono text-slate-200">ρ<sub>বস্তু</sub> &gt; ρ<sub>তরল</sub> অথবা W &gt; F<sub>b,max</sub></span></div>
+                                <p class="text-slate-400 mt-0.5">সম্পূর্ণ ডুবলেও W &gt; F<sub>b,max</sub> হওয়ায় পাত্রের তলায় ডুবে যাবে।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW PASCAL: FORCE MULTIPLICATION PRINCIPLE (বল বৃদ্ধিকরণ নীতি - Universal CQ Solver + Touch Simulator) -->
+        <section id="viewPascal" class="hidden space-y-6">
+            <!-- Top Row: Interactive Hydraulic Press Animation & Universal CQ Input Box -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Left: Hydraulic Press Canvas & Live Readouts (6 cols) -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                                টাচ-ইন্টারঅ্যাক্টিভ হাইড্রোলিক প্রেস
+                            </span>
+                            <span id="pascalAdvantageBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                বল বৃদ্ধি: ১০.০০ গুণ
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="pascalAnimateBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow">
+                                পিস্টনে বল প্রয়োগ করুন
+                            </button>
+                            <button id="pascalResetBtn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+                                রিসেট
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hydraulic Press Interactive Touch Canvas Container -->
+                    <div class="relative w-full h-80 sm:h-[400px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                        <canvas id="pascalCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing touch-none-canvas"></canvas>
+                        <div class="absolute bottom-2.5 left-3 right-3 flex flex-wrap items-center justify-between gap-1 pointer-events-none text-[11px] text-slate-300/90 bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800">
+                            <span>🖐️ <strong>টাচ / মাউস ড্র্যাগ:</strong> বাম পাশের ছোট পিস্টনটি আঙুল বা মাউস দিয়ে চেপে নিচে নামান!</span>
+                            <span id="pascalWorkBadge" class="font-mono text-amber-300">কৃতকাজ: W₁ = W₂ = 10.00 J</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Metrics for Hydraulic Press -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-2.5">
+                            <p class="text-[11px] text-slate-400">ছোট পিস্টনের বল (F₁)</p>
+                            <p id="pMetricF1" class="text-base sm:text-lg font-bold text-rose-400 mt-0.5">100.0 N</p>
+                            <p id="pMetricA1" class="text-[10px] text-slate-400">A₁: 10 cm²</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-2.5">
+                            <p class="text-[11px] text-slate-400">বড় পিস্টনের বল (F₂)</p>
+                            <p id="pMetricF2" class="text-base sm:text-lg font-bold text-emerald-400 mt-0.5">1000.0 N</p>
+                            <p id="pMetricA2" class="text-[10px] text-slate-400">A₂: 100 cm²</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-2.5">
+                            <p class="text-[11px] text-slate-400">সঞ্চালিত চাপ (P)</p>
+                            <p id="pMetricPressure" class="text-base sm:text-lg font-bold text-sky-300 mt-0.5">100.0 kPa</p>
+                            <p class="text-[10px] text-slate-400">P = F₁/A₁ = F₂/A₂</p>
+                        </div>
+                        <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-2.5">
+                            <p class="text-[11px] text-slate-400">পিস্টনের সরণ (l₁, l₂)</p>
+                            <p id="pMetricDisp" class="text-sm sm:text-base font-bold text-amber-300 mt-0.5">10 → 1.0 cm</p>
+                            <p id="pMetricLiftMass" class="text-[10px] text-slate-400">ভর: 102.0 kg</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Sample Board Questions -->
+                    <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+                        <p class="text-xs font-bold text-amber-300">📚 বোর্ড ও গাইডের নমুনা সৃজনশীল প্রশ্ন (১ ক্লিকে ইনপুট বক্সে বসিয়ে দেখো):</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="sampleBoardQ1" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-slate-200 transition">
+                                উদাহরণ ১: বড় পিস্টনের বল দেওয়া আছে (F₂=5000N), ছোট পিস্টনের বল (F₁) কত?
+                            </button>
+                            <button id="sampleBoardQ2" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-slate-200 transition">
+                                উদাহরণ ২: ব্যাস দেওয়া আছে (d₁=4cm, d₂=20cm) ও F₁=80N হলে F₂ কত?
+                            </button>
+                            <button id="sampleBoardQ3" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-slate-200 transition">
+                                উদাহরণ ৩: উভয় পিস্টনে কাজের কোনো পরিবর্তন ঘটবে কি? (শক্তির নিত্যতা যাচাই)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Universal Creative Question (CQ) Input Box & Step-by-Step Solver (6 cols) -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">সৃজনশীল (CQ) অংক সমাধান বক্স</span>
+                            <h2 class="text-base sm:text-lg font-bold text-white">বল বৃদ্ধিকরণ নীতির সকল অংক সমাধানকারী</h2>
+                        </div>
+                        <button id="downloadPascalPdfBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition shadow flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span>সমাধান PDF ডাউনলোড</span>
+                        </button>
+                    </div>
+
+                    <!-- Step 1: Select What the Creative Question Asks to Find! -->
+                    <div class="space-y-1.5">
+                        <label for="pascalTargetSelect" class="block text-xs font-bold text-sky-300">১. তোমার প্রশ্নে কোন মানটি নির্ণয় করতে বলা হয়েছে? (নির্বাচন করো):</label>
+                        <select id="pascalTargetSelect" class="w-full bg-slate-800 border border-sky-500/50 rounded-xl px-3 py-2.5 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-sky-400">
+                            <option value="find_F2">বড় পিস্টনের বল (F₂) / উত্তোলনযোগ্য ভর নির্ণয় করো [ যখন ছোট পিস্টনের বল F₁ দেওয়া থাকে ]</option>
+                            <option value="find_F1">ছোট পিস্টনের বল (F₁) নির্ণয় করো [ যখন বড় পিস্টনের বল F₂ বা ভারী বস্তুর ভর দেওয়া থাকে ]</option>
+                            <option value="find_A2">বড় পিস্টনের ক্ষেত্রফল (A₂) / ব্যাসার্ধ (r₂) / ব্যাস (d₂) নির্ণয় করো [ যখন F₁, F₂ ও ১ম পিস্টনের মাপ দেওয়া থাকে ]</option>
+                            <option value="find_A1">ছোট পিস্টনের ক্ষেত্রফল (A₁) / ব্যাসার্ধ (r₁) / ব্যাস (d₁) নির্ণয় করো [ যখন F₁, F₂ ও ২য় পিস্টনের মাপ দেওয়া থাকে ]</option>
+                            <option value="find_work">উভয় পিস্টনে কৃতকাজ (W₁ ও W₂), সরণ (l₂) ও শক্তির সংরক্ষণশীলতা যাচাই (ঘ-নম্বর প্রশ্ন)</option>
+                        </select>
+                    </div>
+
+                    <!-- Step 2: Mode selector: Input by Area (A), Radius (r), or Diameter (d) -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">২. উদ্দীপকে পিস্টনের মাপ কীভাবে দেওয়া আছে?</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button data-pmode="area" class="pascal-mode-btn preset-btn active px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-center">
+                                ক্ষেত্রফল (A₁, A₂)
+                            </button>
+                            <button data-pmode="radius" class="pascal-mode-btn preset-btn px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-center">
+                                ব্যাসার্ধ (r₁, r₂)
+                            </button>
+                            <button data-pmode="diameter" class="pascal-mode-btn preset-btn px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-medium text-center">
+                                ব্যাস (d₁, d₂)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Direct Student Input Boxes for ALL Parameters (F1, F2, A1/r1/d1, A2/r2/d2, l1, l2) -->
+                    <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-3">
+                        <p class="text-[11px] text-slate-400">৩. নিচের বক্সগুলোতে তোমার প্রশ্নের মানগুলো ইনপুট দাও (যেকোনো বক্স পরিবর্তন করলে বাকিগুলো স্বয়ংক্রিয়ভাবে হিসাব হবে):</p>
+
+                        <!-- Row 1: Small Piston Force (F1) AND Large Piston Force (F2) Input Boxes -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Small Piston Force F1 Box -->
+                            <div id="boxWrapF1" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="pF1Input" class="font-bold text-rose-300">ছোট পিস্টনে বল (F₁)</label>
+                                    <span id="pF1Val" class="font-mono text-[11px] text-rose-400">100 N</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <input id="pF1Input" type="number" step="any" min="0.01" value="100" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-rose-400">
+                                    <select id="pF1Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-rose-300 font-semibold">
+                                        <option value="N">N (বল)</option>
+                                        <option value="kg">kg (ভর)</option>
+                                    </select>
+                                </div>
+                                <input id="pF1Slider" type="range" min="5" max="2000" step="5" value="100" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <!-- Large Piston Force F2 Box (Directly Editable!) -->
+                            <div id="boxWrapF2" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="pF2Input" class="font-bold text-emerald-300">বড় পিস্টনে বল (F₂) / ভর</label>
+                                    <span id="pF2Val" class="font-mono text-[11px] text-emerald-400">1000 N</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <input id="pF2Input" type="number" step="any" min="0.01" value="1000" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-emerald-400">
+                                    <select id="pF2Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-emerald-300 font-semibold">
+                                        <option value="N">N (বল)</option>
+                                        <option value="kg">kg (ভর)</option>
+                                    </select>
+                                </div>
+                                <input id="pF2Slider" type="range" min="10" max="50000" step="10" value="1000" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Small Piston Dimension (A1/r1/d1) AND Large Piston Dimension (A2/r2/d2) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Small Piston Dim 1 -->
+                            <div id="boxWrapDim1" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label id="pDim1Label" for="pDim1Input" class="font-bold text-sky-300">ছোট পিস্টনের ক্ষেত্রফল (A₁)</label>
+                                    <span id="pDim1Val" class="font-mono text-[11px] text-sky-400">10 cm²</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <input id="pDim1Input" type="number" step="any" min="0.0001" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-sky-400">
+                                    <select id="pDimUnit" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-sky-300 font-semibold">
+                                        <option value="cm">cm² / cm</option>
+                                        <option value="m">m² / m</option>
+                                    </select>
+                                </div>
+                                <input id="pDim1Slider" type="range" min="1" max="100" step="0.5" value="10" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <!-- Large Piston Dim 2 -->
+                            <div id="boxWrapDim2" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label id="pDim2Label" for="pDim2Input" class="font-bold text-sky-300">বড় পিস্টনের ক্ষেত্রফল (A₂)</label>
+                                    <span id="pDim2Val" class="font-mono text-[11px] text-emerald-400">100 cm²</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <input id="pDim2Input" type="number" step="any" min="0.0001" value="100" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-sky-400">
+                                    <span class="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-400 flex items-center" id="pDim2UnitTag">cm²</span>
+                                </div>
+                                <input id="pDim2Slider" type="range" min="5" max="1000" step="5" value="100" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Small Piston Displacement (l1) & Large Piston Displacement (l2) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="pL1Input" class="font-bold text-amber-300">ছোট পিস্টনের সরণ (l₁ - cm)</label>
+                                    <span id="pL1Val" class="font-mono text-[11px] text-amber-300">10.0 cm</span>
+                                </div>
+                                <input id="pL1Input" type="number" step="any" min="0.01" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-amber-400">
+                                <input id="pL1Slider" type="range" min="1" max="40" step="0.5" value="10" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                            </div>
+
+                            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 space-y-1.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="pL2Input" class="font-bold text-amber-300">বড় পিস্টনের সরণ (l₂ - cm)</label>
+                                    <span class="text-[10px] text-slate-400">[উভয় দিক থেকেই পরিবর্তনযোগ্য]</span>
+                                </div>
+                                <input id="pL2Input" type="number" step="any" min="0.001" value="1.0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-amber-400">
+                                <p class="text-[10px] text-slate-400">সূত্র: l₂ = l₁ × (A₁ / A₂) &nbsp;|&nbsp; l₁ = l₂ × (A₂ / A₁)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Math Solution Box -->
+                    <div id="pascalMathSteps" class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Easy Explanation & Complete Formula Reference -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Easy & Fluent Explanation (6 cols) -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h3 class="text-base sm:text-lg font-bold text-sky-400 flex items-center gap-2">
+                        <span>সহজ ভাষায় বল বৃদ্ধিকরণ নীতি (Pascal's Principle)</span>
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+                        <p>
+                            <strong class="text-white">মূল ধারণা:</strong> বিজ্ঞানী ব্লেইজ প্যাসকেলের সূত্রানুসারে, একটি আবদ্ধ পাত্রে রাখা তরল বা বায়বীয় পদার্থের কোনো অংশে বাইরে থেকে চাপ প্রয়োগ করলে, সেই চাপ কিছুমাত্র না কমে তরলের সবদিকে সমানভাবে ছড়িয়ে পড়ে এবং পাত্রের গায়ে লম্বভাবে কাজ করে।
+                        </p>
+                        <p>
+                            <strong class="text-emerald-300">কীভাবে কম বল দিয়ে বিশাল ওজন তোলা যায়?</strong><br>
+                            ধরো, একটি ইউ-আকৃতির আবদ্ধ নলের একপাশে একটি সরু পিস্টন (ক্ষেত্রফল <strong>A₁</strong>) এবং অন্যপাশে একটি চওড়া পিস্টন (ক্ষেত্রফল <strong>A₂</strong>) আছে। এখন সরু পিস্টনে অল্প বল (<strong>F₁</strong>) প্রয়োগ করলে তরলে যে চাপ (<strong>P = F₁ / A₁</strong>) তৈরি হয়, ঠিক সেই একই চাপ গিয়ে চওড়া পিস্টনের নিচে ধাক্কা দেয়। যেহেতু চওড়া পিস্টনের ক্ষেত্রফল অনেক বেশি, তাই সেখানে উৎপন্ন ঊর্ধ্বমুখী বল <strong>F₂ = P × A₂ = F₁ × (A₂ / A₁)</strong> হয়। আবার বড় পিস্টনে কোনো ভারী গাড়ি বা ওজন (<strong>F₂</strong>) থাকলে তাকে তুলতে ছোট পিস্টনে প্রয়োজনীয় বল হবে <strong>F₁ = F₂ × (A₁ / A₂)</strong>!
+                        </p>
+                        <p>
+                            <strong class="text-amber-300">শক্তির সংরক্ষণশীলতা (কাজ কেন সমান থাকে?):</strong><br>
+                            বল বৃদ্ধি পেলেও এখানে শক্তির কোনো অলৌকিক সৃষ্টি হয় না। ছোট পিস্টনটিকে যতটুকু নিচে নামানো হয় (<strong>l₁</strong>), বড় পিস্টনটি তার চেয়ে আনুপাতিক হারে কম ওপরে ওঠে (<strong>l₂</strong>)। ফলে ছোট পিস্টনে কৃতকাজ (<strong>W₁ = F₁ × l₁</strong>) এবং বড় পিস্টনে প্রাপ্ত কাজ (<strong>W₂ = F₂ × l₂</strong>) সবসময় সমান থাকে!
+                        </p>
+                        <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/70 text-xs text-slate-300">
+                            <strong class="text-sky-300">বাস্তব জীবনে ব্যবহার:</strong> গাড়ি মেরামতের হাইড্রোলিক জ্যাক বা লিফট, গাড়ির হাইড্রোলিক ব্রেক, তুলার গাঁট বাঁধার হাইড্রোলিক প্রেস এবং ভেকু বা এক্সকাভেটর।
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Formulas Reference (6 cols) -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h3 class="text-base sm:text-lg font-bold text-amber-400">
+                        বল বৃদ্ধিকরণ নীতির সকল প্রয়োজনীয় সূত্রসমূহ
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                            <div class="text-sky-400 font-bold">১. বল ও ক্ষেত্রফলের মূল সূত্র</div>
+                            <div class="font-mono text-sm text-white bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                F₁ / A₁ = F₂ / A₂
+                            </div>
+                            <p class="text-xs text-slate-400">• <strong>F₂ = F₁ × (A₂ / A₁)</strong><br>• <strong>F₁ = F₂ × (A₁ / A₂)</strong></p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                            <div class="text-emerald-400 font-bold">২. ব্যাসার্ধ (r) ও ব্যাসের (d) সূত্র</div>
+                            <div class="font-mono text-sm text-white bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                F₂ / F₁ = (r₂ / r₁)² = (d₂ / d₁)²
+                            </div>
+                            <p class="text-xs text-slate-400">যেহেতু বৃত্তাকার পিস্টনের ক্ষেত্রফল A = πr² = π(d/2)²।</p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                            <div class="text-amber-400 font-bold">৩. পিস্টনের সরণ ও আয়তন সূত্র</div>
+                            <div class="font-mono text-sm text-white bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                A₁ × l₁ = A₂ × l₂
+                            </div>
+                            <p class="text-xs text-slate-400">অপসারিত তরলের আয়তন সমান (V₁ = V₂), তাই <strong>l₂ / l₁ = A₁ / A₂</strong>।</p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                            <div class="text-purple-400 font-bold">৪. কৃতকাজ ও শক্তির নিত্যতা সূত্র</div>
+                            <div class="font-mono text-sm text-white bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                F₁ × l₁ = F₂ × l₂
+                            </div>
+                            <p class="text-xs text-slate-400">১ম পিস্টনে কৃতকাজ (W₁) = ২য় পিস্টনে কৃতকাজ (W₂)।</p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5 sm:col-span-2">
+                            <div class="text-rose-400 font-bold">৫. সঞ্চালিত চাপ ও যান্ত্রিক সুবিধা (Mechanical Advantage)</div>
+                            <div class="flex flex-wrap gap-3 font-mono text-sm text-white bg-slate-900 px-3 py-2 rounded-lg border border-slate-800">
+                                <span>চাপ, P = F₁ / A₁ = F₂ / A₂ (একক: Pa)</span>
+                                <span class="text-slate-600">|</span>
+                                <span>যান্ত্রিক সুবিধা = F₂ / F₁ = A₂ / A₁ = l₁ / l₂</span>
                             </div>
                         </div>
                     </div>
@@ -438,12 +853,12 @@
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div>
-                        <h2 class="text-lg font-bold text-white">প্লবতা ও আর্কিমিডিসের নীতি কুইজ</h2>
+                        <h2 class="text-lg font-bold text-white">প্লবতা ও বল বৃদ্ধিকরণ নীতি কুইজ</h2>
                         <p class="text-xs text-slate-400">নিজের ধারণা যাচাই করে নিন</p>
                     </div>
                     <div class="text-right">
                         <span id="quizScoreBadge" class="px-3 py-1.5 rounded-xl bg-sky-500/20 border border-sky-500/40 text-sky-300 text-xs font-bold">
-                            স্কোর: 0 / 5
+                            স্কোর: 0 / 6
                         </span>
                     </div>
                 </div>
@@ -462,51 +877,149 @@
 
     </main>
 
+    <!-- Footer with StudyPulse & Aim Sujon Branding + Facebook Links -->
+    <footer class="border-t border-slate-800 bg-slate-900/95 mt-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 text-center sm:text-left">
+                <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold text-sm">
+                    SP
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-white flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <span>পেজ: <span class="text-sky-400">StudyPulse</span></span>
+                        <span class="text-slate-600">•</span>
+                        <span>নির্মাতা: <span class="text-amber-300">Aim Sujon</span></span>
+                    </div>
+                    <p class="text-xs text-slate-400">প্লবতা, আর্কিমিডিসের নীতি ও বল বৃদ্ধিকরণ নীতি ইন্টারঅ্যাক্টিভ ল্যাব</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2.5">
+                <a id="fbPageLink" href="https://www.facebook.com/search/top?q=StudyPulse" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#1877F2]/20 hover:bg-[#1877F2]/30 text-sky-300 border border-[#1877F2]/40 text-xs font-semibold transition">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                    </svg>
+                    <span>StudyPulse Facebook Page</span>
+                </a>
+
+                <a id="fbCreatorLink" href="https://www.facebook.com/search/top?q=Aim%20Sujon" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold transition">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                    </svg>
+                    <span>Aim Sujon (Facebook)</span>
+                </a>
+
+                <button id="editLinksBtn" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs transition" title="ফেসবুক লিংক কাস্টমাইজ করুন">
+                    লিঙ্ক সেট করুন
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Customizing Facebook Links -->
+    <div id="linksModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-white">ফেসবুক লিংক কাস্টমাইজ করুন</h3>
+                <button id="closeLinksModalBtn" class="text-slate-400 hover:text-white text-sm">✕</button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-300 mb-1">StudyPulse ফেসবুক পেজ লিংক (URL)</label>
+                    <input id="inputPageUrl" type="url" placeholder="https://www.facebook.com/yourpage" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+                </div>
+                <div>
+                    <label class="block text-slate-300 mb-1">Aim Sujon ফেসবুক প্রোফাইল লিংক (URL)</label>
+                    <input id="inputCreatorUrl" type="url" placeholder="https://www.facebook.com/yourprofile" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="cancelLinksBtn" class="px-3.5 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium">বাতিল</button>
+                <button id="saveLinksBtn" class="px-4 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold">সংরক্ষণ করুন</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- Helper Toast Notification ---
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
         // --- State ---
-        const BASE_WATER_Y = 0.36; // Unperturbed water surface in normalized tank coordinates
-        const WATER_RISE_FACTOR = 0.0018; // Surface rise per Liter of displaced fluid
+        const BASE_WATER_Y = 0.36;
+        const WATER_RISE_FACTOR = 0.0018;
 
         const state = {
-            // 1st Object
-            objDensity: 600,     // kg/m^3
-            objVolumeL: 5.0,     // Liters (1 L = 0.001 m^3)
-            objMass: 3.0,        // kg (m1 = rho1 * V1)
+            objDensity: 600,
+            objVolumeL: 5.0,
+            objMass: 3.0,
             objName: 'কাঠ (Wood)',
             objColor: '#b45309',
 
-            // 2nd Attached Object
             hasObj2: false,
-            obj2Density: 2700,   // kg/m^3 (Aluminum by default so attaching 0.5L still floats!)
-            obj2VolumeL: 0.5,    // Liters
-            obj2Mass: 1.35,      // kg
+            obj2Density: 2700,
+            obj2VolumeL: 0.5,
+            obj2Mass: 1.35,
             obj2Name: 'অ্যালুমিনিয়াম',
             obj2Color: '#64748b',
 
-            // Fluid & Environment
-            fluidDensity: 1000,  // kg/m^3
+            fluidDensity: 1000,
             fluidName: 'বিশুদ্ধ পানি',
             fluidColor: 'rgba(14, 165, 233, 0.42)',
-            g: 9.81,             // m/s^2
+            g: 9.81,
             showVectors: true,
 
-            // Physics vertical animation state
-            objY: 0.36,          // Center of assembly in normalized tank coords
+            objY: 0.36,
             objVy: 0,
             isDragging: false,
             wavePhase: 0
         };
 
+        // --- Buoyancy CQ State ---
+        const buoyancyCqState = {
+            cqType: 'float_sink', // 'float_sink' | 'air_water'
+            volType: 'direct'     // 'direct' | 'box' | 'sphere' | 'cylinder'
+        };
+
+        // --- Pascal Hydraulic Press & Universal CQ State ---
+        const pascalState = {
+            target: 'find_F2', // 'find_F2' | 'find_F1' | 'find_A2' | 'find_A1' | 'find_work'
+            mode: 'area',      // 'area' | 'radius' | 'diameter'
+            dimUnit: 'cm',     // 'cm' | 'm'
+            F1: 100,           // N
+            F2: 1000,          // N
+            dim1: 10,          // cm^2 or cm (or m^2/m)
+            dim2: 100,         // cm^2 or cm (or m^2/m)
+            l1: 10,            // cm
+            l2: 1.0,           // cm
+            animProgress: 0.35,
+            animTarget: 0.35,
+            isAnimating: false,
+            isDraggingPiston: false,
+            pulsePhase: 0
+        };
+
         // --- DOM Elements ---
         const tabSimBtn = document.getElementById('tabSimBtn');
-        const tabCalcBtn = document.getElementById('tabCalcBtn');
+        const tabPascalBtn = document.getElementById('tabPascalBtn');
         const tabQuizBtn = document.getElementById('tabQuizBtn');
+
         const viewSim = document.getElementById('viewSim');
-        const viewCalc = document.getElementById('viewCalc');
+        const viewPascal = document.getElementById('viewPascal');
         const viewQuiz = document.getElementById('viewQuiz');
 
         const canvas = document.getElementById('tankCanvas');
         const ctx = canvas.getContext('2d');
+
+        const pascalCanvas = document.getElementById('pascalCanvas');
+        const pCtx = pascalCanvas.getContext('2d');
 
         // 1st Object Controls
         const objMassSlider = document.getElementById('objMassSlider');
@@ -553,20 +1066,22 @@
 
         // --- Tab Switching ---
         function switchTab(tab) {
-            [tabSimBtn, tabCalcBtn, tabQuizBtn].forEach(b => {
+            [tabSimBtn, tabPascalBtn, tabQuizBtn].forEach(b => {
                 b.classList.remove('active');
                 b.classList.add('text-slate-300');
             });
-            [viewSim, viewCalc, viewQuiz].forEach(v => v.classList.add('hidden'));
+            [viewSim, viewPascal, viewQuiz].forEach(v => v.classList.add('hidden'));
 
             if (tab === 'sim') {
                 tabSimBtn.classList.add('active');
                 viewSim.classList.remove('hidden');
                 resizeCanvas();
-            } else if (tab === 'calc') {
-                tabCalcBtn.classList.add('active');
-                viewCalc.classList.remove('hidden');
                 updateCalculator();
+            } else if (tab === 'pascal') {
+                tabPascalBtn.classList.add('active');
+                viewPascal.classList.remove('hidden');
+                resizePascalCanvas();
+                solvePascalByTarget();
             } else if (tab === 'quiz') {
                 tabQuizBtn.classList.add('active');
                 viewQuiz.classList.remove('hidden');
@@ -574,10 +1089,10 @@
         }
 
         tabSimBtn.addEventListener('click', () => switchTab('sim'));
-        tabCalcBtn.addEventListener('click', () => switchTab('calc'));
+        tabPascalBtn.addEventListener('click', () => switchTab('pascal'));
         tabQuizBtn.addEventListener('click', () => switchTab('quiz'));
 
-        // --- Unified Physics Geometry & Hydrostatics ---
+        // --- Unified Physics Geometry & Hydrostatics (Buoyancy) ---
         function getBlock1HalfHeightNorm() {
             const scale = Math.cbrt(state.objVolumeL / 5.0);
             return 0.075 * scale;
@@ -593,9 +1108,6 @@
             return getBlock1HalfHeightNorm() + getBlock2HalfHeightNorm();
         }
 
-        // Pure geometric submergence given centerY and waterSurfaceY.
-        // Object 2 is attached flush underneath Object 1 (no vertical dead-zone gap),
-        // so displaced volume increases strictly and continuously with depth.
         function computeSubmergenceAtWaterLine(centerY, waterSurfaceY) {
             const h1 = getBlock1HalfHeightNorm();
             const h2 = getBlock2HalfHeightNorm();
@@ -631,8 +1143,6 @@
             };
         }
 
-        // Self-consistent hydrostatics solver: finds exact risen water level `waterY`
-        // and exact submergence at `centerY` so `animate()` and `updateMetricsUI()` never disagree!
         function getTankHydrostatics(centerY) {
             let waterY = BASE_WATER_Y;
             let sub = computeSubmergenceAtWaterLine(centerY, waterY);
@@ -672,18 +1182,15 @@
             };
         }
 
-        // Computes the exact mathematical equilibrium Y for the current state
         function computeEquilibriumY() {
             const totalMass = state.hasObj2 ? (state.objMass + state.obj2Mass) : state.objMass;
             const totalVolL = state.hasObj2 ? (state.objVolumeL + state.obj2VolumeL) : state.objVolumeL;
             const totalHalfH = getTotalHalfHeightNorm();
             const floorY = 0.88 - totalHalfH;
 
-            // Target displaced fluid volume in Liters to balance weight: m_total = V_disp_m3 * rho_fluid => V_disp_L = (m_total / rho_fluid) * 1000
             const requiredDisplacedL = (totalMass / state.fluidDensity) * 1000;
 
             if (requiredDisplacedL >= totalVolL) {
-                // Sinks to floor (or neutral at current depth if equal)
                 if (Math.abs(requiredDisplacedL - totalVolL) < 1e-4) {
                     const minSubmergedY = BASE_WATER_Y - totalVolL * WATER_RISE_FACTOR + totalHalfH;
                     return Math.min(floorY, Math.max(minSubmergedY, state.objY));
@@ -691,7 +1198,6 @@
                 return floorY;
             }
 
-            // Floating: find centerY where displacedL === requiredDisplacedL via bisection
             let low = 0.05;
             let high = floorY;
             for (let i = 0; i < 30; i++) {
@@ -710,7 +1216,6 @@
             const maxMass1 = Math.max(40, Math.ceil(state.objMass + 5));
             objMassSlider.max = maxMass1;
             objMassSlider.value = state.objMass;
-
             objVolumeSlider.value = state.objVolumeL;
 
             const maxRho1 = Math.max(8000, Math.ceil(state.objDensity + 100));
@@ -727,7 +1232,6 @@
             const maxMass2 = Math.max(40, Math.ceil(state.obj2Mass + 5));
             obj2MassSlider.max = maxMass2;
             obj2MassSlider.value = state.obj2Mass;
-
             obj2VolumeSlider.value = state.obj2VolumeL;
 
             const maxRho2 = Math.max(10000, Math.ceil(state.obj2Density + 100));
@@ -798,252 +1302,777 @@
         // --- Canvas Resize & Drawing ---
         function resizeCanvas() {
             const rect = canvas.parentElement.getBoundingClientRect();
+            if (rect.width === 0) return;
             canvas.width = rect.width * window.devicePixelRatio;
             canvas.height = rect.height * window.devicePixelRatio;
             ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
         }
 
-        window.addEventListener('resize', resizeCanvas);
+        function resizePascalCanvas() {
+            const rect = pascalCanvas.parentElement.getBoundingClientRect();
+            if (rect.width === 0) return;
+            pascalCanvas.width = rect.width * window.devicePixelRatio;
+            pascalCanvas.height = rect.height * window.devicePixelRatio;
+            pCtx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+        }
 
-        function drawArrow(x, y1, y2, color, label, alignLeft = false) {
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            resizePascalCanvas();
+        });
+
+        function drawArrowOnCtx(targetCtx, x, y1, y2, color, label, alignLeft = false) {
             const len = Math.abs(y2 - y1);
             if (len < 5) return;
             const dir = y2 > y1 ? 1 : -1;
-            ctx.save();
-            ctx.strokeStyle = color;
-            ctx.fillStyle = color;
-            ctx.lineWidth = 3;
+            targetCtx.save();
+            targetCtx.strokeStyle = color;
+            targetCtx.fillStyle = color;
+            targetCtx.lineWidth = 3;
 
-            ctx.beginPath();
-            ctx.moveTo(x, y1);
-            ctx.lineTo(x, y2);
-            ctx.stroke();
+            targetCtx.beginPath();
+            targetCtx.moveTo(x, y1);
+            targetCtx.lineTo(x, y2);
+            targetCtx.stroke();
 
-            // Arrowhead
-            ctx.beginPath();
-            ctx.moveTo(x, y2);
-            ctx.lineTo(x - 6, y2 - dir * 10);
-            ctx.lineTo(x + 6, y2 - dir * 10);
-            ctx.closePath();
-            ctx.fill();
+            targetCtx.beginPath();
+            targetCtx.moveTo(x, y2);
+            targetCtx.lineTo(x - 6, y2 - dir * 10);
+            targetCtx.lineTo(x + 6, y2 - dir * 10);
+            targetCtx.closePath();
+            targetCtx.fill();
 
-            // Label pill
-            ctx.font = 'bold 11px Inter, sans-serif';
-            const textW = ctx.measureText(label).width + 10;
+            targetCtx.font = 'bold 11px Inter, sans-serif';
+            const textW = targetCtx.measureText(label).width + 10;
             const pillX = alignLeft ? (x - textW - 8) : (x + 8);
             const pillY = (y1 + y2) / 2 - 9;
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-            ctx.fillRect(pillX, pillY, textW, 18);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 1;
-            ctx.strokeRect(pillX, pillY, textW, 18);
-            ctx.fillStyle = color;
-            ctx.textAlign = 'left';
-            ctx.fillText(label, pillX + 5, pillY + 13);
-            ctx.restore();
+            targetCtx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+            targetCtx.fillRect(pillX, pillY, textW, 18);
+            targetCtx.strokeStyle = color;
+            targetCtx.lineWidth = 1;
+            targetCtx.strokeRect(pillX, pillY, textW, 18);
+            targetCtx.fillStyle = color;
+            targetCtx.textAlign = 'left';
+            targetCtx.fillText(label, pillX + 5, pillY + 13);
+            targetCtx.restore();
         }
 
+        // =========================================================================
+        // PASCAL'S PRINCIPLE UNIVERSAL CREATIVE QUESTION SOLVER & SIMULATOR
+        // =========================================================================
+        const pF1Input = document.getElementById('pF1Input');
+        const pF1Unit = document.getElementById('pF1Unit');
+        const pF1Slider = document.getElementById('pF1Slider');
+
+        const pF2Input = document.getElementById('pF2Input');
+        const pF2Unit = document.getElementById('pF2Unit');
+        const pF2Slider = document.getElementById('pF2Slider');
+
+        const pDim1Input = document.getElementById('pDim1Input');
+        const pDim1Slider = document.getElementById('pDim1Slider');
+        const pDim2Input = document.getElementById('pDim2Input');
+        const pDim2Slider = document.getElementById('pDim2Slider');
+        const pDimUnit = document.getElementById('pDimUnit');
+        const pDim2UnitTag = document.getElementById('pDim2UnitTag');
+
+        const pL1Input = document.getElementById('pL1Input');
+        const pL1Slider = document.getElementById('pL1Slider');
+        const pL2Input = document.getElementById('pL2Input');
+        const pascalTargetSelect = document.getElementById('pascalTargetSelect');
+
+        function getAreaRatioFromDims(dim1, dim2, mode) {
+            const d1 = Math.max(1e-6, dim1);
+            const d2 = Math.max(1e-6, dim2);
+            if (mode === 'area') return d2 / d1;
+            return (d2 / d1) * (d2 / d1);
+        }
+
+        function getAreasInCm2AndM2(dim1, dim2, mode, unit) {
+            // If unit === 'm', 1 m = 100 cm, 1 m^2 = 10000 cm^2
+            let A1_cm2, A2_cm2;
+            if (mode === 'area') {
+                const factor = unit === 'm' ? 10000 : 1;
+                A1_cm2 = dim1 * factor;
+                A2_cm2 = dim2 * factor;
+            } else if (mode === 'radius') {
+                const r1_cm = unit === 'm' ? dim1 * 100 : dim1;
+                const r2_cm = unit === 'm' ? dim2 * 100 : dim2;
+                A1_cm2 = Math.PI * r1_cm * r1_cm;
+                A2_cm2 = Math.PI * r2_cm * r2_cm;
+            } else {
+                const d1_cm = unit === 'm' ? dim1 * 100 : dim1;
+                const d2_cm = unit === 'm' ? dim2 * 100 : dim2;
+                A1_cm2 = Math.PI * (d1_cm / 2) * (d1_cm / 2);
+                A2_cm2 = Math.PI * (d2_cm / 2) * (d2_cm / 2);
+            }
+            return {
+                A1_cm2: Math.max(1e-4, A1_cm2),
+                A2_cm2: Math.max(1e-4, A2_cm2),
+                A1_m2: Math.max(1e-8, A1_cm2 * 1e-4),
+                A2_m2: Math.max(1e-8, A2_cm2 * 1e-4)
+            };
+        }
+
+        // Solves the unknown parameter based on `pascalState.target` or bidirectional edits
+        function solvePascalByTarget(editedField = null) {
+            const gVal = 9.8;
+            // Read current inputs with unit conversion for F1 and F2
+            let rawF1 = Math.max(0.001, parseFloat(pF1Input.value) || 0.001);
+            let rawF2 = Math.max(0.001, parseFloat(pF2Input.value) || 0.001);
+            pascalState.F1 = pF1Unit.value === 'kg' ? rawF1 * gVal : rawF1;
+            pascalState.F2 = pF2Unit.value === 'kg' ? rawF2 * gVal : rawF2;
+
+            pascalState.dim1 = Math.max(0.0001, parseFloat(pDim1Input.value) || 0.0001);
+            pascalState.dim2 = Math.max(0.0001, parseFloat(pDim2Input.value) || 0.0001);
+            pascalState.dimUnit = pDimUnit.value;
+
+            pascalState.l1 = Math.max(0.001, parseFloat(pL1Input.value) || 0.001);
+            pascalState.l2 = Math.max(0.0001, parseFloat(pL2Input.value) || 0.0001);
+
+            const target = pascalTargetSelect.value;
+            pascalState.target = target;
+
+            // Highlight target box visually
+            ['boxWrapF1', 'boxWrapF2', 'boxWrapDim1', 'boxWrapDim2'].forEach(id => {
+                document.getElementById(id).classList.remove('ring-2', 'ring-emerald-500');
+            });
+            if (target === 'find_F2') document.getElementById('boxWrapF2').classList.add('ring-2', 'ring-emerald-500');
+            if (target === 'find_F1') document.getElementById('boxWrapF1').classList.add('ring-2', 'ring-emerald-500');
+            if (target === 'find_A2') document.getElementById('boxWrapDim2').classList.add('ring-2', 'ring-emerald-500');
+            if (target === 'find_A1') document.getElementById('boxWrapDim1').classList.add('ring-2', 'ring-emerald-500');
+
+            // If user directly edited F2, compute F1 (unless target is find_A2 or find_A1)
+            if (editedField === 'F2' && target === 'find_F2') {
+                pascalTargetSelect.value = 'find_F1';
+                pascalState.target = 'find_F1';
+            } else if (editedField === 'F1' && target === 'find_F1') {
+                pascalTargetSelect.value = 'find_F2';
+                pascalState.target = 'find_F2';
+            }
+
+            const ratioA = getAreaRatioFromDims(pascalState.dim1, pascalState.dim2, pascalState.mode);
+
+            if (pascalState.target === 'find_F2' || pascalState.target === 'find_work') {
+                pascalState.F2 = pascalState.F1 * ratioA;
+                const displayF2 = pF2Unit.value === 'kg' ? (pascalState.F2 / gVal) : pascalState.F2;
+                if (editedField !== 'F2') pF2Input.value = +displayF2.toFixed(3);
+            } else if (pascalState.target === 'find_F1') {
+                pascalState.F1 = pascalState.F2 / ratioA;
+                const displayF1 = pF1Unit.value === 'kg' ? (pascalState.F1 / gVal) : pascalState.F1;
+                if (editedField !== 'F1') pF1Input.value = +displayF1.toFixed(3);
+            } else if (pascalState.target === 'find_A2') {
+                const forceRatio = pascalState.F2 / pascalState.F1;
+                if (pascalState.mode === 'area') {
+                    pascalState.dim2 = pascalState.dim1 * forceRatio;
+                } else {
+                    pascalState.dim2 = pascalState.dim1 * Math.sqrt(forceRatio);
+                }
+                pDim2Input.value = +pascalState.dim2.toFixed(3);
+            } else if (pascalState.target === 'find_A1') {
+                const forceRatio = pascalState.F2 / pascalState.F1;
+                if (pascalState.mode === 'area') {
+                    pascalState.dim1 = pascalState.dim2 / forceRatio;
+                } else {
+                    pascalState.dim1 = pascalState.dim2 / Math.sqrt(forceRatio);
+                }
+                pDim1Input.value = +pascalState.dim1.toFixed(3);
+            }
+
+            // Recompute final ratioA and displacement sync
+            const finalRatioA = getAreaRatioFromDims(pascalState.dim1, pascalState.dim2, pascalState.mode);
+            if (editedField === 'l2') {
+                pascalState.l1 = pascalState.l2 * finalRatioA;
+                pL1Input.value = +pascalState.l1.toFixed(3);
+            } else {
+                pascalState.l2 = pascalState.l1 / finalRatioA;
+                if (editedField !== 'l2') pL2Input.value = +pascalState.l2.toFixed(4);
+            }
+
+            updatePascalUI();
+        }
+
+        function computePascalMetrics() {
+            const areas = getAreasInCm2AndM2(pascalState.dim1, pascalState.dim2, pascalState.mode, pascalState.dimUnit);
+            const ratioA = areas.A2_cm2 / areas.A1_cm2;
+            const F1 = pascalState.F1;
+            const F2 = pascalState.F2;
+            const l1 = pascalState.l1;
+            const l2 = pascalState.l2;
+            const pressurePa = F1 / areas.A1_m2;
+            const pressureKPa = pressurePa / 1000;
+            const work1J = F1 * (l1 / 100);
+            const work2J = F2 * (l2 / 100);
+            const liftMassKg = F2 / 9.8;
+
+            return {
+                F1,
+                F2,
+                ...areas,
+                ratioA,
+                pressurePa,
+                pressureKPa,
+                l1,
+                l2,
+                workJ: work1J,
+                work2J,
+                liftMassKg
+            };
+        }
+
+        function updatePascalUI() {
+            const m = computePascalMetrics();
+
+            document.getElementById('pF1Val').textContent = `${m.F1.toFixed(2)} N`;
+            document.getElementById('pF2Val').textContent = `${m.F2.toFixed(2)} N`;
+            document.getElementById('pL1Val').textContent = `${m.l1.toFixed(2)} cm`;
+
+            pF1Slider.value = Math.min(2000, Math.max(5, m.F1));
+            pF2Slider.value = Math.min(50000, Math.max(10, m.F2));
+            pDim1Slider.value = Math.min(100, Math.max(1, pascalState.dim1));
+            pDim2Slider.value = Math.min(1000, Math.max(5, pascalState.dim2));
+            pL1Slider.value = Math.min(40, Math.max(1, m.l1));
+
+            const dim1Label = document.getElementById('pDim1Label');
+            const dim2Label = document.getElementById('pDim2Label');
+            const dim1Val = document.getElementById('pDim1Val');
+            const dim2Val = document.getElementById('pDim2Val');
+            const uStr = pascalState.dimUnit;
+
+            if (pascalState.mode === 'area') {
+                dim1Label.textContent = 'ছোট পিস্টনের ক্ষেত্রফল (A₁)';
+                dim2Label.textContent = 'বড় পিস্টনের ক্ষেত্রফল (A₂)';
+                dim1Val.textContent = `${pascalState.dim1} ${uStr}²`;
+                dim2Val.textContent = `${pascalState.dim2} ${uStr}²`;
+                pDim2UnitTag.textContent = `${uStr}²`;
+            } else if (pascalState.mode === 'radius') {
+                dim1Label.textContent = 'ছোট পিস্টনের ব্যাসার্ধ (r₁)';
+                dim2Label.textContent = 'বড় পিস্টনের ব্যাসার্ধ (r₂)';
+                dim1Val.textContent = `${pascalState.dim1} ${uStr} (A₁=${m.A1_cm2.toFixed(1)} cm²)`;
+                dim2Val.textContent = `${pascalState.dim2} ${uStr} (A₂=${m.A2_cm2.toFixed(1)} cm²)`;
+                pDim2UnitTag.textContent = uStr;
+            } else {
+                dim1Label.textContent = 'ছোট পিস্টনের ব্যাস (d₁)';
+                dim2Label.textContent = 'বড় পিস্টনের ব্যাস (d₂)';
+                dim1Val.textContent = `${pascalState.dim1} ${uStr} (A₁=${m.A1_cm2.toFixed(1)} cm²)`;
+                dim2Val.textContent = `${pascalState.dim2} ${uStr} (A₂=${m.A2_cm2.toFixed(1)} cm²)`;
+                pDim2UnitTag.textContent = uStr;
+            }
+
+            document.getElementById('pascalAdvantageBadge').textContent = `বল বৃদ্ধি: ${m.ratioA.toFixed(2)} গুণ`;
+            document.getElementById('pascalWorkBadge').textContent = `কৃতকাজ: W₁ = W₂ = ${m.workJ.toFixed(2)} J`;
+
+            document.getElementById('pMetricF1').textContent = `${m.F1.toFixed(1)} N`;
+            document.getElementById('pMetricA1').textContent = `A₁: ${m.A1_cm2.toFixed(1)} cm²`;
+            document.getElementById('pMetricF2').textContent = `${m.F2.toFixed(1)} N`;
+            document.getElementById('pMetricA2').textContent = `A₂: ${m.A2_cm2.toFixed(1)} cm²`;
+            document.getElementById('pMetricPressure').textContent = `${m.pressureKPa.toFixed(2)} kPa`;
+            document.getElementById('pMetricDisp').textContent = `${m.l1.toFixed(1)} → ${m.l2.toFixed(2)} cm`;
+            document.getElementById('pMetricLiftMass').textContent = `ভর: ${m.liftMassKg.toFixed(1)} kg`;
+
+            // Build Step-by-Step Solution tailored to `pascalState.target`
+            const target = pascalState.target;
+            let stepHtml = '';
+
+            if (target === 'find_F1') {
+                stepHtml = `
+                    <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                        <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
+                        • বড় পিস্টনে প্রয়োজনীয় বল, F₂ = <strong>${m.F2.toFixed(2)} N</strong> ${pF2Unit.value === 'kg' ? `(ভর m₂ = ${pF2Input.value} kg × 9.8 m/s²)` : `(তুলতে পারা ভর m₂ = ${m.liftMassKg.toFixed(2)} kg)`}<br>
+                        • ছোট পিস্টনের ক্ষেত্রফল A₁ = <strong>${m.A1_cm2.toFixed(2)} cm² = ${m.A1_m2.toExponential(3)} m²</strong><br>
+                        • বড় পিস্টনের ক্ষেত্রফল A₂ = <strong>${m.A2_cm2.toFixed(2)} cm² = ${m.A2_m2.toExponential(3)} m²</strong><br>
+                        • নির্ণয় করতে হবে: <strong>ছোট পিস্টনে প্রযুক্ত বল, F₁ = ?</strong>
+                    </div>
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ১: প্যাসকেলের বল বৃদ্ধিকরণ নীতির সূত্র প্রয়োগ</div>
+                    <div>আমরা জানি, F₁ / A₁ = F₂ / A₂ &nbsp;⇒&nbsp; <strong>F₁ = F₂ × (A₁ / A₂)</strong></div>
+                    ${pascalState.mode !== 'area' ? `<div>এখানে, A₁ / A₂ = (${pascalState.mode === 'radius' ? 'r₁ / r₂' : 'd₁ / d₂'})² = (${pascalState.dim1} / ${pascalState.dim2})² = <strong>${(1 / m.ratioA).toFixed(4)}</strong></div>` : `<div>এখানে, A₁ / A₂ = ${m.A1_cm2.toFixed(2)} ÷ ${m.A2_cm2.toFixed(2)} = <strong>${(1 / m.ratioA).toFixed(4)}</strong></div>`}
+
+                    <div class="text-emerald-400 font-bold pt-1">ধাপ ২: মান বসিয়ে ছোট পিস্টনের বল (F₁) নির্ণয়</div>
+                    <div>∴ F₁ = ${m.F2.toFixed(2)} × (${m.A1_cm2.toFixed(2)} ÷ ${m.A2_cm2.toFixed(2)}) = <strong class="text-rose-300 text-sm">${m.F1.toFixed(2)} N</strong> (বা ${(m.F1 / 9.8).toFixed(2)} kg ভরের সমান বল)</div>
+
+                    <div class="p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-700/60 text-emerald-200 mt-1">
+                        <strong>চূড়ান্ত উত্তর:</strong> ছোট পিস্টনে প্রয়োজনীয় বল <strong>F₁ = ${m.F1.toFixed(2)} N</strong> এবং তরলে সঞ্চালিত চাপ <strong>P = ${m.pressurePa.toFixed(0)} Pa (${m.pressureKPa.toFixed(2)} kPa)</strong>।
+                    </div>
+                `;
+            } else if (target === 'find_A2' || target === 'find_A1') {
+                const finding2 = target === 'find_A2';
+                stepHtml = `
+                    <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                        <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
+                        • ছোট পিস্টনের বল F₁ = <strong>${m.F1.toFixed(2)} N</strong> এবং বড় পিস্টনের বল F₂ = <strong>${m.F2.toFixed(2)} N</strong><br>
+                        • ${finding2 ? `ছোট পিস্টনের ক্ষেত্রফল A₁ = <strong>${m.A1_cm2.toFixed(2)} cm²</strong>` : `বড় পিস্টনের ক্ষেত্রফল A₂ = <strong>${m.A2_cm2.toFixed(2)} cm²</strong>`}<br>
+                        • নির্ণয় করতে হবে: <strong>${finding2 ? 'বড় পিস্টনের ক্ষেত্রফল (A₂) / ব্যাসার্ধ (r₂) / ব্যাস (d₂)' : 'ছোট পিস্টনের ক্ষেত্রফল (A₁) / ব্যাসার্ধ (r₁) / ব্যাস (d₁)'} = ?</strong>
+                    </div>
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ১: বল ও ক্ষেত্রফলের অনুপাত সূত্র</div>
+                    <div>আমরা জানি, F₁ / A₁ = F₂ / A₂ &nbsp;⇒&nbsp; <strong>${finding2 ? 'A₂ = A₁ × (F₂ / F₁)' : 'A₁ = A₂ × (F₁ / F₂)'}</strong></div>
+                    <div>∴ ${finding2 ? `A₂ = ${m.A1_cm2.toFixed(2)} × (${m.F2.toFixed(2)} ÷ ${m.F1.toFixed(2)}) = <strong>${m.A2_cm2.toFixed(2)} cm²</strong>` : `A₁ = ${m.A2_cm2.toFixed(2)} × (${m.F1.toFixed(2)} ÷ ${m.F2.toFixed(2)}) = <strong>${m.A1_cm2.toFixed(2)} cm²</strong>`}</div>
+                    ${pascalState.mode !== 'area' ? `
+                        <div class="text-emerald-400 font-bold pt-1">ধাপ ২: ${pascalState.mode === 'radius' ? 'ব্যাসার্ধ (r)' : 'ব্যাস (d)'} নির্ণয়</div>
+                        <div>আমরা জানি, ${pascalState.mode === 'radius' ? 'r₂ / r₁ = √(F₂ / F₁)' : 'd₂ / d₁ = √(F₂ / F₁)'} = √(${m.F2.toFixed(1)} ÷ ${m.F1.toFixed(1)}) = ${Math.sqrt(m.ratioA).toFixed(3)}</div>
+                        <div>∴ নির্ণেয় মান = <strong>${finding2 ? pascalState.dim2.toFixed(2) : pascalState.dim1.toFixed(2)} ${pascalState.dimUnit}</strong></div>
+                    ` : ''}
+                    <div class="p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-700/60 text-emerald-200 mt-1">
+                        <strong>চূড়ান্ত উত্তর:</strong> ${finding2 ? `বড় পিস্টনের ক্ষেত্রফল A₂ = <strong>${m.A2_cm2.toFixed(2)} cm²</strong> (${m.A2_m2.toExponential(3)} m²)` : `ছোট পিস্টনের ক্ষেত্রফল A₁ = <strong>${m.A1_cm2.toFixed(2)} cm²</strong> (${m.A1_m2.toExponential(3)} m²)`}।
+                    </div>
+                `;
+            } else if (target === 'find_work') {
+                stepHtml = `
+                    <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                        <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে (শক্তির সংরক্ষণশীলতা যাচাই):</strong><br>
+                        • ছোট পিস্টনের বল F₁ = <strong>${m.F1.toFixed(2)} N</strong>, ক্ষেত্রফল A₁ = <strong>${m.A1_cm2.toFixed(2)} cm²</strong>, সরণ l₁ = <strong>${m.l1.toFixed(2)} cm = ${(m.l1 / 100).toFixed(4)} m</strong><br>
+                        • বড় পিস্টনের ক্ষেত্রফল A₂ = <strong>${m.A2_cm2.toFixed(2)} cm²</strong>
+                    </div>
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ১: ছোট পিস্টনে কৃতকাজ (W₁) নির্ণয়</div>
+                    <div>W₁ = F₁ × l₁ = ${m.F1.toFixed(2)} N × ${(m.l1 / 100).toFixed(4)} m = <strong class="text-amber-300">${m.workJ.toFixed(3)} J</strong></div>
+
+                    <div class="text-emerald-400 font-bold pt-1">ধাপ ২: বড় পিস্টনের বল (F₂), সরণ (l₂) ও কৃতকাজ (W₂) নির্ণয়</div>
+                    <div>বড় পিস্টনে প্রাপ্ত বল, F₂ = F₁ × (A₂ / A₁) = ${m.F1.toFixed(2)} × ${m.ratioA.toFixed(2)} = <strong>${m.F2.toFixed(2)} N</strong></div>
+                    <div>বড় পিস্টনের সরণ, l₂ = l₁ × (A₁ / A₂) = ${m.l1.toFixed(2)} ÷ ${m.ratioA.toFixed(2)} = <strong>${m.l2.toFixed(3)} cm = ${(m.l2 / 100).toFixed(5)} m</strong></div>
+                    <div>সুতরাং বড় পিস্টনে কৃতকাজ, W₂ = F₂ × l₂ = ${m.F2.toFixed(2)} N × ${(m.l2 / 100).toFixed(5)} m = <strong class="text-emerald-300">${m.work2J.toFixed(3)} J</strong></div>
+
+                    <div class="p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-700/60 text-emerald-200 mt-1">
+                        <strong>সিদ্ধান্ত (ঘ-নম্বর উত্তর):</strong> যেহেতু <strong>W₁ (${m.workJ.toFixed(3)} J) = W₂ (${m.work2J.toFixed(3)} J)</strong>, তাই উভয় পিস্টনে কাজের কোনো পরিবর্তন ঘটবে না; অর্থাৎ উদ্দীপকের ঘটনাটি শক্তির সংরক্ষণশীলতা নীতি মেনে চলে।
+                    </div>
+                `;
+            } else {
+                // Default: find_F2
+                stepHtml = `
+                    <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                        <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
+                        • ছোট পিস্টনে প্রযুক্ত বল, F₁ = <strong>${m.F1.toFixed(2)} N</strong>; সরণ l₁ = <strong>${m.l1.toFixed(1)} cm = ${(m.l1 / 100).toFixed(3)} m</strong><br>
+                        • ছোট পিস্টনের ক্ষেত্রফল A₁ = <strong>${m.A1_cm2.toFixed(2)} cm²</strong> এবং বড় পিস্টনের ক্ষেত্রফল A₂ = <strong>${m.A2_cm2.toFixed(2)} cm²</strong><br>
+                        • নির্ণয় করতে হবে: <strong>বড় পিস্টনে প্রাপ্ত বর্ধিত বল (F₂) ও উত্তোলনযোগ্য ভর = ?</strong>
+                    </div>
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ১: ক্ষেত্রফলের অনুপাত (যান্ত্রিক সুবিধা) নির্ণয়</div>
+                    <div>অনুপাত, A₂ / A₁ = ${m.A2_cm2.toFixed(2)} ÷ ${m.A1_cm2.toFixed(2)} = <strong>${m.ratioA.toFixed(2)}</strong> (বল ${m.ratioA.toFixed(2)} গুণ বৃদ্ধি পাবে)</div>
+
+                    <div class="text-emerald-400 font-bold pt-1">ধাপ ২: বড় পিস্টনে প্রাপ্ত বর্ধিত বল (F₂) ও সঞ্চালিত চাপ (P)</div>
+                    <div>আমরা জানি, F₂ / F₁ = A₂ / A₁ &nbsp;⇒&nbsp; F₂ = F₁ × (A₂ / A₁)</div>
+                    <div>∴ F₂ = ${m.F1.toFixed(2)} × ${m.ratioA.toFixed(2)} = <strong class="text-emerald-300 text-sm">${m.F2.toFixed(2)} N</strong> (যা দিয়ে m = F₂/g = <strong>${m.liftMassKg.toFixed(2)} kg</strong> ভর তোলা সম্ভব)</div>
+                    <div>এবং তরলে সঞ্চালিত চাপ, P = F₁ / A₁ = <strong>${m.pressurePa.toFixed(0)} Pa (${m.pressureKPa.toFixed(2)} kPa)</strong></div>
+
+                    <div class="text-amber-400 font-bold pt-1">ধাপ ৩: বড় পিস্টনের সরণ (l₂) ও কৃতকাজ (W)</div>
+                    <div>সরণ, l₂ = l₁ ÷ (A₂ / A₁) = ${m.l1.toFixed(1)} ÷ ${m.ratioA.toFixed(2)} = <strong class="text-amber-300">${m.l2.toFixed(3)} cm</strong> এবং কৃতকাজ W₁ = W₂ = <strong>${m.workJ.toFixed(2)} J</strong></div>
+                `;
+            }
+
+            document.getElementById('pascalMathSteps').innerHTML = stepHtml;
+        }
+
+        function drawPascalCanvas() {
+            const rect = pascalCanvas.parentElement.getBoundingClientRect();
+            if (rect.width > 0 && pascalCanvas.width === 0) {
+                resizePascalCanvas();
+            }
+            const w = pascalCanvas.width / window.devicePixelRatio;
+            const h = pascalCanvas.height / window.devicePixelRatio;
+            if (!w || !h) return;
+
+            pCtx.clearRect(0, 0, w, h);
+            const m = computePascalMetrics();
+            pascalState.pulsePhase += 0.06;
+
+            if (pascalState.isAnimating && !pascalState.isDraggingPiston) {
+                pascalState.animProgress += (pascalState.animTarget - pascalState.animProgress) * 0.1;
+                if (Math.abs(pascalState.animTarget - pascalState.animProgress) < 0.004) {
+                    pascalState.animProgress = pascalState.animTarget;
+                    pascalState.isAnimating = false;
+                }
+            }
+
+            const baseBottomY = h * 0.84;
+            const tubeThickness = h * 0.12;
+            const cylTopY = h * 0.22;
+
+            const leftW = Math.max(48, Math.min(78, 36 + Math.sqrt(m.A1_cm2) * 3.5));
+            const rightW = Math.max(98, Math.min(185, 58 + Math.sqrt(m.A2_cm2) * 6.5));
+
+            const leftCenterX = w * 0.25;
+            const rightCenterX = w * 0.68;
+
+            const leftX1 = leftCenterX - leftW / 2;
+            const leftX2 = leftCenterX + leftW / 2;
+            const rightX1 = rightCenterX - rightW / 2;
+            const rightX2 = rightCenterX + rightW / 2;
+
+            const maxDownPx = h * 0.24;
+            const downPx = pascalState.animProgress * maxDownPx;
+            const upPx = pascalState.animProgress * Math.max(10, maxDownPx / Math.pow(Math.max(1, m.ratioA), 0.42));
+
+            const leftFluidY = h * 0.40 + downPx;
+            const rightFluidY = h * 0.50 - upPx;
+
+            // 1. Enclosed Hydraulic Fluid
+            pCtx.save();
+            pCtx.fillStyle = pascalState.isDraggingPiston ? 'rgba(56, 189, 248, 0.55)' : 'rgba(14, 165, 233, 0.45)';
+            pCtx.beginPath();
+            pCtx.rect(leftX1, leftFluidY, leftW, baseBottomY - leftFluidY);
+            pCtx.rect(rightX1, rightFluidY, rightW, baseBottomY - rightFluidY);
+            pCtx.rect(leftX1, baseBottomY - tubeThickness, rightX2 - leftX1, tubeThickness);
+            pCtx.fill();
+
+            const channelMidY = baseBottomY - tubeThickness / 2;
+            pCtx.fillStyle = 'rgba(186, 230, 253, 0.9)';
+            for (let i = 0; i < 6; i++) {
+                const frac = ((i / 6) + pascalState.animProgress * 0.8 + (pascalState.isDraggingPiston ? pascalState.pulsePhase * 0.08 : 0)) % 1;
+                const dotX = leftCenterX + frac * (rightCenterX - leftCenterX);
+                pCtx.beginPath();
+                pCtx.arc(dotX, channelMidY, 3.5, 0, Math.PI * 2);
+                pCtx.fill();
+            }
+
+            pCtx.fillStyle = '#e0f2fe';
+            pCtx.font = 'bold 11px Hind Siliguri, sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText(`সমান চাপ সঞ্চালন: P = ${m.pressureKPa.toFixed(1)} kPa  ➔`, (leftX2 + rightX1) / 2, channelMidY - 10);
+            pCtx.restore();
+
+            // 2. Cylinder Walls
+            pCtx.save();
+            pCtx.strokeStyle = '#64748b';
+            pCtx.lineWidth = 4;
+            pCtx.beginPath();
+            pCtx.moveTo(leftX1, cylTopY);
+            pCtx.lineTo(leftX1, baseBottomY);
+            pCtx.lineTo(rightX2, baseBottomY);
+            pCtx.lineTo(rightX2, cylTopY);
+
+            pCtx.moveTo(leftX2, cylTopY);
+            pCtx.lineTo(leftX2, baseBottomY - tubeThickness);
+            pCtx.lineTo(rightX1, baseBottomY - tubeThickness);
+            pCtx.lineTo(rightX1, cylTopY);
+            pCtx.stroke();
+            pCtx.restore();
+
+            // 3. Small Piston 1 (Left) + Interactive Touch Handle
+            const pistonH = 18;
+            const handleTopY = leftFluidY - pistonH - 46;
+            pCtx.save();
+            pCtx.fillStyle = '#cbd5e1';
+            pCtx.strokeStyle = '#0f172a';
+            pCtx.lineWidth = 2;
+            pCtx.fillRect(leftX1 + 2, leftFluidY - pistonH, leftW - 4, pistonH);
+            pCtx.fillStyle = '#94a3b8';
+            pCtx.fillRect(leftCenterX - 6, leftFluidY - pistonH - 36, 12, 36);
+
+            pCtx.fillStyle = pascalState.isDraggingPiston ? '#f43f5e' : '#fb7185';
+            pCtx.strokeStyle = '#fecdd3';
+            pCtx.lineWidth = 2;
+            pCtx.beginPath();
+            pCtx.roundRect(leftCenterX - 36, handleTopY, 72, 14, 6);
+            pCtx.fill();
+            pCtx.stroke();
+
+            pCtx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+            pCtx.strokeStyle = '#38bdf8';
+            pCtx.lineWidth = 1.2;
+            pCtx.beginPath();
+            pCtx.roundRect(leftCenterX - 72, 8, 144, 22, 6);
+            pCtx.fill();
+            pCtx.stroke();
+            pCtx.fillStyle = '#38bdf8';
+            pCtx.font = 'bold 10px Hind Siliguri, sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText(pascalState.isDraggingPiston ? 'চাপ প্রয়োগ হচ্ছে... 👇' : 'টাচ/ড্র্যাগ করে চাপ দিন 👇', leftCenterX, 23);
+            pCtx.restore();
+
+            // 4. Large Piston 2 (Right) + Load Block
+            pCtx.save();
+            pCtx.fillStyle = '#cbd5e1';
+            pCtx.fillRect(rightX1 + 2, rightFluidY - pistonH, rightW - 4, pistonH);
+            pCtx.fillStyle = '#94a3b8';
+            pCtx.fillRect(rightCenterX - 8, rightFluidY - pistonH - 28, 16, 28);
+            pCtx.fillStyle = '#34d399';
+            pCtx.fillRect(rightX1 + 6, rightFluidY - pistonH - 36, rightW - 12, 8);
+
+            const loadW = Math.min(rightW - 16, 122);
+            const loadH = 44;
+            const loadTopY = rightFluidY - pistonH - 36 - loadH;
+            pCtx.fillStyle = '#b45309';
+            pCtx.strokeStyle = '#fde68a';
+            pCtx.lineWidth = 2;
+            pCtx.beginPath();
+            pCtx.roundRect(rightCenterX - loadW / 2, loadTopY, loadW, loadH, 6);
+            pCtx.fill();
+            pCtx.stroke();
+
+            pCtx.fillStyle = '#ffffff';
+            pCtx.font = 'bold 11px Hind Siliguri, sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText(`ভারী বস্তু (${m.liftMassKg.toFixed(1)} kg)`, rightCenterX, loadTopY + 18);
+            pCtx.font = '10px Inter, sans-serif';
+            pCtx.fillText(`F₂ = ${m.F2.toFixed(1)} N`, rightCenterX, loadTopY + 34);
+            pCtx.restore();
+
+            // 5. Force Arrows
+            drawArrowOnCtx(
+                pCtx,
+                leftCenterX,
+                Math.max(34, handleTopY - 38),
+                handleTopY - 2,
+                '#fb7185',
+                `F₁ = ${m.F1.toFixed(1)} N`,
+                false
+            );
+
+            drawArrowOnCtx(
+                pCtx,
+                rightCenterX,
+                rightFluidY + 42,
+                rightFluidY + 2,
+                '#34d399',
+                `F₂ = ${m.F2.toFixed(1)} N`,
+                false
+            );
+
+            pCtx.save();
+            pCtx.fillStyle = '#e2e8f0';
+            pCtx.font = '11px Hind Siliguri, sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText(`ছোট পিস্টন (A₁ = ${m.A1_cm2.toFixed(1)} cm²)`, leftCenterX, baseBottomY + 20);
+            pCtx.fillText(`সরণ l₁ = ${m.l1.toFixed(1)} cm ↓`, leftCenterX, baseBottomY + 36);
+
+            pCtx.fillText(`বড় পিস্টন (A₂ = ${m.A2_cm2.toFixed(1)} cm²)`, rightCenterX, baseBottomY + 20);
+            pCtx.fillText(`সরণ l₂ = ${m.l2.toFixed(2)} cm ↑`, rightCenterX, baseBottomY + 36);
+            pCtx.restore();
+        }
+
+        // --- Touch & Mouse Drag Interaction on Pascal Hydraulic Press Canvas ---
+        function handlePascalPointer(e) {
+            const rect = pascalCanvas.getBoundingClientRect();
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const normY = (clientY - rect.top) / Math.max(1, rect.height);
+
+            const prog = Math.min(1, Math.max(0.025, (normY - 0.20) / 0.42));
+            pascalState.animProgress = prog;
+            pascalState.animTarget = prog;
+            pascalState.l1 = +(prog * 40).toFixed(1);
+            pL1Input.value = pascalState.l1;
+            solvePascalByTarget('l1');
+        }
+
+        pascalCanvas.addEventListener('mousedown', (e) => {
+            pascalState.isDraggingPiston = true;
+            pascalState.isAnimating = false;
+            handlePascalPointer(e);
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!pascalState.isDraggingPiston) return;
+            handlePascalPointer(e);
+        });
+        window.addEventListener('mouseup', () => {
+            pascalState.isDraggingPiston = false;
+        });
+
+        pascalCanvas.addEventListener('touchstart', (e) => {
+            pascalState.isDraggingPiston = true;
+            pascalState.isAnimating = false;
+            handlePascalPointer(e);
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (!pascalState.isDraggingPiston) return;
+            handlePascalPointer(e);
+        }, { passive: true });
+        window.addEventListener('touchend', () => {
+            pascalState.isDraggingPiston = false;
+        });
+
+        // --- Main Animation Loop ---
         function animate() {
-            const w = canvas.width / window.devicePixelRatio;
-            const h = canvas.height / window.devicePixelRatio;
+            if (!viewSim.classList.contains('hidden')) {
+                const w = canvas.width / window.devicePixelRatio;
+                const h = canvas.height / window.devicePixelRatio;
 
-            const totalHalfH = getTotalHalfHeightNorm();
-            const floorY = 0.88 - totalHalfH;
-            const ceilY = 0.09 + totalHalfH;
+                const totalHalfH = getTotalHalfHeightNorm();
+                const floorY = 0.88 - totalHalfH;
+                const ceilY = 0.09 + totalHalfH;
 
-            let hydro = getTankHydrostatics(state.objY);
+                let hydro = getTankHydrostatics(state.objY);
 
-            if (!state.isDragging) {
-                const eqY = computeEquilibriumY();
-                const netForce = hydro.weight - hydro.buoyancy;
-                // Acceleration scaled so the object moves realistically and settles briskly
-                const acc = (netForce / Math.max(hydro.totalMass, 0.15)) * 0.00032;
+                if (!state.isDragging) {
+                    const eqY = computeEquilibriumY();
+                    const netForce = hydro.weight - hydro.buoyancy;
+                    const acc = (netForce / Math.max(hydro.totalMass, 0.15)) * 0.00032;
 
-                state.objVy += acc;
-                const damping = hydro.subFrac > 0 ? 0.84 : 0.96;
-                state.objVy *= damping;
-                state.objY += state.objVy;
+                    state.objVy += acc;
+                    const damping = hydro.subFrac > 0 ? 0.84 : 0.96;
+                    state.objVy *= damping;
+                    state.objY += state.objVy;
 
-                // Snap cleanly to exact mathematical equilibrium when very close and slow
-                if (Math.abs(state.objY - eqY) < 0.0006 && Math.abs(state.objVy) < 0.0006) {
-                    state.objY = eqY;
-                    state.objVy = 0;
+                    if (Math.abs(state.objY - eqY) < 0.0006 && Math.abs(state.objVy) < 0.0006) {
+                        state.objY = eqY;
+                        state.objVy = 0;
+                    }
+
+                    if (state.objY > floorY) {
+                        state.objY = floorY;
+                        state.objVy = 0;
+                    }
+                    if (state.objY < ceilY) {
+                        state.objY = ceilY;
+                        state.objVy = 0;
+                    }
+
+                    hydro = getTankHydrostatics(state.objY);
                 }
 
-                if (state.objY > floorY) {
-                    state.objY = floorY;
-                    state.objVy = 0;
-                }
-                if (state.objY < ceilY) {
-                    state.objY = ceilY;
-                    state.objVy = 0;
-                }
+                updateMetricsUI(hydro);
 
-                hydro = getTankHydrostatics(state.objY);
-            }
+                ctx.clearRect(0, 0, w, h);
 
-            updateMetricsUI(hydro);
+                const tankLeft = w * 0.14;
+                const tankRight = w * 0.86;
+                const tankTop = h * 0.08;
+                const tankBottom = h * 0.88;
 
-            // Clear Canvas
-            ctx.clearRect(0, 0, w, h);
+                state.wavePhase += 0.04;
+                const surfacePx = h * hydro.waterY;
 
-            // Draw Tank Walls
-            const tankLeft = w * 0.14;
-            const tankRight = w * 0.86;
-            const tankTop = h * 0.08;
-            const tankBottom = h * 0.88;
-
-            // Fluid Fill with gentle surface wave (mean height = hydro.waterY)
-            state.wavePhase += 0.04;
-            const surfacePx = h * hydro.waterY;
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(tankLeft, surfacePx);
-            for (let x = tankLeft; x <= tankRight; x += 10) {
-                const waveOffset = Math.sin((x / 35) + state.wavePhase) * 1.8;
-                ctx.lineTo(x, surfacePx + waveOffset);
-            }
-            ctx.lineTo(tankRight, tankBottom);
-            ctx.lineTo(tankLeft, tankBottom);
-            ctx.closePath();
-            ctx.fillStyle = state.fluidColor;
-            ctx.fill();
-
-            // Exact hydrostatic water level line
-            ctx.beginPath();
-            ctx.moveTo(tankLeft, surfacePx);
-            ctx.lineTo(tankRight, surfacePx);
-            ctx.strokeStyle = 'rgba(186, 230, 253, 0.85)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.restore();
-
-            // Tank graduation marks (Liters)
-            ctx.save();
-            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
-            ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
-            ctx.font = '10px Inter, sans-serif';
-            for (let i = 1; i <= 5; i++) {
-                const gy = tankBottom - (i / 6) * (tankBottom - tankTop);
-                ctx.beginPath();
-                ctx.moveTo(tankRight - 12, gy);
-                ctx.lineTo(tankRight, gy);
-                ctx.stroke();
-                ctx.fillText(`${i * 10}L`, tankRight - 34, gy + 3);
-            }
-            ctx.restore();
-
-            // Tank Outer Glass Border
-            ctx.save();
-            ctx.strokeStyle = '#475569';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(tankLeft, tankTop);
-            ctx.lineTo(tankLeft, tankBottom);
-            ctx.lineTo(tankRight, tankBottom);
-            ctx.lineTo(tankRight, tankTop);
-            ctx.stroke();
-            ctx.restore();
-
-            // Draw Object 1 & Optional Attached Object 2 (flush contact + side clamps)
-            const blockCenterX = w * 0.5;
-            const b1TopPx = hydro.top1 * h;
-            const b1HeightPx = (hydro.bottom1 - hydro.top1) * h;
-            const b1WidthPx = Math.max(68, b1HeightPx * 1.25);
-
-            // Draw Object 1 Box
-            ctx.save();
-            ctx.fillStyle = state.objColor;
-            ctx.strokeStyle = '#f8fafc';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.roundRect(blockCenterX - b1WidthPx / 2, b1TopPx, b1WidthPx, b1HeightPx, state.hasObj2 ? [8, 8, 2, 2] : 8);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px Hind Siliguri, sans-serif';
-            ctx.textAlign = 'center';
-            const b1CenterY = b1TopPx + b1HeightPx / 2;
-            ctx.fillText(`১ম: ${state.objName.split(' ')[0]}`, blockCenterX, b1CenterY - 3);
-            ctx.font = '10px Inter, sans-serif';
-            ctx.fillText(`${state.objMass.toFixed(2)}kg | ${Math.round(state.objDensity)}kg/m³`, blockCenterX, b1CenterY + 11);
-            ctx.restore();
-
-            if (state.hasObj2) {
-                const b2TopPx = hydro.top2 * h;
-                const b2HeightPx = (hydro.bottom2 - hydro.top2) * h;
-                const b2WidthPx = Math.max(64, b2HeightPx * 1.25);
-
-                // Draw Object 2 Box flush below Object 1
                 ctx.save();
-                ctx.fillStyle = state.obj2Color;
-                ctx.strokeStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.moveTo(tankLeft, surfacePx);
+                for (let x = tankLeft; x <= tankRight; x += 10) {
+                    const waveOffset = Math.sin((x / 35) + state.wavePhase) * 1.8;
+                    ctx.lineTo(x, surfacePx + waveOffset);
+                }
+                ctx.lineTo(tankRight, tankBottom);
+                ctx.lineTo(tankLeft, tankBottom);
+                ctx.closePath();
+                ctx.fillStyle = state.fluidColor;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(tankLeft, surfacePx);
+                ctx.lineTo(tankRight, surfacePx);
+                ctx.strokeStyle = 'rgba(186, 230, 253, 0.85)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+                ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
+                ctx.font = '10px Inter, sans-serif';
+                for (let i = 1; i <= 5; i++) {
+                    const gy = tankBottom - (i / 6) * (tankBottom - tankTop);
+                    ctx.beginPath();
+                    ctx.moveTo(tankRight - 12, gy);
+                    ctx.lineTo(tankRight, gy);
+                    ctx.stroke();
+                    ctx.fillText(`${i * 10}L`, tankRight - 34, gy + 3);
+                }
+                ctx.restore();
+
+                ctx.save();
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(tankLeft, tankTop);
+                ctx.lineTo(tankLeft, tankBottom);
+                ctx.lineTo(tankRight, tankBottom);
+                ctx.lineTo(tankRight, tankTop);
+                ctx.stroke();
+                ctx.restore();
+
+                const blockCenterX = w * 0.5;
+                const b1TopPx = hydro.top1 * h;
+                const b1HeightPx = (hydro.bottom1 - hydro.top1) * h;
+                const b1WidthPx = Math.max(68, b1HeightPx * 1.25);
+
+                ctx.save();
+                ctx.fillStyle = state.objColor;
+                ctx.strokeStyle = '#f8fafc';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.roundRect(blockCenterX - b2WidthPx / 2, b2TopPx, b2WidthPx, b2HeightPx, [2, 2, 8, 8]);
+                ctx.roundRect(blockCenterX - b1WidthPx / 2, b1TopPx, b1WidthPx, b1HeightPx, state.hasObj2 ? [8, 8, 2, 2] : 8);
                 ctx.fill();
                 ctx.stroke();
 
-                // Side Clamps / Couplers showing physical attachment
-                const clampHalfW = Math.min(b1WidthPx, b2WidthPx) / 2 - 6;
-                ctx.strokeStyle = '#fbbf24';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(blockCenterX - clampHalfW, b2TopPx - 6);
-                ctx.lineTo(blockCenterX - clampHalfW, b2TopPx + 6);
-                ctx.moveTo(blockCenterX + clampHalfW, b2TopPx - 6);
-                ctx.lineTo(blockCenterX + clampHalfW, b2TopPx + 6);
-                ctx.stroke();
-
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 10px Hind Siliguri, sans-serif';
+                ctx.font = 'bold 11px Hind Siliguri, sans-serif';
                 ctx.textAlign = 'center';
-                const b2CenterY = b2TopPx + b2HeightPx / 2;
-                ctx.fillText(`২য়: ${state.obj2Name}`, blockCenterX, b2CenterY - 2);
-                ctx.font = '9px Inter, sans-serif';
-                ctx.fillText(`${state.obj2Mass.toFixed(2)}kg | ${Math.round(state.obj2Density)}kg/m³`, blockCenterX, b2CenterY + 10);
+                const b1CenterY = b1TopPx + b1HeightPx / 2;
+                ctx.fillText(`১ম: ${state.objName.split(' ')[0]}`, blockCenterX, b1CenterY - 3);
+                ctx.font = '10px Inter, sans-serif';
+                ctx.fillText(`${state.objMass.toFixed(2)}kg | ${Math.round(state.objDensity)}kg/m³`, blockCenterX, b1CenterY + 11);
                 ctx.restore();
+
+                if (state.hasObj2) {
+                    const b2TopPx = hydro.top2 * h;
+                    const b2HeightPx = (hydro.bottom2 - hydro.top2) * h;
+                    const b2WidthPx = Math.max(64, b2HeightPx * 1.25);
+
+                    ctx.save();
+                    ctx.fillStyle = state.obj2Color;
+                    ctx.strokeStyle = '#fbbf24';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.roundRect(blockCenterX - b2WidthPx / 2, b2TopPx, b2WidthPx, b2HeightPx, [2, 2, 8, 8]);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    const clampHalfW = Math.min(b1WidthPx, b2WidthPx) / 2 - 6;
+                    ctx.strokeStyle = '#fbbf24';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(blockCenterX - clampHalfW, b2TopPx - 6);
+                    ctx.lineTo(blockCenterX - clampHalfW, b2TopPx + 6);
+                    ctx.moveTo(blockCenterX + clampHalfW, b2TopPx - 6);
+                    ctx.lineTo(blockCenterX + clampHalfW, b2TopPx + 6);
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 10px Hind Siliguri, sans-serif';
+                    ctx.textAlign = 'center';
+                    const b2CenterY = b2TopPx + b2HeightPx / 2;
+                    ctx.fillText(`২য়: ${state.obj2Name}`, blockCenterX, b2CenterY - 2);
+                    ctx.font = '9px Inter, sans-serif';
+                    ctx.fillText(`${state.obj2Mass.toFixed(2)}kg | ${Math.round(state.obj2Density)}kg/m³`, blockCenterX, b2CenterY + 10);
+                    ctx.restore();
+                }
+
+                if (state.showVectors) {
+                    const centerPxY = state.objY * h;
+                    const maxForce = Math.max(hydro.weight, hydro.buoyancy, 1);
+                    const maxArrowPx = Math.min(92, Math.max(42, 28 + Math.log10(maxForce + 1) * 28));
+
+                    const getProportionalLen = (f) => (f <= 0.05 ? 0 : Math.max(14, (f / maxForce) * maxArrowPx));
+
+                    const wLen = getProportionalLen(hydro.weight);
+                    const fbLen = getProportionalLen(hydro.buoyancy);
+
+                    if (wLen > 0) {
+                        drawArrowOnCtx(
+                            ctx,
+                            blockCenterX - 28,
+                            centerPxY,
+                            centerPxY + wLen,
+                            '#fb7185',
+                            `W = ${hydro.weight.toFixed(2)} N`,
+                            true
+                        );
+                    }
+                    if (fbLen > 0) {
+                        drawArrowOnCtx(
+                            ctx,
+                            blockCenterX + 28,
+                            centerPxY,
+                            centerPxY - fbLen,
+                            '#34d399',
+                            `Fb = ${hydro.buoyancy.toFixed(2)} N`,
+                            false
+                        );
+                    }
+                }
             }
 
-            // Force Vectors (Proportional lengths so W == Fb gives identical arrow lengths!)
-            if (state.showVectors) {
-                const centerPxY = state.objY * h;
-                const maxForce = Math.max(hydro.weight, hydro.buoyancy, 1);
-                const maxArrowPx = Math.min(92, Math.max(42, 28 + Math.log10(maxForce + 1) * 28));
-
-                const getProportionalLen = (f) => (f <= 0.05 ? 0 : Math.max(14, (f / maxForce) * maxArrowPx));
-
-                const wLen = getProportionalLen(hydro.weight);
-                const fbLen = getProportionalLen(hydro.buoyancy);
-
-                if (wLen > 0) {
-                    drawArrow(
-                        blockCenterX - 28,
-                        centerPxY,
-                        centerPxY + wLen,
-                        '#fb7185',
-                        `W = ${hydro.weight.toFixed(2)} N`,
-                        true
-                    );
-                }
-                if (fbLen > 0) {
-                    drawArrow(
-                        blockCenterX + 28,
-                        centerPxY,
-                        centerPxY - fbLen,
-                        '#34d399',
-                        `Fb = ${hydro.buoyancy.toFixed(2)} N`,
-                        false
-                    );
-                }
+            if (!viewPascal.classList.contains('hidden')) {
+                drawPascalCanvas();
             }
 
             requestAnimationFrame(animate);
         }
 
-        // --- Pointer Dragging on Canvas ---
+        // --- Pointer Dragging on Buoyancy Canvas ---
         function getPointerNormY(e) {
             const rect = canvas.getBoundingClientRect();
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -1090,32 +2119,33 @@
                 state.objName = btn.dataset.name;
                 state.objColor = btn.dataset.color;
                 syncObj1Sliders();
+                syncLabToBuoyancyCalculator();
             });
         });
 
-        // Changing Mass slider updates Mass and recalculates Density = Mass / Volume
         objMassSlider.addEventListener('input', (e) => {
             state.objMass = parseFloat(e.target.value);
             state.objDensity = state.objMass / (state.objVolumeL / 1000);
             state.objName = 'কাস্টম বস্তু';
             document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
             syncObj1Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
-        // Changing Volume slider keeps Mass fixed and updates Density = Mass / Volume
         objVolumeSlider.addEventListener('input', (e) => {
             state.objVolumeL = parseFloat(e.target.value);
             state.objDensity = state.objMass / (state.objVolumeL / 1000);
             syncObj1Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
-        // Changing Density slider keeps Volume fixed and updates Mass = Density * Volume
         objDensitySlider.addEventListener('input', (e) => {
             state.objDensity = parseFloat(e.target.value);
             state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(3);
             state.objName = 'কাস্টম বস্তু';
             document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
             syncObj1Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
         // --- 2nd Object Toggle, Presets & Sliders ---
@@ -1125,6 +2155,7 @@
             combinedModeBadge.classList.toggle('hidden', !state.hasObj2);
             state.objVy = 0;
             syncObj2Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
         document.querySelectorAll('.obj2-preset').forEach(btn => {
@@ -1136,6 +2167,7 @@
                 state.obj2Name = btn.dataset.name;
                 state.obj2Color = btn.dataset.color;
                 syncObj2Sliders();
+                syncLabToBuoyancyCalculator();
             });
         });
 
@@ -1145,12 +2177,14 @@
             state.obj2Name = 'কাস্টম';
             document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
             syncObj2Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
         obj2VolumeSlider.addEventListener('input', (e) => {
             state.obj2VolumeL = parseFloat(e.target.value);
             state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
             syncObj2Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
         obj2DensitySlider.addEventListener('input', (e) => {
@@ -1159,6 +2193,7 @@
             state.obj2Name = 'কাস্টম';
             document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
             syncObj2Sliders();
+            syncLabToBuoyancyCalculator();
         });
 
         // --- Fluid & Gravity Controls ---
@@ -1170,6 +2205,7 @@
                 state.fluidName = btn.dataset.fname;
                 state.fluidColor = btn.dataset.fcolor;
                 fluidDensitySlider.value = state.fluidDensity;
+                syncLabToBuoyancyCalculator();
             });
         });
 
@@ -1177,6 +2213,7 @@
             btn.addEventListener('click', () => {
                 state.g = parseFloat(btn.dataset.g);
                 gravitySlider.value = state.g;
+                syncLabToBuoyancyCalculator();
             });
         });
 
@@ -1184,10 +2221,12 @@
             state.fluidDensity = parseFloat(e.target.value);
             state.fluidName = 'কাস্টম তরল';
             document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
+            syncLabToBuoyancyCalculator();
         });
 
         gravitySlider.addEventListener('input', (e) => {
             state.g = parseFloat(e.target.value);
+            syncLabToBuoyancyCalculator();
         });
 
         document.getElementById('showVectorsToggle').addEventListener('change', (e) => {
@@ -1235,20 +2274,188 @@
             syncObj2Sliders();
             state.objY = computeEquilibriumY();
             state.objVy = 0;
+            syncLabToBuoyancyCalculator();
         });
 
-        // --- Step-by-Step Calculator Logic ---
+        // --- Pascal Controls & Universal Input Boxes Event Listeners ---
+        pascalTargetSelect.addEventListener('change', () => {
+            solvePascalByTarget('target');
+        });
+
+        document.querySelectorAll('.pascal-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.pascal-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                pascalState.mode = btn.dataset.pmode;
+
+                if (pascalState.mode === 'area') {
+                    pDim1Input.value = 10;
+                    pDim2Input.value = 100;
+                } else {
+                    pDim1Input.value = 2;
+                    pDim2Input.value = 6;
+                }
+                solvePascalByTarget('dim');
+            });
+        });
+
+        pDimUnit.addEventListener('change', () => solvePascalByTarget('unit'));
+
+        // F1 Input & Slider
+        pF1Input.addEventListener('input', () => solvePascalByTarget('F1'));
+        pF1Unit.addEventListener('change', () => solvePascalByTarget('F1'));
+        pF1Slider.addEventListener('input', (e) => {
+            pF1Unit.value = 'N';
+            pF1Input.value = e.target.value;
+            solvePascalByTarget('F1');
+        });
+
+        // F2 Input & Slider (Allows student to directly input or slide Large Piston Force F2!)
+        pF2Input.addEventListener('input', () => solvePascalByTarget('F2'));
+        pF2Unit.addEventListener('change', () => solvePascalByTarget('F2'));
+        pF2Slider.addEventListener('input', (e) => {
+            pF2Unit.value = 'N';
+            pF2Input.value = e.target.value;
+            solvePascalByTarget('F2');
+        });
+
+        // Dim1 & Dim2 Inputs & Sliders
+        pDim1Input.addEventListener('input', () => solvePascalByTarget('dim1'));
+        pDim1Slider.addEventListener('input', (e) => {
+            pDim1Input.value = e.target.value;
+            solvePascalByTarget('dim1');
+        });
+
+        pDim2Input.addEventListener('input', () => solvePascalByTarget('dim2'));
+        pDim2Slider.addEventListener('input', (e) => {
+            pDim2Input.value = e.target.value;
+            solvePascalByTarget('dim2');
+        });
+
+        // l1 & l2 Inputs & Slider
+        pL1Input.addEventListener('input', () => {
+            pascalState.l1 = parseFloat(pL1Input.value) || 1;
+            pascalState.animTarget = Math.min(1, Math.max(0.05, pascalState.l1 / 40));
+            pascalState.isAnimating = true;
+            solvePascalByTarget('l1');
+        });
+
+        pL1Slider.addEventListener('input', (e) => {
+            pL1Input.value = e.target.value;
+            pascalState.l1 = parseFloat(e.target.value);
+            pascalState.animTarget = Math.min(1, Math.max(0.05, pascalState.l1 / 40));
+            pascalState.isAnimating = true;
+            solvePascalByTarget('l1');
+        });
+
+        pL2Input.addEventListener('input', () => {
+            solvePascalByTarget('l2');
+        });
+
+        document.getElementById('pascalAnimateBtn').addEventListener('click', () => {
+            pascalState.animProgress = 0;
+            pascalState.animTarget = Math.min(1, Math.max(0.25, pascalState.l1 / 40));
+            pascalState.isAnimating = true;
+        });
+
+        document.getElementById('pascalResetBtn').addEventListener('click', () => {
+            pascalTargetSelect.value = 'find_F2';
+            pascalState.mode = 'area';
+            pDimUnit.value = 'cm';
+            pF1Unit.value = 'N';
+            pF2Unit.value = 'N';
+            pF1Input.value = 100;
+            pF2Input.value = 1000;
+            pDim1Input.value = 10;
+            pDim2Input.value = 100;
+            pL1Input.value = 10;
+            pascalState.animTarget = 0.25;
+            pascalState.isAnimating = true;
+
+            document.querySelectorAll('.pascal-mode-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.pmode === 'area');
+            });
+            solvePascalByTarget();
+        });
+
+        // Sample Board Questions Buttons
+        document.getElementById('sampleBoardQ1').addEventListener('click', () => {
+            pascalTargetSelect.value = 'find_F1';
+            pascalState.mode = 'area';
+            document.querySelectorAll('.pascal-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.pmode === 'area'));
+            pDimUnit.value = 'cm';
+            pDim1Input.value = 5;
+            pDim2Input.value = 250;
+            pF2Unit.value = 'N';
+            pF2Input.value = 5000;
+            pL1Input.value = 15;
+            solvePascalByTarget('F2');
+            showToast('উদাহরণ ১ লোড হয়েছে: বড় পিস্টনের বল 5000N থেকে ছোট পিস্টনের বল F₁ নির্ণয়!');
+        });
+
+        document.getElementById('sampleBoardQ2').addEventListener('click', () => {
+            pascalTargetSelect.value = 'find_F2';
+            pascalState.mode = 'diameter';
+            document.querySelectorAll('.pascal-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.pmode === 'diameter'));
+            pDimUnit.value = 'cm';
+            pDim1Input.value = 4;
+            pDim2Input.value = 20;
+            pF1Unit.value = 'N';
+            pF1Input.value = 80;
+            pL1Input.value = 10;
+            solvePascalByTarget('F1');
+            showToast('উদাহরণ ২ লোড হয়েছে: পিস্টনের ব্যাস ও F₁=80N থেকে বড় পিস্টনের বল F₂ নির্ণয়!');
+        });
+
+        document.getElementById('sampleBoardQ3').addEventListener('click', () => {
+            pascalTargetSelect.value = 'find_work';
+            pascalState.mode = 'area';
+            document.querySelectorAll('.pascal-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.pmode === 'area'));
+            pDimUnit.value = 'cm';
+            pDim1Input.value = 10;
+            pDim2Input.value = 150;
+            pF1Unit.value = 'N';
+            pF1Input.value = 120;
+            pL1Input.value = 12;
+            solvePascalByTarget('target');
+            showToast('উদাহরণ ৩ লোড হয়েছে: উভয় পিস্টনে কৃতকাজ ও শক্তির সংরক্ষণশীলতা যাচাই!');
+        });
+
+        // =========================================================================
+        // BUOYANCY UNIVERSAL CREATIVE QUESTION SOLVER (TAB 1)
+        // =========================================================================
         const calcHasObj2 = document.getElementById('calcHasObj2');
         const calcObj2Fields = document.getElementById('calcObj2Fields');
         const syncFromLabBtn = document.getElementById('syncFromLabBtn');
 
-        calcHasObj2.addEventListener('change', (e) => {
-            calcObj2Fields.classList.toggle('hidden', !e.target.checked);
-            updateCalculator();
+        document.querySelectorAll('.bcq-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.bcq-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.cqType = btn.dataset.bcq;
+                document.getElementById('bcqMode1Panel').classList.toggle('hidden', buoyancyCqState.cqType !== 'float_sink');
+                document.getElementById('bcqMode2Panel').classList.toggle('hidden', buoyancyCqState.cqType !== 'air_water');
+                updateCalculator();
+            });
         });
 
-        syncFromLabBtn.addEventListener('click', () => {
+        document.querySelectorAll('.vtype-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.volType = btn.dataset.vtype;
+                document.getElementById('volDirectBox').classList.toggle('hidden', buoyancyCqState.volType !== 'direct');
+                document.getElementById('volBoxDims').classList.toggle('hidden', buoyancyCqState.volType !== 'box');
+                document.getElementById('volSphereDims').classList.toggle('hidden', buoyancyCqState.volType !== 'sphere');
+                document.getElementById('volCylDims').classList.toggle('hidden', buoyancyCqState.volType !== 'cylinder');
+                updateCalculator();
+            });
+        });
+
+        function syncLabToBuoyancyCalculator() {
+            document.getElementById('calcMassUnit').value = 'kg';
             document.getElementById('calcMass').value = state.objMass.toFixed(2);
+            document.getElementById('calcVolUnit').value = 'L';
             document.getElementById('calcVolLiters').value = state.objVolumeL.toFixed(1);
             calcHasObj2.checked = state.hasObj2;
             calcObj2Fields.classList.toggle('hidden', !state.hasObj2);
@@ -1257,21 +2464,90 @@
             document.getElementById('calcFluidRho').value = state.fluidDensity;
             document.getElementById('calcG').value = state.g;
             updateCalculator();
+        }
+
+        calcHasObj2.addEventListener('change', (e) => {
+            calcObj2Fields.classList.toggle('hidden', !e.target.checked);
+            updateCalculator();
         });
 
-        const calcInputs = ['calcMass', 'calcVolLiters', 'calcMass2', 'calcVol2Liters', 'calcFluidRho', 'calcG'];
+        syncFromLabBtn.addEventListener('click', () => {
+            syncLabToBuoyancyCalculator();
+            showToast('ল্যাবের বর্তমান মানগুলো সৃজনশীল সমাধান বক্সে আনা হয়েছে!');
+        });
+
+        const calcInputs = [
+            'calcMass', 'calcMassUnit', 'calcVolLiters', 'calcVolUnit',
+            'boxL', 'boxB', 'boxH', 'sphereR', 'cylR', 'cylH',
+            'calcMass2', 'calcVol2Liters', 'calcAirWeight', 'calcWaterWeight',
+            'calcFluidRho', 'calcG'
+        ];
         calcInputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', updateCalculator);
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', updateCalculator);
+                el.addEventListener('change', updateCalculator);
+            }
         });
 
-        function updateCalculator() {
-            const m1 = Math.max(0.01, parseFloat(document.getElementById('calcMass').value) || 0);
-            const v1L = Math.max(0.01, parseFloat(document.getElementById('calcVolLiters').value) || 0);
-            const useObj2 = calcHasObj2.checked;
-            const m2 = useObj2 ? Math.max(0.01, parseFloat(document.getElementById('calcMass2').value) || 0) : 0;
-            const v2L = useObj2 ? Math.max(0.01, parseFloat(document.getElementById('calcVol2Liters').value) || 0) : 0;
+        function getBuoyancyCalcData() {
             const rhoF = Math.max(1, parseFloat(document.getElementById('calcFluidRho').value) || 1000);
-            const g = Math.max(0.1, parseFloat(document.getElementById('calcG').value) || 9.81);
+            const g = Math.max(0.1, parseFloat(document.getElementById('calcG').value) || 9.8);
+
+            if (buoyancyCqState.cqType === 'air_water') {
+                const W_air = Math.max(0.1, parseFloat(document.getElementById('calcAirWeight').value) || 50);
+                const W_water = Math.max(0, parseFloat(document.getElementById('calcWaterWeight').value) || 35);
+                const lostWeight = Math.max(0.01, W_air - W_water);
+                const Fb = lostWeight;
+                const volM3 = Fb / (rhoF * g);
+                const volCm3 = volM3 * 1e6;
+                const massKg = W_air / g;
+                const rhoObj = massKg / volM3;
+
+                return {
+                    cqType: 'air_water',
+                    W_air, W_water, lostWeight, Fb,
+                    volM3, volCm3, massKg, rhoObj, rhoF, g
+                };
+            }
+
+            // Mode 1: float_sink / combined object
+            const rawM1 = Math.max(0.001, parseFloat(document.getElementById('calcMass').value) || 0.001);
+            const mUnit = document.getElementById('calcMassUnit').value;
+            const m1 = mUnit === 'g' ? rawM1 / 1000 : rawM1;
+
+            let v1L = 1;
+            let volFormulaDesc = '';
+            if (buoyancyCqState.volType === 'direct') {
+                const rawV = Math.max(0.0001, parseFloat(document.getElementById('calcVolLiters').value) || 0.0001);
+                const vUnit = document.getElementById('calcVolUnit').value;
+                if (vUnit === 'cm3') v1L = rawV / 1000;
+                else if (vUnit === 'm3') v1L = rawV * 1000;
+                else v1L = rawV;
+                volFormulaDesc = `আয়তন V₁ = ${rawV} ${vUnit} = ${(v1L / 1000).toExponential(3)} m³`;
+            } else if (buoyancyCqState.volType === 'box') {
+                const l = Math.max(0.1, parseFloat(document.getElementById('boxL').value) || 10);
+                const b = Math.max(0.1, parseFloat(document.getElementById('boxB').value) || 10);
+                const h = Math.max(0.1, parseFloat(document.getElementById('boxH').value) || 10);
+                const vCm3 = l * b * h;
+                v1L = vCm3 / 1000;
+                volFormulaDesc = `আয়তন V₁ = l × b × h = ${l}×${b}×${h} = ${vCm3.toFixed(1)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
+            } else if (buoyancyCqState.volType === 'sphere') {
+                const r = Math.max(0.1, parseFloat(document.getElementById('sphereR').value) || 5);
+                const vCm3 = (4 / 3) * Math.PI * Math.pow(r, 3);
+                v1L = vCm3 / 1000;
+                volFormulaDesc = `গোলকের আয়তন V₁ = (4/3)πr³ = (4/3)×3.1416×(${r})³ = ${vCm3.toFixed(2)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
+            } else {
+                const r = Math.max(0.1, parseFloat(document.getElementById('cylR').value) || 5);
+                const h = Math.max(0.1, parseFloat(document.getElementById('cylH').value) || 10);
+                const vCm3 = Math.PI * r * r * h;
+                v1L = vCm3 / 1000;
+                volFormulaDesc = `সিলিন্ডারের আয়তন V₁ = πr²h = 3.1416×(${r})²×${h} = ${vCm3.toFixed(2)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
+            }
+
+            const useObj2 = calcHasObj2.checked;
+            const m2 = useObj2 ? Math.max(0.001, parseFloat(document.getElementById('calcMass2').value) || 0) : 0;
+            const v2L = useObj2 ? Math.max(0.001, parseFloat(document.getElementById('calcVol2Liters').value) || 0) : 0;
 
             const totalM = m1 + m2;
             const totalVL = v1L + v2L;
@@ -1284,27 +2560,340 @@
             const displacedL = floats ? (totalM / rhoF) * 1000 : totalVL;
             const apparentW = Math.max(0, W - actualFb);
             const subPct = floats ? (rhoObj / rhoF) * 100 : 100;
+            const extraMassToSinkKg = floats ? Math.max(0, (totalVM3 * rhoF) - totalM) : 0;
 
+            return {
+                cqType: 'float_sink',
+                m1, v1L, volFormulaDesc, useObj2, m2, v2L, rhoF, g,
+                totalM, totalVL, totalVM3, rhoObj, W, maxFb,
+                floats, actualFb, displacedL, apparentW, subPct, extraMassToSinkKg
+            };
+        }
+
+        function updateCalculator() {
+            const d = getBuoyancyCalcData();
             const container = document.getElementById('calcSolutionSteps');
+
+            if (d.cqType === 'air_water') {
+                container.innerHTML = `
+                    <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                        <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
+                        বাতাসে বস্তুর ওজন, W₁ = <strong>${d.W_air.toFixed(2)} N</strong>; তরলে নিমজ্জিত অবস্থায় ওজন, W₂ = <strong>${d.W_water.toFixed(2)} N</strong><br>
+                        তরলের ঘনত্ব, ρ<sub>f</sub> = <strong>${d.rhoF} kg/m³</strong> এবং g = <strong>${d.g} m/s²</strong>
+                    </div>
+
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ১: বস্তুর হারানো ওজন ও প্লবতা বল (F<sub>b</sub>) নির্ণয়</div>
+                    <div>বস্তুর হারানো ওজন = W₁ - W₂ = ${d.W_air.toFixed(2)} - ${d.W_water.toFixed(2)} = <strong class="text-emerald-300">${d.lostWeight.toFixed(2)} N</strong></div>
+                    <div>আর্কিমিডিসের নীতি অনুসারে, অপসারিত তরলের ওজন বা প্লবতা বল, <strong>F<sub>b</sub> = হারানো ওজন = ${d.Fb.toFixed(2)} N</strong></div>
+
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ২: বস্তুর আয়তন (V) ও ভর (m) নির্ণয়</div>
+                    <div>আমরা জানি, F<sub>b</sub> = V × ρ<sub>f</sub> × g &nbsp;⇒&nbsp; V = F<sub>b</sub> ÷ (ρ<sub>f</sub> × g)</div>
+                    <div>∴ বস্তুর আয়তন, V = ${d.Fb.toFixed(2)} ÷ (${d.rhoF} × ${d.g}) = <strong>${d.volM3.toExponential(4)} m³ (${d.volCm3.toFixed(2)} cm³)</strong></div>
+                    <div>এবং বস্তুর ভর, m = W₁ ÷ g = ${d.W_air.toFixed(2)} ÷ ${d.g} = <strong>${d.massKg.toFixed(3)} kg (${(d.massKg * 1000).toFixed(1)} g)</strong></div>
+
+                    <div class="text-sky-400 font-bold pt-1">ধাপ ৩: বস্তুর উপাদানের ঘনত্ব (ρ) নির্ণয়</div>
+                    <div class="p-3 rounded-lg bg-emerald-950/60 border border-emerald-700/60 text-emerald-200">
+                        বস্তুর ঘনত্ব, ρ = m ÷ V = ${d.massKg.toFixed(3)} ÷ ${d.volM3.toExponential(4)} = <strong class="text-sm">${d.rhoObj.toFixed(2)} kg/m³</strong> (বা ${(d.rhoObj / 1000).toFixed(2)} g/cm³)।
+                    </div>
+                `;
+                return;
+            }
+
             container.innerHTML = `
-                <div class="text-sky-400 font-bold">ধাপ ১: ${useObj2 ? 'যুক্ত বস্তুদ্বয়ের মোট ভর, মোট আয়তন ও গড় ঘনত্ব' : 'বস্তুর ঘনত্ব (ρ<sub>বস্তু</sub>) নির্ণয়'}</div>
-                ${useObj2 ? `<div>মোট ভর, M = m₁ + m₂ = ${m1} + ${m2} = <strong>${totalM.toFixed(2)} kg</strong></div>` : ''}
-                <div>মোট আয়তন, V = ${useObj2 ? `${v1L} + ${v2L} = ` : ''}${totalVL.toFixed(2)} L = <strong>${totalVM3.toFixed(4)} m³</strong></div>
-                <div>${useObj2 ? 'গড় ঘনত্ব, ρ<sub>গড়</sub>' : 'ঘনত্ব, ρ<sub>বস্তু</sub>'} = M / V = ${totalM.toFixed(2)} / ${totalVM3.toFixed(4)} = <strong>${rhoObj.toFixed(2)} kg/m³</strong></div>
+                <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                    <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
+                    • ১ম বস্তুর ভর m₁ = <strong>${d.m1.toFixed(3)} kg</strong>; ${d.volFormulaDesc}<br>
+                    ${d.useObj2 ? `• ২য় যুক্ত বস্তুর ভর m₂ = <strong>${d.m2} kg</strong>, আয়তন V₂ = <strong>${d.v2L} L = ${(d.v2L / 1000).toExponential(3)} m³</strong><br>` : ''}
+                    • তরলের ঘনত্ব ρ<sub>f</sub> = <strong>${d.rhoF} kg/m³</strong> এবং অভিকর্ষজ ত্বরণ g = <strong>${d.g} m/s²</strong>
+                </div>
 
-                <div class="text-sky-400 font-bold pt-2">ধাপ ২: বাতাসে মোট ওজন (W) ও সর্বোচ্চ প্লবতা (F<sub>b,max</sub>)</div>
-                <div>মোট ওজন, W = M × g = ${totalM.toFixed(2)} × ${g} = <strong>${W.toFixed(2)} N</strong></div>
-                <div>১০০% নিমজ্জিত অবস্থায় সর্বোচ্চ প্লবতা, F<sub>b,max</sub> = V × ρ<sub>f</sub> × g = <strong>${maxFb.toFixed(2)} N</strong></div>
+                <div class="text-sky-400 font-bold pt-1">ধাপ ১: ${d.useObj2 ? 'যুক্ত বস্তুদ্বয়ের মোট ভর, মোট আয়তন ও গড় ঘনত্ব' : 'বস্তুর ঘনত্ব (ρ<sub>বস্তু</sub>) নির্ণয়'}</div>
+                ${d.useObj2 ? `<div>মোট ভর, M = m₁ + m₂ = ${d.m1.toFixed(3)} + ${d.m2} = <strong>${d.totalM.toFixed(3)} kg</strong> এবং মোট আয়তন, V = <strong>${d.totalVM3.toExponential(4)} m³</strong></div>` : ''}
+                <div>আমরা জানি, ঘনত্ব ρ = ভর (M) ÷ আয়তন (V) = ${d.totalM.toFixed(3)} ÷ ${d.totalVM3.toExponential(4)} = <strong class="text-sky-300">${d.rhoObj.toFixed(2)} kg/m³</strong></div>
 
-                <div class="text-sky-400 font-bold pt-2">ধাপ ৩: ভাসন নাকি নিমজ্জন ও ক্রিয়াশীল প্লবতা বল</div>
-                <div class="p-2.5 rounded-lg ${floats ? 'bg-emerald-950/60 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/60 border border-rose-700/60 text-rose-200'}">
-                    ${floats
-                        ? `যেহেতু গড় ঘনত্ব (${rhoObj.toFixed(1)} kg/m³) ≤ তরলের ঘনত্ব (${rhoF} kg/m³), তাই এটি <strong>ভাসবে</strong>!<br>• নিমজ্জিত অংশ = <strong>${subPct.toFixed(1)}%</strong> (অপসারিত তরল = <strong>${displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = W = <strong>${actualFb.toFixed(2)} N</strong><br>• তরলে আপাত ওজন, W' = W - F<sub>b</sub> = <strong>0.00 N</strong>`
-                        : `যেহেতু গড় ঘনত্ব (${rhoObj.toFixed(1)} kg/m³) > তরলের ঘনত্ব (${rhoF} kg/m³), তাই এটি <strong>ডুবে যাবে</strong>!<br>• নিমজ্জিত অংশ = <strong>100%</strong> (অপসারিত তরল = <strong>${displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = F<sub>b,max</sub> = <strong>${actualFb.toFixed(2)} N</strong><br>• তরলে আপাত ওজন, W' = W - F<sub>b</sub> = <strong>${apparentW.toFixed(2)} N</strong>`
+                <div class="text-sky-400 font-bold pt-1">ধাপ ২: বাতাসে মোট ওজন (W) ও সর্বোচ্চ প্লবতা বল (F<sub>b,max</sub>)</div>
+                <div>বাতাসে বস্তুর ওজন, W = M × g = ${d.totalM.toFixed(3)} × ${d.g} = <strong class="text-rose-300">${d.W.toFixed(2)} N</strong></div>
+                <div>সম্পূর্ণ (১০০%) ডুবলে অপসারিত তরলের ওজন বা সর্বোচ্চ প্লবতা, F<sub>b,max</sub> = V × ρ<sub>f</sub> × g = ${d.totalVM3.toExponential(4)} × ${d.rhoF} × ${d.g} = <strong class="text-emerald-300">${d.maxFb.toFixed(2)} N</strong></div>
+
+                <div class="text-sky-400 font-bold pt-1">ধাপ ৩: ভাসন নাকি নিমজ্জন সিদ্ধান্ত ও সৃজনশীল (গ/ঘ) ফলাফল</div>
+                <div class="p-3 rounded-lg ${d.floats ? 'bg-emerald-950/60 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/60 border border-rose-700/60 text-rose-200'}">
+                    ${d.floats
+                        ? `যেহেতু বস্তুর ঘনত্ব (${d.rhoObj.toFixed(1)} kg/m³) ≤ তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W ≤ F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ভাসবে</strong>!<br>• নিমজ্জিত অংশের হার = (ρ<sub>বস্তু</sub> ÷ ρ<sub>তরল</sub>) × ১০০% = <strong>${d.subPct.toFixed(1)}%</strong> এবং ভেসে থাকা অংশ = <strong>${(100 - d.subPct).toFixed(1)}%</strong><br>• ভাসমান অবস্থায় ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = W = <strong>${d.actualFb.toFixed(2)} N</strong> (তরলে আপাত ওজন = <strong>0.00 N</strong>)<br>• সম্পূর্ণ ডুবাতে প্রয়োজনীয় অতিরিক্ত ভর, Δm = (V × ρ<sub>f</sub>) - M = <strong>${d.extraMassToSinkKg.toFixed(3)} kg (${(d.extraMassToSinkKg * 1000).toFixed(1)} g)</strong>`
+                        : `যেহেতু বস্তুর ঘনত্ব (${d.rhoObj.toFixed(1)} kg/m³) > তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W > F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ডুবে যাবে</strong>!<br>• নিমজ্জিত অংশের হার = <strong>100%</strong> (অপসারিত তরল = <strong>${d.displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = F<sub>b,max</sub> = <strong>${d.actualFb.toFixed(2)} N</strong><br>• তরলে নিমজ্জিত অবস্থায় আপাত ওজন, W' = W - F<sub>b</sub> = ${d.W.toFixed(2)} - ${d.actualFb.toFixed(2)} = <strong>${d.apparentW.toFixed(2)} N</strong>`
                     }
                 </div>
             `;
         }
+
+        // --- High-Resolution Bengali PDF Worksheet Generator ---
+        function generatePhysicsPdf(type) {
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = 1240;
+            offCanvas.height = 1754;
+            const c = offCanvas.getContext('2d');
+
+            c.fillStyle = '#ffffff';
+            c.fillRect(0, 0, 1240, 1754);
+
+            // Header Banner
+            c.fillStyle = '#0f172a';
+            c.fillRect(0, 0, 1240, 145);
+
+            c.fillStyle = '#38bdf8';
+            c.font = 'bold 34px Hind Siliguri, sans-serif';
+            c.fillText('StudyPulse — সৃজনশীল পদার্থবিজ্ঞান সমাধান শীট', 60, 65);
+
+            c.fillStyle = '#e2e8f0';
+            c.font = '20px Hind Siliguri, sans-serif';
+            const titleSub = type === 'buoyancy'
+                ? 'অধ্যায়: পদার্থের অবস্থা ও চাপ (প্লবতা ও আর্কিমিডিসের নীতি)'
+                : 'অধ্যায়: পদার্থের অবস্থা ও চাপ (বল বৃদ্ধিকরণ নীতি ও প্যাসকেলের সূত্র)';
+            c.fillText(titleSub, 60, 108);
+
+            c.fillStyle = '#fbbf24';
+            c.font = 'bold 20px Hind Siliguri, sans-serif';
+            c.textAlign = 'right';
+            c.fillText('নির্মাতা: Aim Sujon', 1180, 65);
+            c.fillStyle = '#94a3b8';
+            c.font = '17px Inter, sans-serif';
+            c.fillText('Page: StudyPulse', 1180, 105);
+            c.textAlign = 'left';
+
+            let y = 195;
+
+            const drawSectionBox = (bx, by, bw, bh, bgColor, borderColor) => {
+                c.save();
+                c.fillStyle = bgColor;
+                c.strokeStyle = borderColor;
+                c.lineWidth = 2;
+                c.beginPath();
+                c.roundRect(bx, by, bw, bh, 14);
+                c.fill();
+                c.stroke();
+                c.restore();
+            };
+
+            if (type === 'buoyancy') {
+                const d = getBuoyancyCalcData();
+
+                if (d.cqType === 'air_water') {
+                    drawSectionBox(60, y, 1120, 160, '#f8fafc', '#cbd5e1');
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 25px Hind Siliguri, sans-serif';
+                    c.fillText('১. উদ্দীপকের প্রদত্ত তথ্যসমূহ (Given Data):', 85, y + 42);
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`• বাতাসে বস্তুর ওজন (W₁) = ${d.W_air.toFixed(2)} N   এবং   তরলে নিমজ্জিত অবস্থায় ওজন (W₂) = ${d.W_water.toFixed(2)} N`, 85, y + 86);
+                    c.fillText(`• তরলের ঘনত্ব (ρ_f) = ${d.rhoF} kg/m³   এবং   অভিকর্ষজ ত্বরণ (g) = ${d.g} m/s²`, 85, y + 126);
+
+                    y += 190;
+                    drawSectionBox(60, y, 1120, 480, '#ffffff', '#94a3b8');
+                    c.fillStyle = '#0f172a';
+                    c.font = 'bold 26px Hind Siliguri, sans-serif';
+                    c.fillText('২. ধাপে ধাপে সৃজনশীল গাণিতিক সমাধান:', 85, y + 45);
+
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('ধাপ-১: হারানো ওজন ও প্লবতা বল (F_b) নির্ণয়', 85, y + 95);
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`তরলে বস্তুর হারানো ওজন = W₁ - W₂ = ${d.W_air.toFixed(2)} - ${d.W_water.toFixed(2)} = ${d.lostWeight.toFixed(2)} N`, 85, y + 132);
+                    c.fillText(`আর্কিমিডিসের নীতি অনুসারে, প্লবতা বল F_b = হারানো ওজন = ${d.Fb.toFixed(2)} N`, 85, y + 168);
+
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('ধাপ-২: বস্তুর আয়তন (V) ও ভর (m) নির্ণয়', 85, y + 222);
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`আমরা জানি, F_b = V × ρ_f × g   ⇒   V = F_b ÷ (ρ_f × g) = ${d.volM3.toExponential(4)} m³ (${d.volCm3.toFixed(2)} cm³)`, 85, y + 260);
+                    c.fillText(`এবং বস্তুর ভর, m = W₁ ÷ g = ${d.W_air.toFixed(2)} ÷ ${d.g} = ${d.massKg.toFixed(3)} kg`, 85, y + 296);
+
+                    c.fillStyle = '#047857';
+                    c.font = 'bold 23px Hind Siliguri, sans-serif';
+                    c.fillText(`ধাপ-৩ (চূড়ান্ত উত্তর): বস্তুর উপাদানের ঘনত্ব, ρ = m ÷ V = ${d.rhoObj.toFixed(2)} kg/m³`, 85, y + 360);
+                    y += 510;
+                } else {
+                    drawSectionBox(60, y, 1120, 175, '#f8fafc', '#cbd5e1');
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 25px Hind Siliguri, sans-serif';
+                    c.fillText('১. উদ্দীপকের প্রদত্ত তথ্যসমূহ (Given Data):', 85, y + 42);
+
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`• ১ম বস্তুর ভর (m₁) = ${d.m1.toFixed(3)} kg; ${d.volFormulaDesc}`, 85, y + 84);
+                    if (d.useObj2) {
+                        c.fillText(`• ২য় যুক্ত বস্তুর ভর (m₂) = ${d.m2} kg এবং আয়তন (V₂) = ${d.v2L} L`, 85, y + 118);
+                    } else {
+                        c.fillText(`• মোট আয়তন (V) = ${d.totalVL.toFixed(2)} L = ${d.totalVM3.toExponential(4)} m³`, 85, y + 118);
+                    }
+                    c.fillText(`• তরলের ঘনত্ব (ρ_f) = ${d.rhoF} kg/m³   এবং   অভিকর্ষজ ত্বরণ (g) = ${d.g} m/s²`, 85, y + 152);
+
+                    y += 205;
+
+                    drawSectionBox(60, y, 1120, 500, '#ffffff', '#94a3b8');
+                    c.fillStyle = '#0f172a';
+                    c.font = 'bold 26px Hind Siliguri, sans-serif';
+                    c.fillText('২. ধাপে ধাপে গাণিতিক সমাধান (Step-by-Step Calculation):', 85, y + 45);
+
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('ধাপ-১: ঘনত্ব নির্ণয়', 85, y + 92);
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`মোট ভর, M = ${d.totalM.toFixed(3)} kg এবং মোট আয়তন, V = ${d.totalVM3.toExponential(4)} m³`, 85, y + 128);
+                    c.fillText(`সুতরাং ঘনত্ব, ρ = M / V = ${d.totalM.toFixed(3)} / ${d.totalVM3.toExponential(4)} = ${d.rhoObj.toFixed(2)} kg/m³`, 85, y + 162);
+
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('ধাপ-২: বাতাসে ওজন (W) ও সর্বোচ্চ প্লবতা বল (F_b,max) নির্ণয়', 85, y + 215);
+                    c.fillStyle = '#1e293b';
+                    c.font = '21px Hind Siliguri, sans-serif';
+                    c.fillText(`বস্তুর ওজন, W = M × g = ${d.totalM.toFixed(3)} × ${d.g} = ${d.W.toFixed(2)} N`, 85, y + 250);
+                    c.fillText(`সম্পূর্ণ নিমজ্জিত অবস্থায় সর্বোচ্চ প্লবতা, F_b(max) = V × ρ_f × g = ${d.maxFb.toFixed(2)} N`, 85, y + 285);
+
+                    c.fillStyle = '#0284c7';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('ধাপ-৩: ভাসন নাকি নিমজ্জন সিদ্ধান্ত ও চূড়ান্ত ফলাফল', 85, y + 338);
+                    if (d.floats) {
+                        c.fillStyle = '#047857';
+                        c.font = 'bold 21px Hind Siliguri, sans-serif';
+                        c.fillText(`সিদ্ধান্ত: যেহেতু ρ (${d.rhoObj.toFixed(1)} kg/m³) ≤ ρ_f (${d.rhoF} kg/m³), তাই বস্তুটি তরলে ভাসবে।`, 85, y + 375);
+                        c.fillStyle = '#1e293b';
+                        c.font = '20px Hind Siliguri, sans-serif';
+                        c.fillText(`• নিমজ্জিত অংশের হার = ${d.subPct.toFixed(1)}% এবং ভাসমান অবস্থায় প্লবতা বল F_b = W = ${d.actualFb.toFixed(2)} N`, 85, y + 412);
+                        c.fillText(`• সম্পূর্ণ ডুবাতে প্রয়োজনীয় অতিরিক্ত ভর, Δm = (V × ρ_f) - M = ${d.extraMassToSinkKg.toFixed(3)} kg`, 85, y + 448);
+                    } else {
+                        c.fillStyle = '#be123c';
+                        c.font = 'bold 21px Hind Siliguri, sans-serif';
+                        c.fillText(`সিদ্ধান্ত: যেহেতু ρ (${d.rhoObj.toFixed(1)} kg/m³) > ρ_f (${d.rhoF} kg/m³), তাই বস্তুটি তরলে ডুবে যাবে।`, 85, y + 375);
+                        c.fillStyle = '#1e293b';
+                        c.font = '20px Hind Siliguri, sans-serif';
+                        c.fillText(`• নিমজ্জিত অংশ = 100% এবং ক্রিয়াশীল প্লবতা বল, F_b = ${d.actualFb.toFixed(2)} N`, 85, y + 412);
+                        c.fillText(`• তরলে নিমজ্জিত অবস্থায় আপাত ওজন, W' = W - F_b = ${d.W.toFixed(2)} - ${d.actualFb.toFixed(2)} = ${d.apparentW.toFixed(2)} N`, 85, y + 448);
+                    }
+                    y += 530;
+                }
+
+                if (canvas.width > 0) {
+                    drawSectionBox(60, y, 1120, 430, '#0f172a', '#334155');
+                    c.fillStyle = '#38bdf8';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('৩. সিমুলেটর চিত্র (Visual Simulation Snapshot):', 85, y + 38);
+                    c.drawImage(canvas, 220, y + 52, 800, 360);
+                }
+            } else {
+                // Pascal PDF Worksheet
+                const m = computePascalMetrics();
+
+                drawSectionBox(60, y, 1120, 175, '#f8fafc', '#cbd5e1');
+                c.fillStyle = '#0284c7';
+                c.font = 'bold 25px Hind Siliguri, sans-serif';
+                c.fillText('১. উদ্দীপকের প্রদত্ত ও নির্ণেয় তথ্যসমূহ:', 85, y + 42);
+
+                c.fillStyle = '#1e293b';
+                c.font = '21px Hind Siliguri, sans-serif';
+                c.fillText(`• ছোট পিস্টনের বল (F₁) = ${m.F1.toFixed(2)} N   এবং   বড় পিস্টনের বল (F₂) = ${m.F2.toFixed(2)} N`, 85, y + 84);
+                c.fillText(`• ছোট পিস্টনের ক্ষেত্রফল (A₁) = ${m.A1_cm2.toFixed(2)} cm² = ${m.A1_m2.toExponential(3)} m²`, 85, y + 118);
+                c.fillText(`• বড় পিস্টনের ক্ষেত্রফল (A₂) = ${m.A2_cm2.toFixed(2)} cm² = ${m.A2_m2.toExponential(3)} m²  |  সরণ l₁ = ${m.l1.toFixed(1)} cm, l₂ = ${m.l2.toFixed(3)} cm`, 85, y + 152);
+
+                y += 205;
+
+                drawSectionBox(60, y, 1120, 155, '#f0f9ff', '#7dd3fc');
+                c.fillStyle = '#0369a1';
+                c.font = 'bold 25px Hind Siliguri, sans-serif';
+                c.fillText('২. বল বৃদ্ধিকরণ নীতির প্রয়োজনীয় সূত্রসমূহ (Formulas):', 85, y + 42);
+                c.fillStyle = '#0f172a';
+                c.font = '21px Hind Siliguri, sans-serif';
+                c.fillText('• প্যাসকেলের বল বৃদ্ধিকরণ সূত্র: F₁ / A₁ = F₂ / A₂   ⇒   F₂ = F₁ × (A₂ / A₁)   বা   F₁ = F₂ × (A₁ / A₂)', 85, y + 82);
+                c.fillText('• ব্যাসার্ধ ও ব্যাসের ক্ষেত্রে: F₂ / F₁ = (r₂ / r₁)² = (d₂ / d₁)²', 85, y + 116);
+                c.fillText('• সরণ ও কৃতকাজের সূত্র: A₁ × l₁ = A₂ × l₂   এবং   কৃতকাজ W₁ = W₂ = F₁ × l₁ = F₂ × l₂', 85, y + 144);
+
+                y += 185;
+
+                drawSectionBox(60, y, 1120, 470, '#ffffff', '#94a3b8');
+                c.fillStyle = '#0f172a';
+                c.font = 'bold 26px Hind Siliguri, sans-serif';
+                c.fillText('৩. ধাপে ধাপে সৃজনশীল গাণিতিক সমাধান:', 85, y + 45);
+
+                c.fillStyle = '#0284c7';
+                c.font = 'bold 22px Hind Siliguri, sans-serif';
+                c.fillText('ধাপ-১: ক্ষেত্রফলের অনুপাত বা যান্ত্রিক সুবিধা নির্ণয়', 85, y + 92);
+                c.fillStyle = '#1e293b';
+                c.font = '21px Hind Siliguri, sans-serif';
+                c.fillText(`ক্ষেত্রফলের অনুপাত, A₂ / A₁ = ${m.A2_cm2.toFixed(2)} ÷ ${m.A1_cm2.toFixed(2)} = ${m.ratioA.toFixed(2)}`, 85, y + 130);
+
+                c.fillStyle = '#0284c7';
+                c.font = 'bold 22px Hind Siliguri, sans-serif';
+                c.fillText('ধাপ-২: পিস্টনের বল (F₁ ও F₂) এবং সঞ্চালিত চাপ (P) নির্ণয়', 85, y + 185);
+                c.fillStyle = '#1e293b';
+                c.font = '21px Hind Siliguri, sans-serif';
+                c.fillText(`ছোট পিস্টনে বল F₁ = F₂ × (A₁ / A₂) = ${m.F1.toFixed(2)} N  এবং  বড় পিস্টনে বল F₂ = F₁ × (A₂ / A₁) = ${m.F2.toFixed(2)} N`, 85, y + 222);
+                c.fillText(`উত্তোলনযোগ্য সর্বোচ্চ ভর, m = F₂ ÷ g = ${m.F2.toFixed(2)} ÷ 9.8 = ${m.liftMassKg.toFixed(2)} kg`, 85, y + 258);
+                c.fillText(`তরলে সঞ্চালিত চাপ, P = F₁ / A₁ = ${m.pressurePa.toFixed(0)} Pa (${m.pressureKPa.toFixed(2)} kPa)`, 85, y + 294);
+
+                c.fillStyle = '#0284c7';
+                c.font = 'bold 22px Hind Siliguri, sans-serif';
+                c.fillText('ধাপ-৩: পিস্টনের সরণ (l₁ ও l₂) এবং শক্তির সংরক্ষণশীলতা (W₁ = W₂)', 85, y + 350);
+                c.fillStyle = '#1e293b';
+                c.font = '21px Hind Siliguri, sans-serif';
+                c.fillText(`বড় পিস্টনের সরণ, l₂ = l₁ ÷ (A₂ / A₁) = ${m.l1.toFixed(2)} ÷ ${m.ratioA.toFixed(2)} = ${m.l2.toFixed(3)} cm`, 85, y + 388);
+                c.fillStyle = '#047857';
+                c.font = 'bold 22px Hind Siliguri, sans-serif';
+                c.fillText(`কৃতকাজ: ১ম পিস্টনে কাজ W₁ = ${m.workJ.toFixed(3)} J এবং ২য় পিস্টনে কাজ W₂ = ${m.work2J.toFixed(3)} J (অর্থাৎ W₁ = W₂)`, 85, y + 432);
+
+                y += 500;
+
+                if (pascalCanvas.width > 0) {
+                    drawSectionBox(60, y, 1120, 440, '#0f172a', '#334155');
+                    c.fillStyle = '#38bdf8';
+                    c.font = 'bold 22px Hind Siliguri, sans-serif';
+                    c.fillText('৪. হাইড্রোলিক প্রেস সিমুলেটর চিত্র (Visual Simulation Snapshot):', 85, y + 38);
+                    c.drawImage(pascalCanvas, 220, y + 52, 800, 370);
+                }
+            }
+
+            // Footer on PDF
+            c.fillStyle = '#0f172a';
+            c.fillRect(0, 1670, 1240, 84);
+            c.fillStyle = '#38bdf8';
+            c.font = 'bold 20px Hind Siliguri, sans-serif';
+            c.fillText('পেজ: StudyPulse   |   নির্মাতা: Aim Sujon', 60, 1720);
+            c.fillStyle = '#94a3b8';
+            c.font = '18px Hind Siliguri, sans-serif';
+            c.textAlign = 'right';
+            c.fillText('প্লবতা ও বল বৃদ্ধিকরণ নীতি সৃজনশীল সমাধান ল্যাব', 1180, 1720);
+
+            const fileName = type === 'buoyancy'
+                ? 'StudyPulse_Buoyancy_CQ_Solution.pdf'
+                : 'StudyPulse_Pascal_CQ_Solution.pdf';
+
+            try {
+                if (window.jspdf && window.jspdf.jsPDF) {
+                    const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+                    const imgData = offCanvas.toDataURL('image/png');
+                    pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+                    pdf.save(fileName);
+                    showToast(`${fileName} সফলভাবে ডাউনলোড হয়েছে!`);
+                    return;
+                }
+            } catch (err) {
+                // Fallback
+            }
+
+            const link = document.createElement('a');
+            link.download = fileName.replace('.pdf', '.png');
+            link.href = offCanvas.toDataURL('image/png');
+            link.click();
+            showToast('সমাধান শীটটি ডাউনলোড হয়েছে!');
+        }
+
+        document.getElementById('downloadBuoyancyPdfBtn').addEventListener('click', () => {
+            generatePhysicsPdf('buoyancy');
+        });
+
+        document.getElementById('downloadPascalPdfBtn').addEventListener('click', () => {
+            generatePhysicsPdf('pascal');
+        });
 
         // --- Quiz Data & Logic ---
         const quizQuestions = [
@@ -1337,6 +2926,12 @@
                 options: ["প্রায় অর্ধেক (৫০%)", "প্রায় ৯/১০ অংশ (৯২%)", "প্রায় ১/১০ অংশ (১০%)", "প্রায় ৩/৪ অংশ (৭৫%)"],
                 ans: 1,
                 exp: "বরফের ঘনত্ব প্রায় ৯১৭ kg/m³ এবং পানির ঘনত্ব ১০০০ kg/m³ হওয়ায় বরফের প্রায় ৯১.৭% বা প্রায় ৯/১০ অংশ পানির নিচে থাকে।"
+            },
+            {
+                q: "৬. একটি হাইড্রোলিক প্রেসের ছোট ও বড় পিস্টনের ক্ষেত্রফলের অনুপাত ১ : ২০। বড় পিস্টনে ২০০০ N বল পেতে ছোট পিস্টনে কত বল প্রয়োগ করতে হবে?",
+                options: ["৫০ N", "১০০ N", "২০০ N", "৪০০ N"],
+                ans: 1,
+                exp: "বল বৃদ্ধিকরণ নীতি অনুসারে, F₁ = F₂ × (A₁ / A₂) = ২০০০ N × (১ / ২০) = ১০০ N।"
             }
         ];
 
@@ -1404,12 +2999,60 @@
             renderQuiz();
         });
 
+        // --- Custom Facebook Links Modal Logic ---
+        const linksModal = document.getElementById('linksModal');
+        const fbPageLink = document.getElementById('fbPageLink');
+        const fbCreatorLink = document.getElementById('fbCreatorLink');
+        const inputPageUrl = document.getElementById('inputPageUrl');
+        const inputCreatorUrl = document.getElementById('inputCreatorUrl');
+
+        function loadSavedLinks() {
+            try {
+                const savedPage = localStorage.getItem('sp_fb_page_url');
+                const savedCreator = localStorage.getItem('sp_fb_creator_url');
+                if (savedPage) fbPageLink.href = savedPage;
+                if (savedCreator) fbCreatorLink.href = savedCreator;
+            } catch (err) {
+                // Ignore storage errors
+            }
+        }
+
+        document.getElementById('editLinksBtn').addEventListener('click', () => {
+            inputPageUrl.value = fbPageLink.href;
+            inputCreatorUrl.value = fbCreatorLink.href;
+            linksModal.classList.remove('hidden');
+        });
+
+        function closeLinksModal() {
+            linksModal.classList.add('hidden');
+        }
+
+        document.getElementById('closeLinksModalBtn').addEventListener('click', closeLinksModal);
+        document.getElementById('cancelLinksBtn').addEventListener('click', closeLinksModal);
+
+        document.getElementById('saveLinksBtn').addEventListener('click', () => {
+            const pUrl = inputPageUrl.value.trim();
+            const cUrl = inputCreatorUrl.value.trim();
+            if (pUrl) fbPageLink.href = pUrl;
+            if (cUrl) fbCreatorLink.href = cUrl;
+            try {
+                if (pUrl) localStorage.setItem('sp_fb_page_url', pUrl);
+                if (cUrl) localStorage.setItem('sp_fb_creator_url', cUrl);
+            } catch (err) {
+                // Ignore storage errors
+            }
+            closeLinksModal();
+        });
+
         // Initialize on load
         window.onload = () => {
+            loadSavedLinks();
             resizeCanvas();
+            resizePascalCanvas();
             syncObj1Sliders();
             syncObj2Sliders();
             state.objY = computeEquilibriumY();
+            solvePascalByTarget();
             updateCalculator();
             renderQuiz();
             requestAnimationFrame(animate);
