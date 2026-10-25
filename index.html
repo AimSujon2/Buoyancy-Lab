@@ -195,29 +195,50 @@
                             </button>
                         </div>
 
-                        <!-- 1st Object Mass Slider (Direct Mass Control) -->
+                        <!-- 2-of-3 Selector for Lab 1st Object -->
+                        <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-1.5">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-sky-300 font-semibold">যেকোনো ২টি মান ইনপুট দিন (৩য়টি স্বয়ংক্রিয়ভাবে বের হবে):</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1" id="labObj1PairBtns">
+                                <button type="button" data-lpair1="mv" class="lpair1-btn preset-btn active px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ভর ও আয়তন ➔ ρ₁</button>
+                                <button type="button" data-lpair1="rhov" class="lpair1-btn preset-btn px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ঘনত্ব ও আয়তন ➔ m₁</button>
+                                <button type="button" data-lpair1="mrho" class="lpair1-btn preset-btn px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ভর ও ঘনত্ব ➔ V₁</button>
+                            </div>
+                        </div>
+
+                        <!-- 1st Object Mass Slider + Manual Input -->
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <label for="objMassSlider" class="font-medium text-slate-200">১ম বস্তুর ভর (m₁) <span class="text-[10px] text-slate-400">[V₁ স্থির রেখে ρ₁ পরিবর্তন]</span></label>
-                                <span id="objMassVal" class="font-mono font-semibold text-amber-300">3.00 kg</span>
+                            <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
+                                <label for="objMassSlider" class="font-medium text-slate-200">১ম বস্তুর ভর (m₁)</label>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="labMass1Input" type="number" step="any" min="0.01" value="3.0" class="w-20 bg-slate-900 border border-slate-700 focus:border-amber-400 rounded-lg px-2 py-0.5 text-xs font-mono text-amber-300 text-right focus:outline-none" title="১ম বস্তুর ভর (kg) ম্যানুয়ালি লিখুন">
+                                    <span id="objMassVal" class="font-mono font-semibold text-amber-300 text-[11px]">3.00 kg</span>
+                                </div>
                             </div>
                             <input id="objMassSlider" type="range" min="0.1" max="120" step="0.05" value="3.0" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- 1st Object Volume Slider -->
+                        <!-- 1st Object Volume Slider + Manual Input -->
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <label for="objVolumeSlider" class="font-medium text-slate-300">১ম বস্তুর আয়তন (V₁) <span class="text-[10px] text-slate-400">[m₁ স্থির রেখে ρ₁ পরিবর্তন]</span></label>
-                                <span id="objVolumeVal" class="font-mono font-semibold text-sky-400">5.0 L (0.005 m³)</span>
+                            <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
+                                <label for="objVolumeSlider" class="font-medium text-slate-300">১ম বস্তুর আয়তন (V₁)</label>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="labVol1Input" type="number" step="any" min="0.05" value="5.0" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="১ম বস্তুর আয়তন (লিটার) ম্যানুয়ালি লিখুন">
+                                    <span id="objVolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">5.0 L (0.005 m³)</span>
+                                </div>
                             </div>
-                            <input id="objVolumeSlider" type="range" min="1" max="15" step="0.5" value="5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                            <input id="objVolumeSlider" type="range" min="0.5" max="25" step="0.1" value="5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- 1st Object Density Slider -->
+                        <!-- 1st Object Density Slider + Manual Input -->
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <label for="objDensitySlider" class="font-medium text-slate-300">১ম বস্তুর ঘনত্ব (ρ₁ = m₁ / V₁) <span class="text-[10px] text-slate-400">[V₁ স্থির রেখে m₁ পরিবর্তন]</span></label>
-                                <span id="objDensityVal" class="font-mono font-semibold text-sky-400">600 kg/m³</span>
+                            <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
+                                <label for="objDensitySlider" class="font-medium text-slate-300">১ম বস্তুর ঘনত্ব (ρ₁ = m₁ / V₁)</label>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="labRho1Input" type="number" step="any" min="50" value="600" class="w-24 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="১ম বস্তুর ঘনত্ব (kg/m³) ম্যানুয়ালি লিখুন">
+                                    <span id="objDensityVal" class="font-mono font-semibold text-sky-400 text-[11px]">600 kg/m³</span>
+                                </div>
                             </div>
                             <input id="objDensitySlider" type="range" min="100" max="8000" step="10" value="600" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
@@ -259,29 +280,48 @@
                                 </button>
                             </div>
 
-                            <!-- 2nd Object Mass Slider -->
+                            <!-- 2-of-3 Selector for Lab 2nd Object -->
+                            <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-1">
+                                <span class="block text-[10px] text-amber-300 font-semibold">২য় বস্তুর যেকোনো ২টি মান ইনপুট দিন:</span>
+                                <div class="grid grid-cols-3 gap-1" id="labObj2PairBtns">
+                                    <button type="button" data-lpair2="mv" class="lpair2-btn preset-btn active px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ভর ও আয়তন ➔ ρ₂</button>
+                                    <button type="button" data-lpair2="rhov" class="lpair2-btn preset-btn px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ঘনত্ব ও আয়তন ➔ m₂</button>
+                                    <button type="button" data-lpair2="mrho" class="lpair2-btn preset-btn px-1.5 py-1 rounded text-[10px] font-medium border border-slate-700 bg-slate-800 text-slate-200">ভর ও ঘনত্ব ➔ V₂</button>
+                                </div>
+                            </div>
+
+                            <!-- 2nd Object Mass Slider + Manual Input -->
                             <div>
-                                <div class="flex justify-between text-xs mb-1">
+                                <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                     <label for="obj2MassSlider" class="font-medium text-slate-200">২য় বস্তুর ভর (m₂)</label>
-                                    <span id="obj2MassVal" class="font-mono font-semibold text-amber-300">1.35 kg</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <input id="labMass2Input" type="number" step="any" min="0.01" value="1.35" class="w-20 bg-slate-900 border border-slate-700 focus:border-amber-400 rounded-lg px-2 py-0.5 text-xs font-mono text-amber-300 text-right focus:outline-none" title="২য় বস্তুর ভর (kg) ম্যানুয়ালি লিখুন">
+                                        <span id="obj2MassVal" class="font-mono font-semibold text-amber-300 text-[11px]">1.35 kg</span>
+                                    </div>
                                 </div>
                                 <input id="obj2MassSlider" type="range" min="0.1" max="80" step="0.05" value="1.35" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             </div>
 
-                            <!-- 2nd Object Volume Slider -->
+                            <!-- 2nd Object Volume Slider + Manual Input -->
                             <div>
-                                <div class="flex justify-between text-xs mb-1">
+                                <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                     <label for="obj2VolumeSlider" class="font-medium text-slate-300">২য় বস্তুর আয়তন (V₂)</label>
-                                    <span id="obj2VolumeVal" class="font-mono font-semibold text-sky-400">0.5 L</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <input id="labVol2Input" type="number" step="any" min="0.05" value="0.5" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="২য় বস্তুর আয়তন (লিটার) ম্যানুয়ালি লিখুন">
+                                        <span id="obj2VolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">0.5 L</span>
+                                    </div>
                                 </div>
-                                <input id="obj2VolumeSlider" type="range" min="0.5" max="10" step="0.5" value="0.5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
+                                <input id="obj2VolumeSlider" type="range" min="0.1" max="15" step="0.1" value="0.5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             </div>
 
-                            <!-- 2nd Object Density Slider -->
+                            <!-- 2nd Object Density Slider + Manual Input -->
                             <div>
-                                <div class="flex justify-between text-xs mb-1">
+                                <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                     <label for="obj2DensitySlider" class="font-medium text-slate-300">২য় বস্তুর ঘনত্ব (ρ₂ = m₂ / V₂)</label>
-                                    <span id="obj2DensityVal" class="font-mono font-semibold text-sky-400">2700 kg/m³</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <input id="labRho2Input" type="number" step="any" min="50" value="2700" class="w-24 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="২য় বস্তুর ঘনত্ব (kg/m³) ম্যানুয়ালি লিখুন">
+                                        <span id="obj2DensityVal" class="font-mono font-semibold text-sky-400 text-[11px]">2700 kg/m³</span>
+                                    </div>
                                 </div>
                                 <input id="obj2DensitySlider" type="range" min="100" max="10000" step="10" value="2700" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             </div>
@@ -328,17 +368,23 @@
                         </div>
 
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
+                            <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                 <label for="fluidDensitySlider" class="font-medium text-slate-300">তরলের ঘনত্ব (ρ<sub>তরল</sub>)</label>
-                                <span id="fluidDensityVal" class="font-mono font-semibold text-sky-400">1000 kg/m³</span>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="labFluidRhoInput" type="number" step="any" min="100" value="1000" class="w-24 bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="তরলের ঘনত্ব (kg/m³) ম্যানুয়ালি লিখুন">
+                                    <span id="fluidDensityVal" class="font-mono font-semibold text-sky-400 text-[11px]">1000 kg/m³</span>
+                                </div>
                             </div>
                             <input id="fluidDensitySlider" type="range" min="500" max="13600" step="10" value="1000" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
+                            <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                 <label for="gravitySlider" class="font-medium text-slate-300">অভিকর্ষজ ত্বরণ (g)</label>
-                                <span id="gravityVal" class="font-mono font-semibold text-sky-400">9.81 m/s²</span>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="labGInput" type="number" step="any" min="0.1" value="9.81" class="w-20 bg-slate-950 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="অভিকর্ষজ ত্বরণ g (m/s²) ম্যানুয়ালি লিখুন">
+                                    <span id="gravityVal" class="font-mono font-semibold text-sky-400 text-[11px]">9.81 m/s²</span>
+                                </div>
                             </div>
                             <input id="gravitySlider" type="range" min="1.6" max="24.8" step="0.01" value="9.81" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             <div class="flex gap-2 mt-1.5">
@@ -389,94 +435,245 @@
                         </div>
                     </div>
 
-                    <!-- Mode 1 Inputs: Mass & Volume / Shape Dimensions -->
-                    <div id="bcqMode1Panel" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <span class="text-xs font-semibold text-slate-300">বস্তুর আয়তন কীভাবে দেওয়া আছে?</span>
-                            <div class="flex gap-1.5" id="volInputTypeBtns">
-                                <button data-vtype="direct" class="vtype-btn preset-btn active px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সরাসরি আয়তন (V)</button>
-                                <button data-vtype="box" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">দৈর্ঘ্য×প্রস্থ×উচ্চতা</button>
-                                <button data-vtype="sphere" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">গোলকের ব্যাসার্ধ (r)</button>
-                                <button data-vtype="cylinder" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সিলিন্ডার (r, h)</button>
+                    <!-- Mode 1 Inputs: Any 2 of 3 (Mass, Volume, Density) + Shape Dimensions for BOTH Object 1 & Object 2 -->
+                    <div id="bcqMode1Panel" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-4">
+                        <!-- 1st Object Section -->
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">১ম বস্তুর তথ্য (যেকোনো ২টি ইনপুট দিন, ৩য়টি স্বয়ংক্রিয়ভাবে বের হবে)</span>
+                                <span id="cqObj1AutoBadge" class="text-[11px] font-mono text-emerald-300 bg-emerald-950/60 border border-emerald-700/50 px-2 py-0.5 rounded">স্বয়ংক্রিয় নির্ণয়: ঘনত্ব (ρ₁)</span>
                             </div>
-                        </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর ভর (m₁)</label>
-                                <div class="flex gap-1.5">
-                                    <input id="calcMass" type="number" step="any" min="0.001" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
-                                    <select id="calcMassUnit" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-sky-300 font-semibold">
-                                        <option value="kg">kg</option>
-                                        <option value="g">g (গ্রাম)</option>
-                                    </select>
+                            <!-- 1st Object: 2-of-3 Mode Buttons -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5" id="obj1InputPairBtns">
+                                <button type="button" data-pair1="mv" class="pair1-btn preset-btn active px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                    <div class="font-bold text-white">ভর (m₁) ও আয়তন (V₁) দেওয়া</div>
+                                    <div class="text-[10px] text-slate-400">ঘনত্ব ρ₁ = m₁/V₁ নির্ণয় হবে</div>
+                                </button>
+                                <button type="button" data-pair1="rhov" class="pair1-btn preset-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                    <div class="font-bold text-white">ঘনত্ব (ρ₁) ও আয়তন (V₁) দেওয়া</div>
+                                    <div class="text-[10px] text-slate-400">ভর m₁ = ρ₁×V₁ নির্ণয় হবে</div>
+                                </button>
+                                <button type="button" data-pair1="mrho" class="pair1-btn preset-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                    <div class="font-bold text-white">ভর (m₁) ও ঘনত্ব (ρ₁) দেওয়া</div>
+                                    <div class="text-[10px] text-slate-400">আয়তন V₁ = m₁/ρ₁ নির্ণয় হবে</div>
+                                </button>
+                            </div>
+
+                            <!-- 1st Object Volume Input Type Selector (Shown when Volume is an input) -->
+                            <div id="obj1VolTypeWrap" class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                                <span class="text-xs font-semibold text-slate-300">১ম বস্তুর আয়তন কীভাবে দেওয়া আছে?</span>
+                                <div class="flex flex-wrap gap-1.5" id="volInputTypeBtns">
+                                    <button type="button" data-vtype="direct" class="vtype-btn preset-btn active px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সরাসরি আয়তন (V)</button>
+                                    <button type="button" data-vtype="box" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">দৈর্ঘ্য×প্রস্থ×উচ্চতা</button>
+                                    <button type="button" data-vtype="sphere" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">গোলকের ব্যাসার্ধ (r)</button>
+                                    <button type="button" data-vtype="cylinder" class="vtype-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সিলিন্ডার (r, h)</button>
                                 </div>
                             </div>
 
-                            <!-- Direct Volume Input -->
-                            <div id="volDirectBox">
-                                <label class="block text-xs text-slate-300 mb-1">১ম বস্তুর আয়তন (V₁)</label>
-                                <div class="flex gap-1.5">
-                                    <input id="calcVolLiters" type="number" step="any" min="0.0001" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
-                                    <select id="calcVolUnit" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-sky-300 font-semibold">
-                                        <option value="L">লিটার (L / dm³)</option>
-                                        <option value="cm3">cm³ (সিসি)</option>
-                                        <option value="m3">m³ (ঘনমিটার)</option>
-                                    </select>
+                            <!-- 1st Object: Mass, Volume, Density 3-Column Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                <div id="wrapCalcMass1" class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+                                    <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                        <span>১ম বস্তুর ভর (m₁)</span>
+                                        <span id="tagCalcMass1" class="text-[10px] text-sky-400">ইনপুট</span>
+                                    </label>
+                                    <div class="flex gap-1">
+                                        <input id="calcMass" type="number" step="any" min="0.0001" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500">
+                                        <select id="calcMassUnit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-sky-300 font-semibold">
+                                            <option value="kg">kg</option>
+                                            <option value="g">g</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Direct Volume Input -->
+                                <div id="volDirectBox" class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+                                    <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                        <span>১ম বস্তুর আয়তন (V₁)</span>
+                                        <span id="tagCalcVol1" class="text-[10px] text-sky-400">ইনপুট</span>
+                                    </label>
+                                    <div class="flex gap-1">
+                                        <input id="calcVolLiters" type="number" step="any" min="0.0001" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500">
+                                        <select id="calcVolUnit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-sky-300 font-semibold">
+                                            <option value="L">L</option>
+                                            <option value="cm3">cm³</option>
+                                            <option value="m3">m³</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 1st Object Density Input -->
+                                <div id="wrapCalcRho1" class="p-2 rounded-xl bg-slate-900/90 border border-slate-800 ring-1 ring-emerald-500/60">
+                                    <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                        <span>১ম বস্তুর ঘনত্ব (ρ₁)</span>
+                                        <span id="tagCalcRho1" class="text-[10px] text-emerald-400 font-bold">স্বয়ংক্রিয়</span>
+                                    </label>
+                                    <div class="flex gap-1">
+                                        <input id="calcRho1" type="number" step="any" min="1" value="600" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-sky-500">
+                                        <select id="calcRho1Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-sky-300 font-semibold">
+                                            <option value="kgm3">kg/m³</option>
+                                            <option value="gcm3">g/cm³</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Box Dimensions (l x b x h in cm) -->
-                        <div id="volBoxDims" class="hidden grid grid-cols-3 gap-2 pt-1">
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">দৈর্ঘ্য l (cm)</label>
-                                <input id="boxL" type="number" step="any" value="25" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">প্রস্থ b (cm)</label>
-                                <input id="boxB" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">উচ্চতা h (cm)</label>
-                                <input id="boxH" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                        </div>
-
-                        <!-- Sphere Radius (r in cm) -->
-                        <div id="volSphereDims" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">গোলকের ব্যাসার্ধ r (cm)</label>
-                                <input id="sphereR" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                        </div>
-
-                        <!-- Cylinder Dimensions (r, h in cm) -->
-                        <div id="volCylDims" class="hidden grid grid-cols-2 gap-2 pt-1">
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">সিলিন্ডারের ব্যাসার্ধ r (cm)</label>
-                                <input id="cylR" type="number" step="any" value="7" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">সিলিন্ডারের উচ্চতা h (cm)</label>
-                                <input id="cylH" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                            </div>
-                        </div>
-
-                        <!-- Optional 2nd object in Calculator -->
-                        <div class="pt-2 border-t border-slate-800 space-y-2.5">
-                            <label class="inline-flex items-center gap-2 text-xs font-semibold text-amber-300 cursor-pointer">
-                                <input type="checkbox" id="calcHasObj2" class="rounded text-amber-500 focus:ring-0">
-                                <span>এর সাথে ২য় একটি বস্তু বেঁধে দেওয়া হয়েছে (যুক্ত বস্তুর সৃজনশীল প্রশ্ন)</span>
-                            </label>
-                            <div id="calcObj2Fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <!-- 1st Object Box Dimensions (l x b x h in cm) -->
+                            <div id="volBoxDims" class="hidden grid grid-cols-3 gap-2 pt-1">
                                 <div>
-                                    <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর ভর, m₂ (kg)</label>
-                                    <input id="calcMass2" type="number" step="any" min="0.001" value="1.35" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                    <label class="block text-[11px] text-slate-400 mb-1">১ম বস্তুর দৈর্ঘ্য l₁ (cm)</label>
+                                    <input id="boxL" type="number" step="any" value="25" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-slate-300 mb-1">২য় বস্তুর আয়তন, V₂ (লিটার / dm³)</label>
-                                    <input id="calcVol2Liters" type="number" step="any" min="0.001" value="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                    <label class="block text-[11px] text-slate-400 mb-1">প্রস্থ b₁ (cm)</label>
+                                    <input id="boxB" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">উচ্চতা h₁ (cm)</label>
+                                    <input id="boxH" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+
+                            <!-- 1st Object Sphere Radius (r in cm) -->
+                            <div id="volSphereDims" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">১ম গোলকের ব্যাসার্ধ r₁ (cm)</label>
+                                    <input id="sphereR" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+
+                            <!-- 1st Object Cylinder Dimensions (r, h in cm) -->
+                            <div id="volCylDims" class="hidden grid grid-cols-2 gap-2 pt-1">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">১ম সিলিন্ডারের ব্যাসার্ধ r₁ (cm)</label>
+                                    <input id="cylR" type="number" step="any" value="7" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">১ম সিলিন্ডারের উচ্চতা h₁ (cm)</label>
+                                    <input id="cylH" type="number" step="any" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Optional 2nd object in Calculator (Full Rich Input Parity with 1st Object!) -->
+                        <div class="pt-3 border-t border-slate-800 space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label class="inline-flex items-center gap-2 text-xs font-bold text-amber-300 cursor-pointer">
+                                    <input type="checkbox" id="calcHasObj2" class="rounded text-amber-500 focus:ring-0">
+                                    <span>+ এর সাথে ২য় একটি বস্তু বেঁধে দেওয়া হয়েছে (যুক্ত বস্তুর সৃজনশীল প্রশ্ন)</span>
+                                </label>
+                                <span id="cqObj2AutoBadge" class="hidden text-[11px] font-mono text-amber-300 bg-amber-950/60 border border-amber-700/50 px-2 py-0.5 rounded">স্বয়ংক্রিয় নির্ণয়: ঘনত্ব (ρ₂)</span>
+                            </div>
+
+                            <div id="calcObj2Fields" class="hidden space-y-3 p-3 rounded-xl bg-slate-900/60 border border-amber-500/30">
+                                <!-- 2nd Object: 2-of-3 Mode Buttons -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5" id="obj2InputPairBtns">
+                                    <button type="button" data-pair2="mv" class="pair2-btn preset-btn active px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                        <div class="font-bold text-amber-200">ভর (m₂) ও আয়তন (V₂) দেওয়া</div>
+                                        <div class="text-[10px] text-slate-400">ঘনত্ব ρ₂ = m₂/V₂ নির্ণয় হবে</div>
+                                    </button>
+                                    <button type="button" data-pair2="rhov" class="pair2-btn preset-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                        <div class="font-bold text-amber-200">ঘনত্ব (ρ₂) ও আয়তন (V₂) দেওয়া</div>
+                                        <div class="text-[10px] text-slate-400">ভর m₂ = ρ₂×V₂ নির্ণয় হবে</div>
+                                    </button>
+                                    <button type="button" data-pair2="mrho" class="pair2-btn preset-btn px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium text-left">
+                                        <div class="font-bold text-amber-200">ভর (m₂) ও ঘনত্ব (ρ₂) দেওয়া</div>
+                                        <div class="text-[10px] text-slate-400">আয়তন V₂ = m₂/ρ₂ নির্ণয় হবে</div>
+                                    </button>
+                                </div>
+
+                                <!-- 2nd Object Volume Input Type Selector -->
+                                <div id="obj2VolTypeWrap" class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                                    <span class="text-xs font-semibold text-amber-200">২য় বস্তুর আয়তন কীভাবে দেওয়া আছে?</span>
+                                    <div class="flex flex-wrap gap-1.5" id="vol2InputTypeBtns">
+                                        <button type="button" data-v2type="direct" class="v2type-btn preset-btn active px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সরাসরি আয়তন (V₂)</button>
+                                        <button type="button" data-v2type="box" class="v2type-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">দৈর্ঘ্য×প্রস্থ×উচ্চতা</button>
+                                        <button type="button" data-v2type="sphere" class="v2type-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">গোলকের ব্যাসার্ধ (r₂)</button>
+                                        <button type="button" data-v2type="cylinder" class="v2type-btn preset-btn px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-800 text-[11px] font-medium">সিলিন্ডার (r₂, h₂)</button>
+                                    </div>
+                                </div>
+
+                                <!-- 2nd Object: Mass, Volume, Density 3-Column Grid -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                    <div id="wrapCalcMass2" class="p-2 rounded-xl bg-slate-950/90 border border-slate-800">
+                                        <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                            <span>২য় বস্তুর ভর (m₂)</span>
+                                            <span id="tagCalcMass2" class="text-[10px] text-amber-400">ইনপুট</span>
+                                        </label>
+                                        <div class="flex gap-1">
+                                            <input id="calcMass2" type="number" step="any" min="0.0001" value="1.35" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                                            <select id="calcMass2Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-amber-300 font-semibold">
+                                                <option value="kg">kg</option>
+                                                <option value="g">g</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="vol2DirectBox" class="p-2 rounded-xl bg-slate-950/90 border border-slate-800">
+                                        <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                            <span>২য় বস্তুর আয়তন (V₂)</span>
+                                            <span id="tagCalcVol2" class="text-[10px] text-amber-400">ইনপুট</span>
+                                        </label>
+                                        <div class="flex gap-1">
+                                            <input id="calcVol2Liters" type="number" step="any" min="0.0001" value="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                                            <select id="calcVol2Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-amber-300 font-semibold">
+                                                <option value="L">L</option>
+                                                <option value="cm3">cm³</option>
+                                                <option value="m3">m³</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="wrapCalcRho2" class="p-2 rounded-xl bg-slate-950/90 border border-slate-800 ring-1 ring-emerald-500/60">
+                                        <label class="block text-xs text-slate-300 mb-1 flex justify-between">
+                                            <span>২য় বস্তুর ঘনত্ব (ρ₂)</span>
+                                            <span id="tagCalcRho2" class="text-[10px] text-emerald-400 font-bold">স্বয়ংক্রিয়</span>
+                                        </label>
+                                        <div class="flex gap-1">
+                                            <input id="calcRho2" type="number" step="any" min="1" value="2700" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                                            <select id="calcRho2Unit" class="bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-amber-300 font-semibold">
+                                                <option value="kgm3">kg/m³</option>
+                                                <option value="gcm3">g/cm³</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 2nd Object Box Dimensions -->
+                                <div id="vol2BoxDims" class="hidden grid grid-cols-3 gap-2 pt-1">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">২য় বস্তুর দৈর্ঘ্য l₂ (cm)</label>
+                                        <input id="box2L" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">প্রস্থ b₂ (cm)</label>
+                                        <input id="box2B" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">উচ্চতা h₂ (cm)</label>
+                                        <input id="box2H" type="number" step="any" value="5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
+                                </div>
+
+                                <!-- 2nd Object Sphere Radius -->
+                                <div id="vol2SphereDims" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">২য় গোলকের ব্যাসার্ধ r₂ (cm)</label>
+                                        <input id="sphere2R" type="number" step="any" value="5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
+                                </div>
+
+                                <!-- 2nd Object Cylinder Dimensions -->
+                                <div id="vol2CylDims" class="hidden grid grid-cols-2 gap-2 pt-1">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">২য় সিলিন্ডারের ব্যাসার্ধ r₂ (cm)</label>
+                                        <input id="cyl2R" type="number" step="any" value="4" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-400 mb-1">২য় সিলিন্ডারের উচ্চতা h₂ (cm)</label>
+                                        <input id="cyl2H" type="number" step="any" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -985,7 +1182,12 @@
         // --- Buoyancy CQ State ---
         const buoyancyCqState = {
             cqType: 'float_sink', // 'float_sink' | 'air_water'
-            volType: 'direct'     // 'direct' | 'box' | 'sphere' | 'cylinder'
+            pair1: 'mv',          // 'mv' (find rho1) | 'rhov' (find m1) | 'mrho' (find V1)
+            volType: 'direct',    // 'direct' | 'box' | 'sphere' | 'cylinder'
+            pair2: 'mv',          // 'mv' (find rho2) | 'rhov' (find m2) | 'mrho' (find V2)
+            vol2Type: 'direct',   // 'direct' | 'box' | 'sphere' | 'cylinder'
+            labPair1: 'mv',       // 'mv' | 'rhov' | 'mrho'
+            labPair2: 'mv'        // 'mv' | 'rhov' | 'mrho'
         };
 
         // --- Pascal Hydraulic Press & Universal CQ State ---
@@ -1094,14 +1296,14 @@
 
         // --- Unified Physics Geometry & Hydrostatics (Buoyancy) ---
         function getBlock1HalfHeightNorm() {
-            const scale = Math.cbrt(state.objVolumeL / 5.0);
-            return 0.075 * scale;
+            const scale = Math.cbrt(Math.max(0.05, state.objVolumeL) / 5.0);
+            return Math.min(0.14, Math.max(0.035, 0.075 * scale));
         }
 
         function getBlock2HalfHeightNorm() {
             if (!state.hasObj2) return 0;
-            const scale = Math.cbrt(state.obj2VolumeL / 5.0);
-            return 0.075 * scale;
+            const scale = Math.cbrt(Math.max(0.05, state.obj2VolumeL) / 5.0);
+            return Math.min(0.11, Math.max(0.03, 0.075 * scale));
         }
 
         function getTotalHalfHeightNorm() {
@@ -1129,7 +1331,7 @@
             const frac2 = state.hasObj2 ? calcLinearFrac(top2, bottom2) : 0;
 
             const displacedL = state.objVolumeL * frac1 + (state.hasObj2 ? state.obj2VolumeL * frac2 : 0);
-            const totalVolL = state.objVolumeL + (state.hasObj2 ? state.obj2VolumeL : 0);
+            const totalVolL = Math.max(1e-6, state.objVolumeL + (state.hasObj2 ? state.obj2VolumeL : 0));
 
             return {
                 displacedL,
@@ -1147,7 +1349,8 @@
             let waterY = BASE_WATER_Y;
             let sub = computeSubmergenceAtWaterLine(centerY, waterY);
             for (let i = 0; i < 8; i++) {
-                waterY = BASE_WATER_Y - sub.displacedL * WATER_RISE_FACTOR;
+                const rise = Math.min(0.15, sub.displacedL * WATER_RISE_FACTOR);
+                waterY = BASE_WATER_Y - rise;
                 sub = computeSubmergenceAtWaterLine(centerY, waterY);
             }
 
@@ -1212,34 +1415,57 @@
             return 0.5 * (low + high);
         }
 
+        const labMass1Input = document.getElementById('labMass1Input');
+        const labVol1Input = document.getElementById('labVol1Input');
+        const labRho1Input = document.getElementById('labRho1Input');
+        const labMass2Input = document.getElementById('labMass2Input');
+        const labVol2Input = document.getElementById('labVol2Input');
+        const labRho2Input = document.getElementById('labRho2Input');
+        const labFluidRhoInput = document.getElementById('labFluidRhoInput');
+        const labGInput = document.getElementById('labGInput');
+
         function syncObj1Sliders() {
             const maxMass1 = Math.max(40, Math.ceil(state.objMass + 5));
             objMassSlider.max = maxMass1;
             objMassSlider.value = state.objMass;
+
+            const maxVol1 = Math.max(25, Math.ceil(state.objVolumeL + 2));
+            objVolumeSlider.max = maxVol1;
             objVolumeSlider.value = state.objVolumeL;
 
             const maxRho1 = Math.max(8000, Math.ceil(state.objDensity + 100));
             objDensitySlider.max = maxRho1;
             objDensitySlider.value = Math.round(state.objDensity);
 
+            if (document.activeElement !== labMass1Input) labMass1Input.value = +state.objMass.toFixed(3);
+            if (document.activeElement !== labVol1Input) labVol1Input.value = +state.objVolumeL.toFixed(3);
+            if (document.activeElement !== labRho1Input) labRho1Input.value = +state.objDensity.toFixed(1);
+
             objMassVal.textContent = `${state.objMass.toFixed(2)} kg`;
-            objVolumeVal.textContent = `${state.objVolumeL.toFixed(1)} L (${(state.objVolumeL / 1000).toFixed(4)} m³)`;
+            objVolumeVal.textContent = `${state.objVolumeL.toFixed(2)} L (${(state.objVolumeL / 1000).toFixed(4)} m³)`;
             objDensityVal.textContent = `${Math.round(state.objDensity)} kg/m³`;
-            obj1SummaryBadge.textContent = `m₁ = ${state.objMass.toFixed(2)} kg | V₁ = ${state.objVolumeL.toFixed(1)} L`;
+            obj1SummaryBadge.textContent = `m₁ = ${state.objMass.toFixed(2)} kg | V₁ = ${state.objVolumeL.toFixed(2)} L`;
         }
 
         function syncObj2Sliders() {
             const maxMass2 = Math.max(40, Math.ceil(state.obj2Mass + 5));
             obj2MassSlider.max = maxMass2;
             obj2MassSlider.value = state.obj2Mass;
+
+            const maxVol2 = Math.max(15, Math.ceil(state.obj2VolumeL + 2));
+            obj2VolumeSlider.max = maxVol2;
             obj2VolumeSlider.value = state.obj2VolumeL;
 
             const maxRho2 = Math.max(10000, Math.ceil(state.obj2Density + 100));
             obj2DensitySlider.max = maxRho2;
             obj2DensitySlider.value = Math.round(state.obj2Density);
 
+            if (document.activeElement !== labMass2Input) labMass2Input.value = +state.obj2Mass.toFixed(3);
+            if (document.activeElement !== labVol2Input) labVol2Input.value = +state.obj2VolumeL.toFixed(3);
+            if (document.activeElement !== labRho2Input) labRho2Input.value = +state.obj2Density.toFixed(1);
+
             obj2MassVal.textContent = `${state.obj2Mass.toFixed(2)} kg`;
-            obj2VolumeVal.textContent = `${state.obj2VolumeL.toFixed(1)} L`;
+            obj2VolumeVal.textContent = `${state.obj2VolumeL.toFixed(2)} L`;
             obj2DensityVal.textContent = `${Math.round(state.obj2Density)} kg/m³`;
 
             const totalMass = state.objMass + state.obj2Mass;
@@ -1247,7 +1473,7 @@
             const effRho = totalMass / (totalVolL / 1000);
 
             combMassText.textContent = `${totalMass.toFixed(2)} kg`;
-            combVolText.textContent = `${totalVolL.toFixed(1)} L`;
+            combVolText.textContent = `${totalVolL.toFixed(2)} L`;
             combRhoText.textContent = `${Math.round(effRho)} kg/m³`;
         }
 
@@ -1259,6 +1485,8 @@
 
             fluidDensityVal.textContent = `${state.fluidDensity} kg/m³`;
             gravityVal.textContent = `${state.g.toFixed(2)} m/s²`;
+            if (document.activeElement !== labFluidRhoInput) labFluidRhoInput.value = state.fluidDensity;
+            if (document.activeElement !== labGInput) labGInput.value = state.g;
 
             metricWeight.textContent = `${hydro.weight.toFixed(2)} N`;
             metricMass.textContent = `মোট ভর: ${hydro.totalMass.toFixed(2)} kg`;
@@ -2123,32 +2351,92 @@
             });
         });
 
-        objMassSlider.addEventListener('input', (e) => {
-            state.objMass = parseFloat(e.target.value);
-            state.objDensity = state.objMass / (state.objVolumeL / 1000);
+        // --- 2-of-3 Calculation Helper for Virtual Lab Object 1 & Object 2 ---
+        document.querySelectorAll('.lpair1-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lpair1-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.labPair1 = btn.dataset.lpair1;
+            });
+        });
+
+        document.querySelectorAll('.lpair2-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lpair2-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.labPair2 = btn.dataset.lpair2;
+            });
+        });
+
+        function applyLabObj1Change(editedProp, newVal) {
+            if (!isFinite(newVal) || newVal <= 0) return;
+            if (editedProp === 'm') {
+                state.objMass = Math.max(0.001, newVal);
+                if (buoyancyCqState.labPair1 === 'mrho') {
+                    state.objVolumeL = Math.max(0.01, (state.objMass / state.objDensity) * 1000);
+                } else {
+                    state.objDensity = state.objMass / (state.objVolumeL / 1000);
+                }
+            } else if (editedProp === 'v') {
+                state.objVolumeL = Math.max(0.01, newVal);
+                if (buoyancyCqState.labPair1 === 'rhov') {
+                    state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(4);
+                } else {
+                    state.objDensity = state.objMass / (state.objVolumeL / 1000);
+                }
+            } else if (editedProp === 'rho') {
+                state.objDensity = Math.max(10, newVal);
+                if (buoyancyCqState.labPair1 === 'mrho') {
+                    state.objVolumeL = Math.max(0.01, (state.objMass / state.objDensity) * 1000);
+                } else {
+                    state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(4);
+                }
+            }
             state.objName = 'কাস্টম বস্তু';
             document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
             syncObj1Sliders();
             syncLabToBuoyancyCalculator();
-        });
+        }
 
-        objVolumeSlider.addEventListener('input', (e) => {
-            state.objVolumeL = parseFloat(e.target.value);
-            state.objDensity = state.objMass / (state.objVolumeL / 1000);
-            syncObj1Sliders();
+        function applyLabObj2Change(editedProp, newVal) {
+            if (!isFinite(newVal) || newVal <= 0) return;
+            if (editedProp === 'm') {
+                state.obj2Mass = Math.max(0.001, newVal);
+                if (buoyancyCqState.labPair2 === 'mrho') {
+                    state.obj2VolumeL = Math.max(0.01, (state.obj2Mass / state.obj2Density) * 1000);
+                } else {
+                    state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
+                }
+            } else if (editedProp === 'v') {
+                state.obj2VolumeL = Math.max(0.01, newVal);
+                if (buoyancyCqState.labPair2 === 'rhov') {
+                    state.obj2Mass = +(state.obj2Density * (state.obj2VolumeL / 1000)).toFixed(4);
+                } else {
+                    state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
+                }
+            } else if (editedProp === 'rho') {
+                state.obj2Density = Math.max(10, newVal);
+                if (buoyancyCqState.labPair2 === 'mrho') {
+                    state.obj2VolumeL = Math.max(0.01, (state.obj2Mass / state.obj2Density) * 1000);
+                } else {
+                    state.obj2Mass = +(state.obj2Density * (state.obj2VolumeL / 1000)).toFixed(4);
+                }
+            }
+            state.obj2Name = 'কাস্টম';
+            document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
+            syncObj2Sliders();
             syncLabToBuoyancyCalculator();
-        });
+        }
 
-        objDensitySlider.addEventListener('input', (e) => {
-            state.objDensity = parseFloat(e.target.value);
-            state.objMass = +(state.objDensity * (state.objVolumeL / 1000)).toFixed(3);
-            state.objName = 'কাস্টম বস্তু';
-            document.querySelectorAll('.obj-preset').forEach(b => b.classList.remove('active'));
-            syncObj1Sliders();
-            syncLabToBuoyancyCalculator();
-        });
+        objMassSlider.addEventListener('input', (e) => applyLabObj1Change('m', parseFloat(e.target.value)));
+        objVolumeSlider.addEventListener('input', (e) => applyLabObj1Change('v', parseFloat(e.target.value)));
+        objDensitySlider.addEventListener('input', (e) => applyLabObj1Change('rho', parseFloat(e.target.value)));
 
-        // --- 2nd Object Toggle, Presets & Sliders ---
+        labMass1Input.addEventListener('input', (e) => applyLabObj1Change('m', parseFloat(e.target.value)));
+        labVol1Input.addEventListener('input', (e) => applyLabObj1Change('v', parseFloat(e.target.value)));
+        labRho1Input.addEventListener('input', (e) => applyLabObj1Change('rho', parseFloat(e.target.value)));
+
+        // --- 2nd Object Toggle, Presets, Sliders & Manual Inputs ---
         attachObj2Toggle.addEventListener('change', (e) => {
             state.hasObj2 = e.target.checked;
             obj2ControlsPanel.classList.toggle('hidden', !state.hasObj2);
@@ -2171,32 +2459,15 @@
             });
         });
 
-        obj2MassSlider.addEventListener('input', (e) => {
-            state.obj2Mass = parseFloat(e.target.value);
-            state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
-            state.obj2Name = 'কাস্টম';
-            document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
-            syncObj2Sliders();
-            syncLabToBuoyancyCalculator();
-        });
+        obj2MassSlider.addEventListener('input', (e) => applyLabObj2Change('m', parseFloat(e.target.value)));
+        obj2VolumeSlider.addEventListener('input', (e) => applyLabObj2Change('v', parseFloat(e.target.value)));
+        obj2DensitySlider.addEventListener('input', (e) => applyLabObj2Change('rho', parseFloat(e.target.value)));
 
-        obj2VolumeSlider.addEventListener('input', (e) => {
-            state.obj2VolumeL = parseFloat(e.target.value);
-            state.obj2Density = state.obj2Mass / (state.obj2VolumeL / 1000);
-            syncObj2Sliders();
-            syncLabToBuoyancyCalculator();
-        });
+        labMass2Input.addEventListener('input', (e) => applyLabObj2Change('m', parseFloat(e.target.value)));
+        labVol2Input.addEventListener('input', (e) => applyLabObj2Change('v', parseFloat(e.target.value)));
+        labRho2Input.addEventListener('input', (e) => applyLabObj2Change('rho', parseFloat(e.target.value)));
 
-        obj2DensitySlider.addEventListener('input', (e) => {
-            state.obj2Density = parseFloat(e.target.value);
-            state.obj2Mass = +(state.obj2Density * (state.obj2VolumeL / 1000)).toFixed(3);
-            state.obj2Name = 'কাস্টম';
-            document.querySelectorAll('.obj2-preset').forEach(b => b.classList.remove('active'));
-            syncObj2Sliders();
-            syncLabToBuoyancyCalculator();
-        });
-
-        // --- Fluid & Gravity Controls ---
+        // --- Fluid & Gravity Controls (Sliders + Manual Inputs) ---
         document.querySelectorAll('.fluid-preset').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
@@ -2205,6 +2476,7 @@
                 state.fluidName = btn.dataset.fname;
                 state.fluidColor = btn.dataset.fcolor;
                 fluidDensitySlider.value = state.fluidDensity;
+                labFluidRhoInput.value = state.fluidDensity;
                 syncLabToBuoyancyCalculator();
             });
         });
@@ -2213,20 +2485,45 @@
             btn.addEventListener('click', () => {
                 state.g = parseFloat(btn.dataset.g);
                 gravitySlider.value = state.g;
+                labGInput.value = state.g;
                 syncLabToBuoyancyCalculator();
             });
         });
 
         fluidDensitySlider.addEventListener('input', (e) => {
             state.fluidDensity = parseFloat(e.target.value);
+            labFluidRhoInput.value = state.fluidDensity;
             state.fluidName = 'কাস্টম তরল';
             document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
             syncLabToBuoyancyCalculator();
         });
 
+        labFluidRhoInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            if (isFinite(val) && val >= 50) {
+                state.fluidDensity = val;
+                fluidDensitySlider.max = Math.max(13600, Math.ceil(val + 100));
+                fluidDensitySlider.value = val;
+                state.fluidName = 'কাস্টম তরল';
+                document.querySelectorAll('.fluid-preset').forEach(b => b.classList.remove('active'));
+                syncLabToBuoyancyCalculator();
+            }
+        });
+
         gravitySlider.addEventListener('input', (e) => {
             state.g = parseFloat(e.target.value);
+            labGInput.value = state.g;
             syncLabToBuoyancyCalculator();
+        });
+
+        labGInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            if (isFinite(val) && val > 0.05) {
+                state.g = val;
+                gravitySlider.max = Math.max(25, Math.ceil(val + 2));
+                gravitySlider.value = val;
+                syncLabToBuoyancyCalculator();
+            }
         });
 
         document.getElementById('showVectorsToggle').addEventListener('change', (e) => {
@@ -2426,7 +2723,91 @@
         // =========================================================================
         const calcHasObj2 = document.getElementById('calcHasObj2');
         const calcObj2Fields = document.getElementById('calcObj2Fields');
+        const cqObj2AutoBadge = document.getElementById('cqObj2AutoBadge');
         const syncFromLabBtn = document.getElementById('syncFromLabBtn');
+
+        function updatePairUIHighlights() {
+            const p1 = buoyancyCqState.pair1;
+            const wM1 = document.getElementById('wrapCalcMass1');
+            const wV1 = document.getElementById('volDirectBox');
+            const wR1 = document.getElementById('wrapCalcRho1');
+            const tM1 = document.getElementById('tagCalcMass1');
+            const tV1 = document.getElementById('tagCalcVol1');
+            const tR1 = document.getElementById('tagCalcRho1');
+            const b1 = document.getElementById('cqObj1AutoBadge');
+
+            [wM1, wV1, wR1].forEach(w => w.classList.remove('ring-1', 'ring-emerald-500/60'));
+            [tM1, tV1, tR1].forEach(t => {
+                t.textContent = 'ইনপুট';
+                t.className = 'text-[10px] text-sky-400';
+            });
+
+            if (p1 === 'mv') {
+                wR1.classList.add('ring-1', 'ring-emerald-500/60');
+                tR1.textContent = 'স্বয়ংক্রিয় (ρ₁=m₁/V₁)';
+                tR1.className = 'text-[10px] text-emerald-400 font-bold';
+                b1.textContent = 'স্বয়ংক্রিয় নির্ণয়: ঘনত্ব (ρ₁)';
+                document.getElementById('obj1VolTypeWrap').classList.remove('hidden');
+            } else if (p1 === 'rhov') {
+                wM1.classList.add('ring-1', 'ring-emerald-500/60');
+                tM1.textContent = 'স্বয়ংক্রিয় (m₁=ρ₁V₁)';
+                tM1.className = 'text-[10px] text-emerald-400 font-bold';
+                b1.textContent = 'স্বয়ংক্রিয় নির্ণয়: ভর (m₁)';
+                document.getElementById('obj1VolTypeWrap').classList.remove('hidden');
+            } else if (p1 === 'mrho') {
+                wV1.classList.add('ring-1', 'ring-emerald-500/60');
+                tV1.textContent = 'স্বয়ংক্রিয় (V₁=m₁/ρ₁)';
+                tV1.className = 'text-[10px] text-emerald-400 font-bold';
+                b1.textContent = 'স্বয়ংক্রিয় নির্ণয়: আয়তন (V₁)';
+                buoyancyCqState.volType = 'direct';
+                document.querySelectorAll('.vtype-btn').forEach(b => b.classList.toggle('active', b.dataset.vtype === 'direct'));
+                document.getElementById('volDirectBox').classList.remove('hidden');
+                document.getElementById('volBoxDims').classList.add('hidden');
+                document.getElementById('volSphereDims').classList.add('hidden');
+                document.getElementById('volCylDims').classList.add('hidden');
+                document.getElementById('obj1VolTypeWrap').classList.add('hidden');
+            }
+
+            const p2 = buoyancyCqState.pair2;
+            const wM2 = document.getElementById('wrapCalcMass2');
+            const wV2 = document.getElementById('vol2DirectBox');
+            const wR2 = document.getElementById('wrapCalcRho2');
+            const tM2 = document.getElementById('tagCalcMass2');
+            const tV2 = document.getElementById('tagCalcVol2');
+            const tR2 = document.getElementById('tagCalcRho2');
+
+            [wM2, wV2, wR2].forEach(w => w.classList.remove('ring-1', 'ring-emerald-500/60'));
+            [tM2, tV2, tR2].forEach(t => {
+                t.textContent = 'ইনপুট';
+                t.className = 'text-[10px] text-amber-400';
+            });
+
+            if (p2 === 'mv') {
+                wR2.classList.add('ring-1', 'ring-emerald-500/60');
+                tR2.textContent = 'স্বয়ংক্রিয় (ρ₂=m₂/V₂)';
+                tR2.className = 'text-[10px] text-emerald-400 font-bold';
+                cqObj2AutoBadge.textContent = 'স্বয়ংক্রিয় নির্ণয়: ২য় ঘনত্ব (ρ₂)';
+                document.getElementById('obj2VolTypeWrap').classList.remove('hidden');
+            } else if (p2 === 'rhov') {
+                wM2.classList.add('ring-1', 'ring-emerald-500/60');
+                tM2.textContent = 'স্বয়ংক্রিয় (m₂=ρ₂V₂)';
+                tM2.className = 'text-[10px] text-emerald-400 font-bold';
+                cqObj2AutoBadge.textContent = 'স্বয়ংক্রিয় নির্ণয়: ২য় ভর (m₂)';
+                document.getElementById('obj2VolTypeWrap').classList.remove('hidden');
+            } else if (p2 === 'mrho') {
+                wV2.classList.add('ring-1', 'ring-emerald-500/60');
+                tV2.textContent = 'স্বয়ংক্রিয় (V₂=m₂/ρ₂)';
+                tV2.className = 'text-[10px] text-emerald-400 font-bold';
+                cqObj2AutoBadge.textContent = 'স্বয়ংক্রিয় নির্ণয়: ২য় আয়তন (V₂)';
+                buoyancyCqState.vol2Type = 'direct';
+                document.querySelectorAll('.v2type-btn').forEach(b => b.classList.toggle('active', b.dataset.v2type === 'direct'));
+                document.getElementById('vol2DirectBox').classList.remove('hidden');
+                document.getElementById('vol2BoxDims').classList.add('hidden');
+                document.getElementById('vol2SphereDims').classList.add('hidden');
+                document.getElementById('vol2CylDims').classList.add('hidden');
+                document.getElementById('obj2VolTypeWrap').classList.add('hidden');
+            }
+        }
 
         document.querySelectorAll('.bcq-type-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -2439,12 +2820,31 @@
             });
         });
 
+        document.querySelectorAll('.pair1-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.pair1-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.pair1 = btn.dataset.pair1;
+                updatePairUIHighlights();
+                updateCalculator();
+            });
+        });
+
+        document.querySelectorAll('.pair2-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.pair2-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.pair2 = btn.dataset.pair2;
+                updatePairUIHighlights();
+                updateCalculator();
+            });
+        });
+
         document.querySelectorAll('.vtype-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 buoyancyCqState.volType = btn.dataset.vtype;
-                document.getElementById('volDirectBox').classList.toggle('hidden', buoyancyCqState.volType !== 'direct');
                 document.getElementById('volBoxDims').classList.toggle('hidden', buoyancyCqState.volType !== 'box');
                 document.getElementById('volSphereDims').classList.toggle('hidden', buoyancyCqState.volType !== 'sphere');
                 document.getElementById('volCylDims').classList.toggle('hidden', buoyancyCqState.volType !== 'cylinder');
@@ -2452,15 +2852,87 @@
             });
         });
 
+        document.querySelectorAll('.v2type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.v2type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                buoyancyCqState.vol2Type = btn.dataset.v2type;
+                document.getElementById('vol2BoxDims').classList.toggle('hidden', buoyancyCqState.vol2Type !== 'box');
+                document.getElementById('vol2SphereDims').classList.toggle('hidden', buoyancyCqState.vol2Type !== 'sphere');
+                document.getElementById('vol2CylDims').classList.toggle('hidden', buoyancyCqState.vol2Type !== 'cylinder');
+                updateCalculator();
+            });
+        });
+
+        document.getElementById('calcRho1').addEventListener('input', () => {
+            if (buoyancyCqState.pair1 === 'mv') {
+                buoyancyCqState.pair1 = 'rhov';
+                document.querySelectorAll('.pair1-btn').forEach(b => b.classList.toggle('active', b.dataset.pair1 === 'rhov'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+        document.getElementById('calcMass').addEventListener('input', () => {
+            if (buoyancyCqState.pair1 === 'rhov') {
+                buoyancyCqState.pair1 = 'mv';
+                document.querySelectorAll('.pair1-btn').forEach(b => b.classList.toggle('active', b.dataset.pair1 === 'mv'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+        document.getElementById('calcVolLiters').addEventListener('input', () => {
+            if (buoyancyCqState.pair1 === 'mrho') {
+                buoyancyCqState.pair1 = 'mv';
+                document.querySelectorAll('.pair1-btn').forEach(b => b.classList.toggle('active', b.dataset.pair1 === 'mv'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+
+        document.getElementById('calcRho2').addEventListener('input', () => {
+            if (buoyancyCqState.pair2 === 'mv') {
+                buoyancyCqState.pair2 = 'rhov';
+                document.querySelectorAll('.pair2-btn').forEach(b => b.classList.toggle('active', b.dataset.pair2 === 'rhov'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+        document.getElementById('calcMass2').addEventListener('input', () => {
+            if (buoyancyCqState.pair2 === 'rhov') {
+                buoyancyCqState.pair2 = 'mv';
+                document.querySelectorAll('.pair2-btn').forEach(b => b.classList.toggle('active', b.dataset.pair2 === 'mv'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+        document.getElementById('calcVol2Liters').addEventListener('input', () => {
+            if (buoyancyCqState.pair2 === 'mrho') {
+                buoyancyCqState.pair2 = 'mv';
+                document.querySelectorAll('.pair2-btn').forEach(b => b.classList.toggle('active', b.dataset.pair2 === 'mv'));
+                updatePairUIHighlights();
+            }
+            updateCalculator();
+        });
+
         function syncLabToBuoyancyCalculator() {
             document.getElementById('calcMassUnit').value = 'kg';
-            document.getElementById('calcMass').value = state.objMass.toFixed(2);
+            document.getElementById('calcMass').value = +state.objMass.toFixed(3);
             document.getElementById('calcVolUnit').value = 'L';
-            document.getElementById('calcVolLiters').value = state.objVolumeL.toFixed(1);
+            document.getElementById('calcVolLiters').value = +state.objVolumeL.toFixed(3);
+            document.getElementById('calcRho1Unit').value = 'kgm3';
+            document.getElementById('calcRho1').value = +state.objDensity.toFixed(1);
+
             calcHasObj2.checked = state.hasObj2;
             calcObj2Fields.classList.toggle('hidden', !state.hasObj2);
-            document.getElementById('calcMass2').value = state.obj2Mass.toFixed(2);
-            document.getElementById('calcVol2Liters').value = state.obj2VolumeL.toFixed(1);
+            cqObj2AutoBadge.classList.toggle('hidden', !state.hasObj2);
+
+            document.getElementById('calcMass2Unit').value = 'kg';
+            document.getElementById('calcMass2').value = +state.obj2Mass.toFixed(3);
+            document.getElementById('calcVol2Unit').value = 'L';
+            document.getElementById('calcVol2Liters').value = +state.obj2VolumeL.toFixed(3);
+            document.getElementById('calcRho2Unit').value = 'kgm3';
+            document.getElementById('calcRho2').value = +state.obj2Density.toFixed(1);
+
             document.getElementById('calcFluidRho').value = state.fluidDensity;
             document.getElementById('calcG').value = state.g;
             updateCalculator();
@@ -2468,6 +2940,7 @@
 
         calcHasObj2.addEventListener('change', (e) => {
             calcObj2Fields.classList.toggle('hidden', !e.target.checked);
+            cqObj2AutoBadge.classList.toggle('hidden', !e.target.checked);
             updateCalculator();
         });
 
@@ -2477,9 +2950,11 @@
         });
 
         const calcInputs = [
-            'calcMass', 'calcMassUnit', 'calcVolLiters', 'calcVolUnit',
+            'calcMassUnit', 'calcVolUnit', 'calcRho1Unit',
             'boxL', 'boxB', 'boxH', 'sphereR', 'cylR', 'cylH',
-            'calcMass2', 'calcVol2Liters', 'calcAirWeight', 'calcWaterWeight',
+            'calcMass2Unit', 'calcVol2Unit', 'calcRho2Unit',
+            'box2L', 'box2B', 'box2H', 'sphere2R', 'cyl2R', 'cyl2H',
+            'calcAirWeight', 'calcWaterWeight',
             'calcFluidRho', 'calcG'
         ];
         calcInputs.forEach(id => {
@@ -2489,6 +2964,107 @@
                 el.addEventListener('change', updateCalculator);
             }
         });
+
+        function resolveObjectProps(objIndex) {
+            const isObj1 = objIndex === 1;
+            const pairMode = isObj1 ? buoyancyCqState.pair1 : buoyancyCqState.pair2;
+            const vType = isObj1 ? buoyancyCqState.volType : buoyancyCqState.vol2Type;
+
+            const massInputEl = document.getElementById(isObj1 ? 'calcMass' : 'calcMass2');
+            const massUnitEl = document.getElementById(isObj1 ? 'calcMassUnit' : 'calcMass2Unit');
+            const volInputEl = document.getElementById(isObj1 ? 'calcVolLiters' : 'calcVol2Liters');
+            const volUnitEl = document.getElementById(isObj1 ? 'calcVolUnit' : 'calcVol2Unit');
+            const rhoInputEl = document.getElementById(isObj1 ? 'calcRho1' : 'calcRho2');
+            const rhoUnitEl = document.getElementById(isObj1 ? 'calcRho1Unit' : 'calcRho2Unit');
+
+            const rawM = Math.max(0.0001, parseFloat(massInputEl.value) || 0.0001);
+            const mUnit = massUnitEl.value;
+            let mKg = mUnit === 'g' ? rawM / 1000 : rawM;
+
+            const rawRho = Math.max(0.001, parseFloat(rhoInputEl.value) || 0.001);
+            const rhoUnit = rhoUnitEl.value;
+            let rhoKgM3 = rhoUnit === 'gcm3' ? rawRho * 1000 : rawRho;
+
+            let vL = 1;
+            let volFormulaDesc = '';
+            const subIdx = isObj1 ? '₁' : '₂';
+
+            if (pairMode !== 'mrho') {
+                if (vType === 'direct') {
+                    const rawV = Math.max(0.0001, parseFloat(volInputEl.value) || 0.0001);
+                    const vUnit = volUnitEl.value;
+                    if (vUnit === 'cm3') vL = rawV / 1000;
+                    else if (vUnit === 'm3') vL = rawV * 1000;
+                    else vL = rawV;
+                    volFormulaDesc = `আয়তন V${subIdx} = ${rawV} ${vUnit} = ${(vL / 1000).toExponential(3)} m³`;
+                } else if (vType === 'box') {
+                    const l = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'boxL' : 'box2L').value) || 10);
+                    const b = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'boxB' : 'box2B').value) || 10);
+                    const h = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'boxH' : 'box2H').value) || 10);
+                    const vCm3 = l * b * h;
+                    vL = vCm3 / 1000;
+                    volFormulaDesc = `আয়তন V${subIdx} = l×b×h = ${l}×${b}×${h} = ${vCm3.toFixed(1)} cm³ = ${(vL / 1000).toExponential(3)} m³`;
+                    if (document.activeElement !== volInputEl) {
+                        volUnitEl.value = 'L';
+                        volInputEl.value = +vL.toFixed(4);
+                    }
+                } else if (vType === 'sphere') {
+                    const r = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'sphereR' : 'sphere2R').value) || 5);
+                    const vCm3 = (4 / 3) * Math.PI * Math.pow(r, 3);
+                    vL = vCm3 / 1000;
+                    volFormulaDesc = `গোলকের আয়তন V${subIdx} = (4/3)πr³ = (4/3)×3.1416×(${r})³ = ${vCm3.toFixed(2)} cm³ = ${(vL / 1000).toExponential(3)} m³`;
+                    if (document.activeElement !== volInputEl) {
+                        volUnitEl.value = 'L';
+                        volInputEl.value = +vL.toFixed(4);
+                    }
+                } else {
+                    const r = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'cylR' : 'cyl2R').value) || 5);
+                    const h = Math.max(0.01, parseFloat(document.getElementById(isObj1 ? 'cylH' : 'cyl2H').value) || 10);
+                    const vCm3 = Math.PI * r * r * h;
+                    vL = vCm3 / 1000;
+                    volFormulaDesc = `সিলিন্ডারের আয়তন V${subIdx} = πr²h = 3.1416×(${r})²×${h} = ${vCm3.toFixed(2)} cm³ = ${(vL / 1000).toExponential(3)} m³`;
+                    if (document.activeElement !== volInputEl) {
+                        volUnitEl.value = 'L';
+                        volInputEl.value = +vL.toFixed(4);
+                    }
+                }
+            }
+
+            let stepCalcDesc = '';
+            if (pairMode === 'mv') {
+                const vM3 = vL / 1000;
+                rhoKgM3 = mKg / vM3;
+                const displayRho = rhoUnit === 'gcm3' ? (rhoKgM3 / 1000) : rhoKgM3;
+                if (document.activeElement !== rhoInputEl) rhoInputEl.value = +displayRho.toFixed(3);
+                stepCalcDesc = `ঘনত্ব ρ${subIdx} = m${subIdx} ÷ V${subIdx} = ${mKg.toFixed(3)} kg ÷ ${(vL / 1000).toExponential(3)} m³ = <strong>${rhoKgM3.toFixed(2)} kg/m³</strong>`;
+            } else if (pairMode === 'rhov') {
+                const vM3 = vL / 1000;
+                mKg = rhoKgM3 * vM3;
+                const displayM = mUnit === 'g' ? (mKg * 1000) : mKg;
+                if (document.activeElement !== massInputEl) massInputEl.value = +displayM.toFixed(4);
+                stepCalcDesc = `ভর m${subIdx} = ρ${subIdx} × V${subIdx} = ${rhoKgM3.toFixed(1)} kg/m³ × ${(vL / 1000).toExponential(3)} m³ = <strong>${mKg.toFixed(3)} kg (${(mKg * 1000).toFixed(1)} g)</strong>`;
+            } else if (pairMode === 'mrho') {
+                const vM3 = mKg / rhoKgM3;
+                vL = vM3 * 1000;
+                const vUnit = volUnitEl.value;
+                let displayV = vL;
+                if (vUnit === 'cm3') displayV = vL * 1000;
+                else if (vUnit === 'm3') displayV = vM3;
+                if (document.activeElement !== volInputEl) volInputEl.value = +displayV.toFixed(4);
+                volFormulaDesc = `আয়তন V${subIdx} = m${subIdx} ÷ ρ${subIdx} = ${mKg.toFixed(3)} ÷ ${rhoKgM3.toFixed(1)} = ${vM3.toExponential(4)} m³ (${vL.toFixed(3)} L)`;
+                stepCalcDesc = `আয়তন V${subIdx} = m${subIdx} ÷ ρ${subIdx} = ${mKg.toFixed(3)} kg ÷ ${rhoKgM3.toFixed(1)} kg/m³ = <strong>${vM3.toExponential(4)} m³ (${vL.toFixed(3)} L)</strong>`;
+            }
+
+            return {
+                mKg,
+                vL,
+                vM3: vL / 1000,
+                rhoKgM3,
+                pairMode,
+                volFormulaDesc,
+                stepCalcDesc
+            };
+        }
 
         function getBuoyancyCalcData() {
             const rhoF = Math.max(1, parseFloat(document.getElementById('calcFluidRho').value) || 1000);
@@ -2511,43 +3087,19 @@
                 };
             }
 
-            // Mode 1: float_sink / combined object
-            const rawM1 = Math.max(0.001, parseFloat(document.getElementById('calcMass').value) || 0.001);
-            const mUnit = document.getElementById('calcMassUnit').value;
-            const m1 = mUnit === 'g' ? rawM1 / 1000 : rawM1;
-
-            let v1L = 1;
-            let volFormulaDesc = '';
-            if (buoyancyCqState.volType === 'direct') {
-                const rawV = Math.max(0.0001, parseFloat(document.getElementById('calcVolLiters').value) || 0.0001);
-                const vUnit = document.getElementById('calcVolUnit').value;
-                if (vUnit === 'cm3') v1L = rawV / 1000;
-                else if (vUnit === 'm3') v1L = rawV * 1000;
-                else v1L = rawV;
-                volFormulaDesc = `আয়তন V₁ = ${rawV} ${vUnit} = ${(v1L / 1000).toExponential(3)} m³`;
-            } else if (buoyancyCqState.volType === 'box') {
-                const l = Math.max(0.1, parseFloat(document.getElementById('boxL').value) || 10);
-                const b = Math.max(0.1, parseFloat(document.getElementById('boxB').value) || 10);
-                const h = Math.max(0.1, parseFloat(document.getElementById('boxH').value) || 10);
-                const vCm3 = l * b * h;
-                v1L = vCm3 / 1000;
-                volFormulaDesc = `আয়তন V₁ = l × b × h = ${l}×${b}×${h} = ${vCm3.toFixed(1)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
-            } else if (buoyancyCqState.volType === 'sphere') {
-                const r = Math.max(0.1, parseFloat(document.getElementById('sphereR').value) || 5);
-                const vCm3 = (4 / 3) * Math.PI * Math.pow(r, 3);
-                v1L = vCm3 / 1000;
-                volFormulaDesc = `গোলকের আয়তন V₁ = (4/3)πr³ = (4/3)×3.1416×(${r})³ = ${vCm3.toFixed(2)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
-            } else {
-                const r = Math.max(0.1, parseFloat(document.getElementById('cylR').value) || 5);
-                const h = Math.max(0.1, parseFloat(document.getElementById('cylH').value) || 10);
-                const vCm3 = Math.PI * r * r * h;
-                v1L = vCm3 / 1000;
-                volFormulaDesc = `সিলিন্ডারের আয়তন V₁ = πr²h = 3.1416×(${r})²×${h} = ${vCm3.toFixed(2)} cm³ = ${(v1L / 1000).toExponential(3)} m³`;
-            }
-
+            const obj1 = resolveObjectProps(1);
             const useObj2 = calcHasObj2.checked;
-            const m2 = useObj2 ? Math.max(0.001, parseFloat(document.getElementById('calcMass2').value) || 0) : 0;
-            const v2L = useObj2 ? Math.max(0.001, parseFloat(document.getElementById('calcVol2Liters').value) || 0) : 0;
+            const obj2 = useObj2 ? resolveObjectProps(2) : { mKg: 0, vL: 0, vM3: 0, rhoKgM3: 0, pairMode: 'mv', volFormulaDesc: '', stepCalcDesc: '' };
+
+            const m1 = obj1.mKg;
+            const v1L = obj1.vL;
+            const rho1 = obj1.rhoKgM3;
+            const volFormulaDesc = obj1.volFormulaDesc;
+
+            const m2 = useObj2 ? obj2.mKg : 0;
+            const v2L = useObj2 ? obj2.vL : 0;
+            const rho2 = useObj2 ? obj2.rhoKgM3 : 0;
+            const vol2FormulaDesc = useObj2 ? obj2.volFormulaDesc : '';
 
             const totalM = m1 + m2;
             const totalVL = v1L + v2L;
@@ -2564,7 +3116,10 @@
 
             return {
                 cqType: 'float_sink',
-                m1, v1L, volFormulaDesc, useObj2, m2, v2L, rhoF, g,
+                obj1, obj2,
+                m1, v1L, rho1, volFormulaDesc,
+                useObj2, m2, v2L, rho2, vol2FormulaDesc,
+                rhoF, g,
                 totalM, totalVL, totalVM3, rhoObj, W, maxFb,
                 floats, actualFb, displacedL, apparentW, subPct, extraMassToSinkKg
             };
@@ -2601,15 +3156,16 @@
 
             container.innerHTML = `
                 <div class="text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
-                    <strong class="text-sky-300">উদ্দীপকে দেওয়া আছে:</strong><br>
-                    • ১ম বস্তুর ভর m₁ = <strong>${d.m1.toFixed(3)} kg</strong>; ${d.volFormulaDesc}<br>
-                    ${d.useObj2 ? `• ২য় যুক্ত বস্তুর ভর m₂ = <strong>${d.m2} kg</strong>, আয়তন V₂ = <strong>${d.v2L} L = ${(d.v2L / 1000).toExponential(3)} m³</strong><br>` : ''}
+                    <strong class="text-sky-300">উদ্দীপকের তথ্য ও ৩য় রাশি নির্ণয়:</strong><br>
+                    • <strong>১ম বস্তু:</strong> ভর m₁ = <strong>${d.m1.toFixed(3)} kg</strong>, ঘনত্ব ρ₁ = <strong>${d.rho1.toFixed(1)} kg/m³</strong>; ${d.volFormulaDesc}<br>
+                    &nbsp;&nbsp;↳ <em>সুতরাং ১ম বস্তুর ক্ষেত্রে: ${d.obj1.stepCalcDesc}</em><br>
+                    ${d.useObj2 ? `• <strong>২য় যুক্ত বস্তু:</strong> ভর m₂ = <strong>${d.m2.toFixed(3)} kg</strong>, ঘনত্ব ρ₂ = <strong>${d.rho2.toFixed(1)} kg/m³</strong>; ${d.vol2FormulaDesc}<br>&nbsp;&nbsp;↳ <em>সুতরাং ২য় বস্তুর ক্ষেত্রে: ${d.obj2.stepCalcDesc}</em><br>` : ''}
                     • তরলের ঘনত্ব ρ<sub>f</sub> = <strong>${d.rhoF} kg/m³</strong> এবং অভিকর্ষজ ত্বরণ g = <strong>${d.g} m/s²</strong>
                 </div>
 
-                <div class="text-sky-400 font-bold pt-1">ধাপ ১: ${d.useObj2 ? 'যুক্ত বস্তুদ্বয়ের মোট ভর, মোট আয়তন ও গড় ঘনত্ব' : 'বস্তুর ঘনত্ব (ρ<sub>বস্তু</sub>) নির্ণয়'}</div>
-                ${d.useObj2 ? `<div>মোট ভর, M = m₁ + m₂ = ${d.m1.toFixed(3)} + ${d.m2} = <strong>${d.totalM.toFixed(3)} kg</strong> এবং মোট আয়তন, V = <strong>${d.totalVM3.toExponential(4)} m³</strong></div>` : ''}
-                <div>আমরা জানি, ঘনত্ব ρ = ভর (M) ÷ আয়তন (V) = ${d.totalM.toFixed(3)} ÷ ${d.totalVM3.toExponential(4)} = <strong class="text-sky-300">${d.rhoObj.toFixed(2)} kg/m³</strong></div>
+                <div class="text-sky-400 font-bold pt-1">ধাপ ১: ${d.useObj2 ? 'যুক্ত বস্তুদ্বয়ের মোট ভর, মোট আয়তন ও সম্মিলিত গড় ঘনত্ব নির্ণয়' : 'বস্তুর ঘনত্ব (ρ<sub>বস্তু</sub>) ও আয়তন বিশ্লেষণ'}</div>
+                ${d.useObj2 ? `<div>মোট ভর, M = m₁ + m₂ = ${d.m1.toFixed(3)} + ${d.m2.toFixed(3)} = <strong>${d.totalM.toFixed(3)} kg</strong> এবং মোট আয়তন, V = V₁ + V₂ = ${(d.v1L/1000).toExponential(3)} + ${(d.v2L/1000).toExponential(3)} = <strong>${d.totalVM3.toExponential(4)} m³ (${d.totalVL.toFixed(3)} L)</strong></div>` : ''}
+                <div>আমরা জানি, ${d.useObj2 ? 'সম্মিলিত গড় ঘনত্ব' : 'বস্তুর ঘনত্ব'} ρ = ভর (M) ÷ আয়তন (V) = ${d.totalM.toFixed(3)} ÷ ${d.totalVM3.toExponential(4)} = <strong class="text-sky-300">${d.rhoObj.toFixed(2)} kg/m³</strong> (${(d.rhoObj / 1000).toFixed(3)} g/cm³)</div>
 
                 <div class="text-sky-400 font-bold pt-1">ধাপ ২: বাতাসে মোট ওজন (W) ও সর্বোচ্চ প্লবতা বল (F<sub>b,max</sub>)</div>
                 <div>বাতাসে বস্তুর ওজন, W = M × g = ${d.totalM.toFixed(3)} × ${d.g} = <strong class="text-rose-300">${d.W.toFixed(2)} N</strong></div>
@@ -2618,8 +3174,8 @@
                 <div class="text-sky-400 font-bold pt-1">ধাপ ৩: ভাসন নাকি নিমজ্জন সিদ্ধান্ত ও সৃজনশীল (গ/ঘ) ফলাফল</div>
                 <div class="p-3 rounded-lg ${d.floats ? 'bg-emerald-950/60 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/60 border border-rose-700/60 text-rose-200'}">
                     ${d.floats
-                        ? `যেহেতু বস্তুর ঘনত্ব (${d.rhoObj.toFixed(1)} kg/m³) ≤ তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W ≤ F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ভাসবে</strong>!<br>• নিমজ্জিত অংশের হার = (ρ<sub>বস্তু</sub> ÷ ρ<sub>তরল</sub>) × ১০০% = <strong>${d.subPct.toFixed(1)}%</strong> এবং ভেসে থাকা অংশ = <strong>${(100 - d.subPct).toFixed(1)}%</strong><br>• ভাসমান অবস্থায় ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = W = <strong>${d.actualFb.toFixed(2)} N</strong> (তরলে আপাত ওজন = <strong>0.00 N</strong>)<br>• সম্পূর্ণ ডুবাতে প্রয়োজনীয় অতিরিক্ত ভর, Δm = (V × ρ<sub>f</sub>) - M = <strong>${d.extraMassToSinkKg.toFixed(3)} kg (${(d.extraMassToSinkKg * 1000).toFixed(1)} g)</strong>`
-                        : `যেহেতু বস্তুর ঘনত্ব (${d.rhoObj.toFixed(1)} kg/m³) > তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W > F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ডুবে যাবে</strong>!<br>• নিমজ্জিত অংশের হার = <strong>100%</strong> (অপসারিত তরল = <strong>${d.displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = F<sub>b,max</sub> = <strong>${d.actualFb.toFixed(2)} N</strong><br>• তরলে নিমজ্জিত অবস্থায় আপাত ওজন, W' = W - F<sub>b</sub> = ${d.W.toFixed(2)} - ${d.actualFb.toFixed(2)} = <strong>${d.apparentW.toFixed(2)} N</strong>`
+                        ? `যেহেতু ${d.useObj2 ? 'যুক্ত বস্তুর গড় ঘনত্ব' : 'বস্তুর ঘনত্ব'} (${d.rhoObj.toFixed(1)} kg/m³) ≤ তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W ≤ F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ভাসবে</strong>!<br>• নিমজ্জিত অংশের হার = (ρ<sub>বস্তু</sub> ÷ ρ<sub>তরল</sub>) × ১০০% = <strong>${d.subPct.toFixed(1)}%</strong> এবং ভেসে থাকা অংশ = <strong>${(100 - d.subPct).toFixed(1)}%</strong><br>• ভাসমান অবস্থায় ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = W = <strong>${d.actualFb.toFixed(2)} N</strong> (তরলে আপাত ওজন = <strong>0.00 N</strong>)<br>• সম্পূর্ণ ডুবাতে প্রয়োজনীয় অতিরিক্ত ভর, Δm = (V × ρ<sub>f</sub>) - M = <strong>${d.extraMassToSinkKg.toFixed(3)} kg (${(d.extraMassToSinkKg * 1000).toFixed(1)} g)</strong>`
+                        : `যেহেতু ${d.useObj2 ? 'যুক্ত বস্তুর গড় ঘনত্ব' : 'বস্তুর ঘনত্ব'} (${d.rhoObj.toFixed(1)} kg/m³) > তরলের ঘনত্ব (${d.rhoF} kg/m³) [অথবা W > F<sub>b,max</sub>], তাই বস্তুটি তরলে <strong>ডুবে যাবে</strong>!<br>• নিমজ্জিত অংশের হার = <strong>100%</strong> (অপসারিত তরল = <strong>${d.displacedL.toFixed(2)} L</strong>)<br>• ক্রিয়াশীল প্লবতা বল, F<sub>b</sub> = F<sub>b,max</sub> = <strong>${d.actualFb.toFixed(2)} N</strong><br>• তরলে নিমজ্জিত অবস্থায় আপাত ওজন, W' = W - F<sub>b</sub> = ${d.W.toFixed(2)} - ${d.actualFb.toFixed(2)} = <strong>${d.apparentW.toFixed(2)} N</strong>`
                     }
                 </div>
             `;
@@ -2722,9 +3278,9 @@
                     c.font = '21px Hind Siliguri, sans-serif';
                     c.fillText(`• ১ম বস্তুর ভর (m₁) = ${d.m1.toFixed(3)} kg; ${d.volFormulaDesc}`, 85, y + 84);
                     if (d.useObj2) {
-                        c.fillText(`• ২য় যুক্ত বস্তুর ভর (m₂) = ${d.m2} kg এবং আয়তন (V₂) = ${d.v2L} L`, 85, y + 118);
+                        c.fillText(`• ২য় যুক্ত বস্তু: ভর m₂ = ${d.m2.toFixed(3)} kg, ঘনত্ব ρ₂ = ${d.rho2.toFixed(1)} kg/m³, আয়তন V₂ = ${d.v2L.toFixed(3)} L`, 85, y + 118);
                     } else {
-                        c.fillText(`• মোট আয়তন (V) = ${d.totalVL.toFixed(2)} L = ${d.totalVM3.toExponential(4)} m³`, 85, y + 118);
+                        c.fillText(`• ১ম বস্তুর ঘনত্ব (ρ₁) = ${d.rho1.toFixed(1)} kg/m³ এবং মোট আয়তন (V) = ${d.totalVL.toFixed(3)} L (${d.totalVM3.toExponential(4)} m³)`, 85, y + 118);
                     }
                     c.fillText(`• তরলের ঘনত্ব (ρ_f) = ${d.rhoF} kg/m³   এবং   অভিকর্ষজ ত্বরণ (g) = ${d.g} m/s²`, 85, y + 152);
 
