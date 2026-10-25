@@ -219,14 +219,21 @@
                             <input id="objMassSlider" type="range" min="0.1" max="120" step="0.05" value="3.0" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
 
-                        <!-- 1st Object Volume Slider + Manual Input -->
+                        <!-- 1st Object Volume Slider + Manual Input (cm³, m³, L) -->
                         <div>
                             <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                 <label for="objVolumeSlider" class="font-medium text-slate-300">১ম বস্তুর আয়তন (V₁)</label>
-                                <div class="flex items-center gap-1.5">
-                                    <input id="labVol1Input" type="number" step="any" min="0.05" value="5.0" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="১ম বস্তুর আয়তন (লিটার) ম্যানুয়ালি লিখুন">
-                                    <span id="objVolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">5.0 L (0.005 m³)</span>
+                                <div class="flex flex-wrap items-center gap-1">
+                                    <input id="labVol1Input" type="number" step="any" min="0.00001" value="5000" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="১ম বস্তুর আয়তন ম্যানুয়ালি লিখুন">
+                                    <select id="labVol1Unit" class="bg-slate-900 border border-slate-700 rounded-lg px-1.5 py-0.5 text-[11px] text-sky-300 font-semibold focus:outline-none">
+                                        <option value="cm3">cm³ (ঘনসেমি)</option>
+                                        <option value="m3">m³ (ঘনমিটার)</option>
+                                        <option value="L">L (লিটার)</option>
+                                    </select>
                                 </div>
+                            </div>
+                            <div class="flex justify-end mb-1">
+                                <span id="objVolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">0.0050 m³ (5000 cm³)</span>
                             </div>
                             <input id="objVolumeSlider" type="range" min="0.5" max="25" step="0.1" value="5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                         </div>
@@ -302,14 +309,21 @@
                                 <input id="obj2MassSlider" type="range" min="0.1" max="80" step="0.05" value="1.35" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             </div>
 
-                            <!-- 2nd Object Volume Slider + Manual Input -->
+                            <!-- 2nd Object Volume Slider + Manual Input (cm³, m³, L) -->
                             <div>
                                 <div class="flex flex-wrap items-center justify-between gap-1 text-xs mb-1">
                                     <label for="obj2VolumeSlider" class="font-medium text-slate-300">২য় বস্তুর আয়তন (V₂)</label>
-                                    <div class="flex items-center gap-1.5">
-                                        <input id="labVol2Input" type="number" step="any" min="0.05" value="0.5" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="২য় বস্তুর আয়তন (লিটার) ম্যানুয়ালি লিখুন">
-                                        <span id="obj2VolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">0.5 L</span>
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <input id="labVol2Input" type="number" step="any" min="0.00001" value="500" class="w-20 bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-lg px-2 py-0.5 text-xs font-mono text-sky-300 text-right focus:outline-none" title="২য় বস্তুর আয়তন ম্যানুয়ালি লিখুন">
+                                        <select id="labVol2Unit" class="bg-slate-900 border border-slate-700 rounded-lg px-1.5 py-0.5 text-[11px] text-sky-300 font-semibold focus:outline-none">
+                                            <option value="cm3">cm³ (ঘনসেমি)</option>
+                                            <option value="m3">m³ (ঘনমিটার)</option>
+                                            <option value="L">L (লিটার)</option>
+                                        </select>
                                     </div>
+                                </div>
+                                <div class="flex justify-end mb-1">
+                                    <span id="obj2VolumeVal" class="font-mono font-semibold text-sky-400 text-[11px]">0.0005 m³ (500 cm³)</span>
                                 </div>
                                 <input id="obj2VolumeSlider" type="range" min="0.1" max="15" step="0.1" value="0.5" class="w-full h-2 bg-slate-800 rounded-lg cursor-pointer">
                             </div>
@@ -1417,12 +1431,26 @@
 
         const labMass1Input = document.getElementById('labMass1Input');
         const labVol1Input = document.getElementById('labVol1Input');
+        const labVol1Unit = document.getElementById('labVol1Unit');
         const labRho1Input = document.getElementById('labRho1Input');
         const labMass2Input = document.getElementById('labMass2Input');
         const labVol2Input = document.getElementById('labVol2Input');
+        const labVol2Unit = document.getElementById('labVol2Unit');
         const labRho2Input = document.getElementById('labRho2Input');
         const labFluidRhoInput = document.getElementById('labFluidRhoInput');
         const labGInput = document.getElementById('labGInput');
+
+        function convertLitersToUnit(volL, unit) {
+            if (unit === 'm3') return +(volL / 1000).toFixed(6);
+            if (unit === 'cm3') return +(volL * 1000).toFixed(1);
+            return +volL.toFixed(3);
+        }
+
+        function convertUnitToLiters(val, unit) {
+            if (unit === 'm3') return val * 1000;
+            if (unit === 'cm3') return val / 1000;
+            return val;
+        }
 
         function syncObj1Sliders() {
             const maxMass1 = Math.max(40, Math.ceil(state.objMass + 5));
@@ -1437,14 +1465,18 @@
             objDensitySlider.max = maxRho1;
             objDensitySlider.value = Math.round(state.objDensity);
 
+            const u1 = labVol1Unit ? labVol1Unit.value : 'cm3';
             if (document.activeElement !== labMass1Input) labMass1Input.value = +state.objMass.toFixed(3);
-            if (document.activeElement !== labVol1Input) labVol1Input.value = +state.objVolumeL.toFixed(3);
+            if (document.activeElement !== labVol1Input) labVol1Input.value = convertLitersToUnit(state.objVolumeL, u1);
             if (document.activeElement !== labRho1Input) labRho1Input.value = +state.objDensity.toFixed(1);
 
+            const v1M3 = (state.objVolumeL / 1000).toFixed(4);
+            const v1Cm3 = Math.round(state.objVolumeL * 1000);
+
             objMassVal.textContent = `${state.objMass.toFixed(2)} kg`;
-            objVolumeVal.textContent = `${state.objVolumeL.toFixed(2)} L (${(state.objVolumeL / 1000).toFixed(4)} m³)`;
+            objVolumeVal.textContent = `${v1M3} m³ (${v1Cm3} cm³)`;
             objDensityVal.textContent = `${Math.round(state.objDensity)} kg/m³`;
-            obj1SummaryBadge.textContent = `m₁ = ${state.objMass.toFixed(2)} kg | V₁ = ${state.objVolumeL.toFixed(2)} L`;
+            obj1SummaryBadge.textContent = `m₁ = ${state.objMass.toFixed(2)} kg | V₁ = ${v1M3} m³ (${v1Cm3} cm³)`;
         }
 
         function syncObj2Sliders() {
@@ -1460,12 +1492,16 @@
             obj2DensitySlider.max = maxRho2;
             obj2DensitySlider.value = Math.round(state.obj2Density);
 
+            const u2 = labVol2Unit ? labVol2Unit.value : 'cm3';
             if (document.activeElement !== labMass2Input) labMass2Input.value = +state.obj2Mass.toFixed(3);
-            if (document.activeElement !== labVol2Input) labVol2Input.value = +state.obj2VolumeL.toFixed(3);
+            if (document.activeElement !== labVol2Input) labVol2Input.value = convertLitersToUnit(state.obj2VolumeL, u2);
             if (document.activeElement !== labRho2Input) labRho2Input.value = +state.obj2Density.toFixed(1);
 
+            const v2M3 = (state.obj2VolumeL / 1000).toFixed(4);
+            const v2Cm3 = Math.round(state.obj2VolumeL * 1000);
+
             obj2MassVal.textContent = `${state.obj2Mass.toFixed(2)} kg`;
-            obj2VolumeVal.textContent = `${state.obj2VolumeL.toFixed(2)} L`;
+            obj2VolumeVal.textContent = `${v2M3} m³ (${v2Cm3} cm³)`;
             obj2DensityVal.textContent = `${Math.round(state.obj2Density)} kg/m³`;
 
             const totalMass = state.objMass + state.obj2Mass;
@@ -1473,7 +1509,7 @@
             const effRho = totalMass / (totalVolL / 1000);
 
             combMassText.textContent = `${totalMass.toFixed(2)} kg`;
-            combVolText.textContent = `${totalVolL.toFixed(2)} L`;
+            combVolText.textContent = `${(totalVolL / 1000).toFixed(4)} m³ (${Math.round(totalVolL * 1000)} cm³)`;
             combRhoText.textContent = `${Math.round(effRho)} kg/m³`;
         }
 
@@ -1491,7 +1527,7 @@
             metricWeight.textContent = `${hydro.weight.toFixed(2)} N`;
             metricMass.textContent = `মোট ভর: ${hydro.totalMass.toFixed(2)} kg`;
             metricBuoyancy.textContent = `${hydro.buoyancy.toFixed(2)} N`;
-            metricDisplaced.textContent = `অপসারিত তরল: ${hydro.displacedL.toFixed(2)} L`;
+            metricDisplaced.textContent = `অপসারিত: ${(hydro.displacedL / 1000).toFixed(4)} m³ (${Math.round(hydro.displacedL * 1000)} cm³)`;
             metricApparent.textContent = `${hydro.apparentWeight.toFixed(2)} N`;
             metricNetForce.textContent = hydro.onFloor
                 ? `তলার প্রতিক্রিয়া বল: ${hydro.normalForce.toFixed(2)} N`
@@ -1506,8 +1542,8 @@
             depthReadout.textContent = `তলদেশের গভীরতা: ${depthM.toFixed(2)} m`;
 
             const labelPrefix = state.hasObj2
-                ? `যুক্ত অবস্থায় মোট ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, মোট আয়তন <strong>${hydro.totalVolL.toFixed(1)} L</strong> এবং সম্মিলিত গড় ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `
-                : `বস্তুটির ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, আয়তন <strong>${hydro.totalVolL.toFixed(1)} L</strong> এবং ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `;
+                ? `যুক্ত অবস্থায় মোট ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, মোট আয়তন <strong>${(hydro.totalVolL / 1000).toFixed(4)} m³ (${Math.round(hydro.totalVolL * 1000)} cm³)</strong> এবং সম্মিলিত গড় ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `
+                : `বস্তুটির ভর <strong>${hydro.totalMass.toFixed(2)} kg</strong>, আয়তন <strong>${(hydro.totalVolL / 1000).toFixed(4)} m³ (${Math.round(hydro.totalVolL * 1000)} cm³)</strong> এবং ঘনত্ব <strong>${Math.round(hydro.effDensity)} kg/m³</strong>। `;
 
             if (ratio < 0.999) {
                 statusBadge.textContent = 'ভাসমান (Floating)';
@@ -2433,7 +2469,17 @@
         objDensitySlider.addEventListener('input', (e) => applyLabObj1Change('rho', parseFloat(e.target.value)));
 
         labMass1Input.addEventListener('input', (e) => applyLabObj1Change('m', parseFloat(e.target.value)));
-        labVol1Input.addEventListener('input', (e) => applyLabObj1Change('v', parseFloat(e.target.value)));
+        labVol1Input.addEventListener('input', (e) => {
+            const rawVal = parseFloat(e.target.value);
+            const u1 = labVol1Unit ? labVol1Unit.value : 'cm3';
+            applyLabObj1Change('v', convertUnitToLiters(rawVal, u1));
+        });
+        if (labVol1Unit) {
+            labVol1Unit.addEventListener('change', () => {
+                syncObj1Sliders();
+                syncLabToBuoyancyCalculator();
+            });
+        }
         labRho1Input.addEventListener('input', (e) => applyLabObj1Change('rho', parseFloat(e.target.value)));
 
         // --- 2nd Object Toggle, Presets, Sliders & Manual Inputs ---
@@ -2464,7 +2510,17 @@
         obj2DensitySlider.addEventListener('input', (e) => applyLabObj2Change('rho', parseFloat(e.target.value)));
 
         labMass2Input.addEventListener('input', (e) => applyLabObj2Change('m', parseFloat(e.target.value)));
-        labVol2Input.addEventListener('input', (e) => applyLabObj2Change('v', parseFloat(e.target.value)));
+        labVol2Input.addEventListener('input', (e) => {
+            const rawVal = parseFloat(e.target.value);
+            const u2 = labVol2Unit ? labVol2Unit.value : 'cm3';
+            applyLabObj2Change('v', convertUnitToLiters(rawVal, u2));
+        });
+        if (labVol2Unit) {
+            labVol2Unit.addEventListener('change', () => {
+                syncObj2Sliders();
+                syncLabToBuoyancyCalculator();
+            });
+        }
         labRho2Input.addEventListener('input', (e) => applyLabObj2Change('rho', parseFloat(e.target.value)));
 
         // --- Fluid & Gravity Controls (Sliders + Manual Inputs) ---
@@ -2915,10 +2971,11 @@
         });
 
         function syncLabToBuoyancyCalculator() {
+            const u1 = labVol1Unit ? labVol1Unit.value : 'cm3';
             document.getElementById('calcMassUnit').value = 'kg';
             document.getElementById('calcMass').value = +state.objMass.toFixed(3);
-            document.getElementById('calcVolUnit').value = 'L';
-            document.getElementById('calcVolLiters').value = +state.objVolumeL.toFixed(3);
+            document.getElementById('calcVolUnit').value = u1;
+            document.getElementById('calcVolLiters').value = convertLitersToUnit(state.objVolumeL, u1);
             document.getElementById('calcRho1Unit').value = 'kgm3';
             document.getElementById('calcRho1').value = +state.objDensity.toFixed(1);
 
@@ -2926,10 +2983,11 @@
             calcObj2Fields.classList.toggle('hidden', !state.hasObj2);
             cqObj2AutoBadge.classList.toggle('hidden', !state.hasObj2);
 
+            const u2 = labVol2Unit ? labVol2Unit.value : 'cm3';
             document.getElementById('calcMass2Unit').value = 'kg';
             document.getElementById('calcMass2').value = +state.obj2Mass.toFixed(3);
-            document.getElementById('calcVol2Unit').value = 'L';
-            document.getElementById('calcVol2Liters').value = +state.obj2VolumeL.toFixed(3);
+            document.getElementById('calcVol2Unit').value = u2;
+            document.getElementById('calcVol2Liters').value = convertLitersToUnit(state.obj2VolumeL, u2);
             document.getElementById('calcRho2Unit').value = 'kgm3';
             document.getElementById('calcRho2').value = +state.obj2Density.toFixed(1);
 
